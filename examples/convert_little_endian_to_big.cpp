@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-#include <endian/convert_endian.hpp>
+#include <endian/little_endian.hpp>
 
 // Checks if the platform is big- or little-endian
 // From a test proposed here:
@@ -30,10 +30,10 @@ int main()
     std::cout << "in is: " << std::hex << in << std::endl;
     // If the host is little endian, the put function
     // should change the byte order (no change for big endian)
-    endian::convert_endian::put32(in, data);
+    endian::little_endian::put32(in, data);
 
-    if(0x11u == data[0] && 0x22u == data[1] && 0x33u == data[2]
-       && 0x44u == data[3])
+    if(0x11u == data[3] && 0x22u == data[2] && 0x33u == data[1]
+       && 0x44u == data[0])
     {
         std::cout << "sucess in conveting endian" << std::endl;
     } else

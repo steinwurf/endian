@@ -3,7 +3,7 @@
 //
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
 
-#include <endian/convert_endian.hpp>
+#include <endian/big_endian.hpp>
 #include <gtest/gtest.h>
 
 namespace
@@ -34,11 +34,11 @@ TEST(ConvertBigEndian, Convert)
         uint8_t in = 0x11U;
 
         // No change will occur for a single-byte value
-        endian::convert_endian::put8(in, data);
+        endian::big_endian::put8(in, data);
         EXPECT_TRUE(0x11U == data[0]);
 
         // No change will occur for a single-byte value
-        uint8_t out = endian::convert_endian::get8(data);
+        uint8_t out = endian::big_endian::get8(data);
         EXPECT_TRUE(out == in);
     }
 
@@ -49,12 +49,12 @@ TEST(ConvertBigEndian, Convert)
 
         // If the host is little endian, the put function
         // should change the byte order (no change for big endian)
-        endian::convert_endian::put16(in, data);
+        endian::big_endian::put16(in, data);
         EXPECT_TRUE(0x11U == data[0]);
         EXPECT_TRUE(0x22U == data[1]);
 
         // Get should swap the value back (no change for big endian)
-        uint16_t out = endian::convert_endian::get16(data);
+        uint16_t out = endian::big_endian::get16(data);
         EXPECT_TRUE(out == in);
     }
 
@@ -65,14 +65,14 @@ TEST(ConvertBigEndian, Convert)
 
         // If the host is little endian, the put function
         // should change the byte order (no change for big endian)
-        endian::convert_endian::put32(in, data);
+        endian::big_endian::put32(in, data);
         EXPECT_TRUE(0x11U == data[0]);
         EXPECT_TRUE(0x22U == data[1]);
         EXPECT_TRUE(0x33U == data[2]);
         EXPECT_TRUE(0x44U == data[3]);
 
         // Get should swap the value back (no change for big endian)
-        uint32_t out = endian::convert_endian::get32(data);
+        uint32_t out = endian::big_endian::get32(data);
         EXPECT_TRUE(out == in);
     }
 
@@ -83,7 +83,7 @@ TEST(ConvertBigEndian, Convert)
 
         // If the host is little endian, the put function
         // should change the byte order (no change for big endian)
-        endian::convert_endian::put64(in, data);
+        endian::big_endian::put64(in, data);
         EXPECT_TRUE(0x11U == data[0]);
         EXPECT_TRUE(0x22U == data[1]);
         EXPECT_TRUE(0x33U == data[2]);
@@ -94,7 +94,7 @@ TEST(ConvertBigEndian, Convert)
         EXPECT_TRUE(0x88U == data[7]);
 
         // Get should swap the value back (no change for big endian)
-        uint64_t out = endian::convert_endian::get64(data);
+        uint64_t out = endian::big_endian::get64(data);
         EXPECT_TRUE(out == in);
     }
 }

@@ -23,6 +23,11 @@ def resolve(ctx):
         git_repository='github.com/steinwurf/waf-tools.git',
         major=3))
 
+        ctx.add_dependency(resolve.ResolveVersion(
+        name='storage',
+        git_repository='github.com/steinwurf/storage.git',
+        major=1))
+
     # Internal dependencies
     if ctx.is_toplevel():
 
@@ -30,7 +35,6 @@ def resolve(ctx):
             name='gtest',
             git_repository='github.com/steinwurf/gtest.git',
             major=3))
-
 
 def configure(conf):
 
