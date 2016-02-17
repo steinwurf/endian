@@ -10,8 +10,8 @@
 
 namespace endian
 {
-    // Inserts and extracts integers in little-endian format.
-    struct little_endian
+    // Inserts and extracts integers in big-endian format.
+    struct convert_endian
     {
         /// Gets an 8-bit value integer from a byte stream. Only exists for
         /// convenience in the template-based getters and putters.
@@ -33,7 +33,7 @@ namespace endian
             *buffer = value;
         }
 
-        /// Gets a 16-bit value integer which is in little-endian format from
+        /// Gets a 16-bit value integer which is in big-endian format from
         /// a byte stream.
         /// @copydetails get8()
         static uint16_t get16(const uint8_t* buffer)
@@ -42,7 +42,7 @@ namespace endian
             return (buffer[0] << 8) | buffer[1];
         }
 
-        /// Inserts a 16-bit value into a byte stream in little-endian format.
+        /// Inserts a 16-bit value into a byte stream in big-endian format.
         /// @copydetails put8()
         static void put16(uint16_t value, uint8_t* buffer)
         {
@@ -52,7 +52,7 @@ namespace endian
             buffer[0] = (value >> 8 & 0xFF);
         }
 
-        /// Gets a 32-bit value integer which is in little-endian format from a
+        /// Gets a 32-bit value integer which is in big-endian format from a
         /// byte stream.
         /// @copydetails get8()
         static uint32_t get32(const uint8_t* buffer)
@@ -62,7 +62,7 @@ namespace endian
                    (buffer[2] << 8)  | buffer[3];
         }
 
-        /// Inserts a 32-bit value into a byte stream in little-endian format.
+        /// Inserts a 32-bit value into a byte stream in big-endian format.
         /// @copydetails put8()
         static void put32(uint32_t value, uint8_t* buffer)
         {
@@ -74,7 +74,7 @@ namespace endian
             buffer[0] = ((value >> 24) & 0xFF);
         }
 
-        /// Gets a 64-bit value integer which is in little-endian format from a
+        /// Gets a 64-bit value integer which is in big-endian format from a
         /// byte stream.
         /// @copydetails get8()
         static uint64_t get64(const uint8_t* buffer)
@@ -90,7 +90,7 @@ namespace endian
                    ((uint64_t) buffer[7]);
         }
 
-        /// Inserts a 64-bit value into a byte stream in little-endian format.
+        /// Inserts a 64-bit value into a byte stream in big-endian format.
         /// @copydetails put8()
         static void put64(uint64_t value, uint8_t* buffer)
         {
@@ -117,50 +117,50 @@ namespace endian
     };
 
     template<>
-    inline void little_endian::put<uint8_t>(uint8_t value, uint8_t* buffer)
+    inline void convert_endian::put<uint8_t>(uint8_t value, uint8_t* buffer)
     {
-        little_endian::put8(value, buffer);
+        convert_endian::put8(value, buffer);
     }
 
     template<>
-    inline void little_endian::put<uint16_t>(uint16_t value, uint8_t* buffer)
+    inline void convert_endian::put<uint16_t>(uint16_t value, uint8_t* buffer)
     {
-        little_endian::put16(value, buffer);
+        convert_endian::put16(value, buffer);
     }
 
     template<>
-    inline void little_endian::put<uint32_t>(uint32_t value, uint8_t* buffer)
+    inline void convert_endian::put<uint32_t>(uint32_t value, uint8_t* buffer)
     {
-        little_endian::put32(value, buffer);
+        convert_endian::put32(value, buffer);
     }
 
     template<>
-    inline void little_endian::put<uint64_t>(uint64_t value, uint8_t* buffer)
+    inline void convert_endian::put<uint64_t>(uint64_t value, uint8_t* buffer)
     {
-        little_endian::put64(value, buffer);
+        convert_endian::put64(value, buffer);
     }
 
     template<>
-    inline uint8_t little_endian::get<uint8_t>(const uint8_t* buffer)
+    inline uint8_t convert_endian::get<uint8_t>(const uint8_t* buffer)
     {
-        return little_endian::get8(buffer);
+        return convert_endian::get8(buffer);
     }
 
     template<>
-    inline uint16_t little_endian::get<uint16_t>(const uint8_t* buffer)
+    inline uint16_t convert_endian::get<uint16_t>(const uint8_t* buffer)
     {
-        return little_endian::get16(buffer);
+        return convert_endian::get16(buffer);
     }
 
     template<>
-    inline uint32_t little_endian::get<uint32_t>(const uint8_t* buffer)
+    inline uint32_t convert_endian::get<uint32_t>(const uint8_t* buffer)
     {
-        return little_endian::get32(buffer);
+        return convert_endian::get32(buffer);
     }
 
     template<>
-    inline uint64_t little_endian::get<uint64_t>(const uint8_t* buffer)
+    inline uint64_t convert_endian::get<uint64_t>(const uint8_t* buffer)
     {
-        return little_endian::get64(buffer);
+        return convert_endian::get64(buffer);
     }
 }
