@@ -2,12 +2,9 @@
 endian
 ======
 
-This is the default description, please change it.
+enidan is a header only C++ library for conversion between big and little endian.
 
-.. contents:: Table of Contents:
-   :local:
-
-Usage
+License
 =====
 
-Here is how you use it...
+endian is available under the BSD license.
