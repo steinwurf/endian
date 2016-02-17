@@ -10,6 +10,7 @@
 
 namespace endian
 {
+
     // Inserts and extracts integers in big-endian format.
     struct convert_endian
     {
