@@ -5,7 +5,7 @@
 
 #include "endian_stream.hpp"
 
-namespace sak
+namespace endian
 {
 
     endian_stream::endian_stream(uint8_t* buffer, uint32_t size) :

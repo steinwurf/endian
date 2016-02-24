@@ -1,3 +1,4 @@
+
 // Copyright (c) 2016 Steinwurf ApS
 // All Rights Reserved
 //
@@ -9,7 +10,7 @@
 #include <cassert>
 #include <algorithm>
 
-#include <storage/storage.hpp>
+//#include <storage/storage.hpp>
 #include "big_endian.hpp"
 #include "little_endian.hpp"
 
