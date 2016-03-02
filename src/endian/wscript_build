@@ -4,6 +4,6 @@ bld.stlib(
     features='cxx',
     source=bld.path.ant_glob('**/*.cpp'),
     target='endian',
-    use=[],
+    use=['storage'],
     export_includes=['..']
 )

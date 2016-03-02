@@ -10,7 +10,7 @@
 #include <cassert>
 #include <algorithm>
 
-//#include <storage/storage.hpp>
+#include <storage/storage.hpp>
 #include "big_endian.hpp"
 #include "little_endian.hpp"
 
@@ -37,16 +37,16 @@ namespace endian
 
         /// Writes a value of the size of ValueType to the stream
         /// @param value the value to write
-        template<class ValueType>
-        void write(ValueType value)
-        {
-            // Make sure there is enough space in the underlying buffer
-            assert(m_size >= m_position + sizeof(ValueType));
-            // Write the value at the current position
-            EndianType::put<ValueType>(value, &m_buffer[m_position]);
-            // Advance the current position
-            m_position += sizeof(ValueType);
-        }
+        // template<class ValueType>
+        // void write(ValueType value)
+        // {
+        //     // Make sure there is enough space in the underlying buffer
+        //     assert(m_size >= m_position + sizeof(ValueType));
+        //     // Write the value at the current position
+        //     EndianType::put<ValueType>(value, &m_buffer[m_position]);
+        //     // Advance the current position
+        //     m_position += sizeof(ValueType);
+        // }
 
         /// Writes the contents of a sak::storage container to the stream.
         /// Note that this function is provided only for convenience and
@@ -55,7 +55,7 @@ namespace endian
         /// @param storage the storage to write
         void write(const storage::mutable_storage& storage)
         {
-            write(const_storage(storage));
+            write(storage::const_storage(storage));
         }
 
         /// Writes the contents of a sak::storage container to the stream.
@@ -75,16 +75,16 @@ namespace endian
 
         /// Reads from the stream and moves the read position.
         /// @param value reference to the value to be read
-        template<class ValueType>
-        void read(ValueType& value)
-        {
-            // Make sure there is enough data to read in the underlying buffer
-            assert(m_size >= m_position + sizeof(ValueType));
-            // Read the value at the current position
-            value = EndianType::get<ValueType>(&m_buffer[m_position]);
-            // Advance the current position
-            m_position += sizeof(ValueType);
-        }
+        // template<class ValueType>
+        // void read(ValueType& value)
+        // {
+        //     // Make sure there is enough data to read in the underlying buffer
+        //     assert(m_size >= m_position + sizeof(ValueType));
+        //     // Read the value at the current position
+        //     value = EndianType::get<ValueType>(&m_buffer[m_position]);
+        //     // Advance the current position
+        //     m_position += sizeof(ValueType);
+        // }
 
         /// Reads data from the stream to fill a mutable storage
         /// Note that this function is provided only for convenience and
