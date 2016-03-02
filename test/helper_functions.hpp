@@ -32,7 +32,7 @@ void write_read_test()
     stream.seek(0);
     for (uint32_t i = 0; i < elements; i++)
     {
-        stream.template read(last_value);
+        stream.read(last_value);
         EXPECT_EQ(highest_value, last_value);
     }
 
@@ -45,7 +45,7 @@ void write_read_test()
     stream.seek(0);
     for (uint32_t i = 0; i < elements; i++)
     {
-        stream.template read(last_value);
+        stream.read(last_value);
         EXPECT_EQ(lowest_value, last_value);
     }
 }
@@ -86,7 +86,7 @@ void random_write_read_test(bool pseudorandom)
     // Read values in FIFO order
     for (uint32_t i = 0; i < elements; i++)
     {
-        stream.template read(last_value);
+        stream.read(last_value);
         EXPECT_EQ(values[i], last_value);
     }
 }
@@ -148,19 +148,19 @@ void various_write_read_test(bool pseudorandom)
         switch (i % 4)
         {
             case 0:
-                stream.template read<uint8_t>(last_u8);
+                stream.read(last_u8);
                 EXPECT_EQ(values[i], last_u8);
                 break;
             case 1:
-                stream.template read<uint16_t>(last_u16);
+                stream.read(last_u16);
                 EXPECT_EQ(values[i], last_u16);
                 break;
             case 2:
-                stream.template read<uint32_t>(last_u32);
+                stream.read(last_u32);
                 EXPECT_EQ(values[i], last_u32);
                 break;
             case 3:
-                stream.template read<uint64_t>(last_u64);
+                stream.read(last_u64);
                 EXPECT_EQ(values[i], last_u64);
                 break;
         }
