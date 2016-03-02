@@ -23,30 +23,39 @@ namespace endian
     class endian_stream
     {
     public:
-
         /// Creates an endian stream on top of a pre-allocated buffer of the
         /// specified size
         /// @param buffer a pointer to the buffer
         /// @param size the size of the buffer in bytes
-        endian_stream(uint8_t* buffer, uint32_t size);
+        endian_stream(uint8_t* buffer, uint32_t size) :
+            m_buffer(buffer), m_size(size), m_position(0)
+        {
+            assert(m_buffer != 0);
+            assert(m_size);
+        }
 
         /// Creates an endian stream on top of a mutable storage that has
         /// a fixed size
         /// @param storage the mutable storage
-        //endian_stream(const mutable_storage& storage);
+        endian_stream(const storage::mutable_storage& storage) :
+            m_buffer(storage.m_data), m_size(storage.m_size), m_position(0)
+        {
+            assert(m_buffer != 0);
+            assert(m_size);
+        }
 
         /// Writes a value of the size of ValueType to the stream
         /// @param value the value to write
-        // template<class ValueType>
-        // void write(ValueType value)
-        // {
-        //     // Make sure there is enough space in the underlying buffer
-        //     assert(m_size >= m_position + sizeof(ValueType));
-        //     // Write the value at the current position
-        //     EndianType::put<ValueType>(value, &m_buffer[m_position]);
-        //     // Advance the current position
-        //     m_position += sizeof(ValueType);
-        // }
+        template<class ValueType>
+        void write(ValueType value)
+        {
+            // Make sure there is enough space in the underlying buffer
+            assert(m_size >= m_position + sizeof(ValueType));
+            // Write the value at the current position
+            EndianType::template put<ValueType>(value, &m_buffer[m_position]);
+            // Advance the current position
+            m_position += sizeof(ValueType);
+        }
 
         /// Writes the contents of a sak::storage container to the stream.
         /// Note that this function is provided only for convenience and
@@ -75,16 +84,16 @@ namespace endian
 
         /// Reads from the stream and moves the read position.
         /// @param value reference to the value to be read
-        // template<class ValueType>
-        // void read(ValueType& value)
-        // {
-        //     // Make sure there is enough data to read in the underlying buffer
-        //     assert(m_size >= m_position + sizeof(ValueType));
-        //     // Read the value at the current position
-        //     value = EndianType::get<ValueType>(&m_buffer[m_position]);
-        //     // Advance the current position
-        //     m_position += sizeof(ValueType);
-        // }
+        template<class ValueType>
+        void read(ValueType& value)
+        {
+            // Make sure there is enough data to read in the underlying buffer
+            assert(m_size >= m_position + sizeof(ValueType));
+            // Read the value at the current position
+            value = EndianType::template get<ValueType>(&m_buffer[m_position]);
+            // Advance the current position
+            m_position += sizeof(ValueType);
+        }
 
         /// Reads data from the stream to fill a mutable storage
         /// Note that this function is provided only for convenience and
@@ -104,15 +113,25 @@ namespace endian
 
         /// Gets the size of the underlying buffer
         /// @return the size of the buffer
-        uint32_t size() const;
+        uint32_t size() const
+        {
+            return m_size;
+        }
 
         /// Gets the current read/write position in the stream
         /// @return the current position
-        uint32_t position() const;
+        uint32_t position() const
+        {
+            return m_position;
+        }
 
         /// Changes the current read/write position in the stream
         /// @param new_position the new position
-        void seek(uint32_t new_position);
+        void seek(uint32_t new_position)
+        {
+            assert(new_position <= m_size);
+            m_position = new_position;
+        }
 
     private:
 
