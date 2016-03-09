@@ -32,6 +32,8 @@ The unit tests for the endian library are located in the `test/src` folder.
 
 We use the Google Unit Testing Framwork (gtest) to drive the unit tests. To build and run the test run:
 
+::
+
     python waf configure
     python waf
 
