@@ -13,9 +13,9 @@ enidan is a simple C++ library for conversion between big and little endian and 
 Usage
 =====
 
-The `endian::little_endian` and `endian::big_endian` structures act like functions contains for conversion to little/big endian. In both structures there are two types of functions `put` and `get`, each have specializations for different integer lengths.
+The ``endian::little_endian`` and ``endian::big_endian`` structures act like functions contains for conversion to little/big endian. In both structures there are two types of functions `put` and `get`, each have specializations for different integer lengths.
 
-The `endian::endian_stream` class is stream-like interface used for writing and reading data either to or from a stream or storage object.
+The ``endian::endian_stream`` class is stream-like interface used for writing and reading data either to or from a stream or storage object.
 
 
 Header-only
@@ -28,7 +28,7 @@ The library uses c++11 features such as variadic templates, so you need a relati
 Unit testing
 =====
 
-The unit tests for the endian library are located in the `test/src` folder.
+The unit tests for the endian library are located in the ``test/src`` folder.
 
 We use the Google Unit Testing Framwork (gtest) to drive the unit tests. To build and run the test run:
 
@@ -37,11 +37,13 @@ We use the Google Unit Testing Framwork (gtest) to drive the unit tests. To buil
     python waf configure
     python waf
 
-Depending on the platform you should see a test binary called `endian_test` in (extension also depends on operating system e.g `.exe` for windows):
+Depending on the platform you should see a test binary called ``endian_test`` in (extension also depends on operating system e.g `.exe` for windows):
+
+::
 
    build/platform/test
 
-Where `platform` is typically either linux, win32 or darwin depending on your operating system
+Where ``platform`` is typically either linux, win32 or darwin depending on your operating system
 
 License
 =====
