@@ -13,7 +13,7 @@ enidan is a simple C++ library for conversion between big and little endian and 
 Usage
 -----
 
-The ``endian::little_endian`` and ``endian::big_endian`` structures act like functions contains for conversion to little/big endian. In both structures there are two types of functions `put` and `get`, each have specializations for different integer lengths.
+The ``endian::little_endian`` and ``endian::big_endian`` structures acts like function containers for conversion to little/big endian. In both structures there are two types of functions `put` and `get`, each have specializations for different integer lengths.
 
 The ``endian::endian_stream`` class is stream-like interface used for writing and reading data either to or from a stream or storage object.
 
