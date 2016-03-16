@@ -3,98 +3,84 @@
 //
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
 
+#include <endian/is_big_endian.hpp>
 #include <endian/little_endian.hpp>
 #include <gtest/gtest.h>
 
-namespace
-{
-    // Checks if the platform is little- or little-endian
-    // From a test proposed here:
-    // http://stackoverflow.com/questions/1001307/
-    static bool is_big_endian()
-    {
-        union
-        {
-            uint32_t i;
-            uint8_t c[4];
-        } test = {0x01020304};
-
-        return test.c[0] == 1;
-    }
-}
 
 TEST(ConvertLittleEndian, Convert)
 {
     // Indicate endianness for debugging purposes
-    SCOPED_TRACE(testing::Message() << "little_endian:" << is_big_endian());
+    SCOPED_TRACE(testing::Message() << "big_endian:" <<
+                 endian::is_big_endian());
 
     // Test 8-bit integer
     {
         uint8_t data[1];
-        uint8_t in = 0x11U;
+        uint8_t input = 0x11U;
 
         // No change will occur for a single-byte value
-        endian::little_endian::put8(in, data);
-        EXPECT_TRUE(0x11U == data[0]);
+        endian::little_endian::put8(input, data);
+        EXPECT_EQ(0x11U, data[0]);
 
         // No change will occur for a single-byte value
         uint8_t out = endian::little_endian::get8(data);
-        EXPECT_TRUE(out == in);
+        EXPECT_EQ(out, input);
     }
 
     // Test 16-bit integer
     {
         uint8_t data[2];
-        uint16_t in = 0x2211U;
+        uint16_t input = 0x2211U;
 
         // If the host is little endian, the put function
-        // should change the byte order (no change for little endian)
-        endian::little_endian::put16(in, data);
-        EXPECT_TRUE(0x22U == data[1]);
-        EXPECT_TRUE(0x11U == data[0]);
+        // should change the byte order (no change for big endian)
+        endian::little_endian::put16(input, data);
+        EXPECT_EQ(0x22U, data[1]);
+        EXPECT_EQ(0x11U, data[0]);
 
-        // Get should swap the value back (no change for little endian)
+        // Get should swap the value back (no change for big endian)
         uint16_t out = endian::little_endian::get16(data);
-        EXPECT_TRUE(out == in);
+        EXPECT_EQ(out, input);
     }
 
     // Test 32-bit integer
     {
         uint8_t data[4];
-        uint32_t in = 0x44332211U;
+        uint32_t input = 0x44332211U;
 
         // If the host is little endian, the put function
-        // should change the byte order (no change for little endian)
-        endian::little_endian::put32(in, data);
-        EXPECT_TRUE(0x44U == data[3]);
-        EXPECT_TRUE(0x33U == data[2]);
-        EXPECT_TRUE(0x22U == data[1]);
-        EXPECT_TRUE(0x11U == data[0]);
+        // should change the byte order (no change for big endian)
+        endian::little_endian::put32(input, data);
+        EXPECT_EQ(0x44U, data[3]);
+        EXPECT_EQ(0x33U, data[2]);
+        EXPECT_EQ(0x22U, data[1]);
+        EXPECT_EQ(0x11U, data[0]);
 
-        // Get should swap the value back (no change for little endian)
+        // Get should swap the value back (no change for big endian)
         uint32_t out = endian::little_endian::get32(data);
-        EXPECT_TRUE(out == in);
+        EXPECT_EQ(out, input);
     }
 
     // Test 64-bit integer
     {
         uint8_t data[8];
-        uint64_t in = 0x8877665544332211ULL;
+        uint64_t input = 0x8877665544332211ULL;
 
         // If the host is little endian, the put function
-        // should change the byte order (no change for little endian)
-        endian::little_endian::put64(in, data);
-        EXPECT_TRUE(0x88U == data[7]);
-        EXPECT_TRUE(0x77U == data[6]);
-        EXPECT_TRUE(0x66U == data[5]);
-        EXPECT_TRUE(0x55U == data[4]);
-        EXPECT_TRUE(0x44U == data[3]);
-        EXPECT_TRUE(0x33U == data[2]);
-        EXPECT_TRUE(0x22U == data[1]);
-        EXPECT_TRUE(0x11U == data[0]);
+        // should change the byte order (no change for big endian)
+        endian::little_endian::put64(input, data);
+        EXPECT_EQ(0x88U, data[7]);
+        EXPECT_EQ(0x77U, data[6]);
+        EXPECT_EQ(0x66U, data[5]);
+        EXPECT_EQ(0x55U, data[4]);
+        EXPECT_EQ(0x44U, data[3]);
+        EXPECT_EQ(0x33U, data[2]);
+        EXPECT_EQ(0x22U, data[1]);
+        EXPECT_EQ(0x11U, data[0]);
 
-        // Get should swap the value back (no change for little endian)
+        // Get should swap the value back (no change for big endian)
         uint64_t out = endian::little_endian::get64(data);
-        EXPECT_TRUE(out == in);
+        EXPECT_EQ(out, input);
     }
 }

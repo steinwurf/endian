@@ -3,12 +3,16 @@
 //
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
 
+#pragma once
+
+#include <cstdint>
+
 namespace endian
 {
     // Checks if the platform is big- or little-endian
     // From a test proposed here:
     // http://stackoverflow.com/questions/1001307/
-    bool is_big_endian()
+    inline bool is_big_endian()
     {
         union
         {
