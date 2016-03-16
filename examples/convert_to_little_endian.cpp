@@ -22,7 +22,7 @@ int main()
     if(0x11u == data[3] && 0x22u == data[2] && 0x33u == data[1] &&
        0x44u == data[0])
     {
-        std::cout << "sucess input conveting endian" << std::endl;
+        std::cout << "Success input converted" << std::endl;
     }
     else
     {

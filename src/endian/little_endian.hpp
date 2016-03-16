@@ -11,7 +11,7 @@
 namespace endian
 {
 
-    // Inserts and extracts integers in big-endian format.
+    // Inserts and extracts integers in little-endian format.
     struct little_endian
     {
         /// Gets an 8-bit value integer from a byte stream. Only exists for
