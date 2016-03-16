@@ -30,7 +30,7 @@ namespace endian
         endian_stream(uint8_t* buffer, uint32_t size) :
             m_buffer(buffer), m_size(size), m_position(0)
         {
-            assert(m_buffer != 0);
+            assert(m_buffer != nullptr);
             assert(m_size);
         }
 
@@ -40,7 +40,7 @@ namespace endian
         endian_stream(const storage::mutable_storage& storage) :
             m_buffer(storage.m_data), m_size(storage.m_size), m_position(0)
         {
-            assert(m_buffer != 0);
+            assert(m_buffer != nullptr);
             assert(m_size);
         }
 

@@ -2,6 +2,6 @@
 
 bld.program(
     features='cxx',
-    source=['convert_little_endian_to_big.cpp'],
+    source=['convert_to_little_endian.cpp'],
     target='convert_little_endian_to_big',
     use=['endian'])
