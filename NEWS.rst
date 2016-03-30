@@ -7,3 +7,7 @@ every change, see the Git log.
 Latest
 ------
 * tbd
+
+1.0.0
+-----
+* Major: Initial release.
