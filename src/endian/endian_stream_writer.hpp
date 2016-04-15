@@ -1,4 +1,3 @@
-
 // Copyright (c) 2016 Steinwurf ApS
 // All Rights Reserved
 //
@@ -6,13 +5,7 @@
 
 #pragma once
 
-#include <cstdint>
-#include <cassert>
-#include <algorithm>
-
-#include <storage/storage.hpp>
-#include "big_endian.hpp"
-#include "little_endian.hpp"
+#include "endian_stream_reader.hpp"
 
 namespace endian
 {
@@ -20,14 +13,14 @@ namespace endian
     /// for accessing a fixed-size buffer.
     /// All complexity regarding endianness is encapsulated.
     template<class EndianType>
-    class endian_stream
+    class endian_stream_writer: public endian_stream_reader
     {
     public:
         /// Creates an endian stream on top of a pre-allocated buffer of the
         /// specified size
         /// @param buffer a pointer to the buffer
         /// @param size the size of the buffer in bytes
-        endian_stream(uint8_t* buffer, uint32_t size) :
+        endian_stream_writer(uint8_t* buffer, uint32_t size) :
             m_buffer(buffer), m_size(size), m_position(0)
         {
             assert(m_buffer != nullptr);
@@ -37,7 +30,7 @@ namespace endian
         /// Creates an endian stream on top of a mutable storage that has
         /// a fixed size
         /// @param storage the mutable storage
-        endian_stream(const storage::mutable_storage& storage) :
+        endian_stream_writer(const storage::mutable_storage& storage) :
             m_buffer(storage.m_data), m_size(storage.m_size), m_position(0)
         {
             assert(m_buffer != nullptr);
@@ -109,28 +102,6 @@ namespace endian
             std::copy_n(&m_buffer[m_position], storage.m_size, storage.m_data);
             // Advance the current position
             m_position += storage.m_size;
-        }
-
-        /// Gets the size of the underlying buffer
-        /// @return the size of the buffer
-        uint32_t size() const
-        {
-            return m_size;
-        }
-
-        /// Gets the current read/write position in the stream
-        /// @return the current position
-        uint32_t position() const
-        {
-            return m_position;
-        }
-
-        /// Changes the current read/write position in the stream
-        /// @param new_position the new position
-        void seek(uint32_t new_position)
-        {
-            assert(new_position <= m_size);
-            m_position = new_position;
         }
 
     private:

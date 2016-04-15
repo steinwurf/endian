@@ -5,7 +5,7 @@
 
 #include <endian/big_endian.hpp>
 #include <endian/little_endian.hpp>
-#include <endian/endian_stream.hpp>
+#include <endian/endian_stream_writer.hpp>
 
 #include <gtest/gtest.h>
 
@@ -17,7 +17,7 @@ void write_read_test()
     const uint32_t size = 1024 * sizeof(ValueType); ///size in bytes
     std::vector<uint8_t> buffer;
     buffer.resize(size);
-    endian::endian_stream<EndianType> stream(buffer.data(), size);
+    endian::endian_stream_writer<EndianType> stream(buffer.data(), size);
 
     ValueType lowest_value = 0;
     ValueType highest_value = std::numeric_limits<ValueType>::max();
@@ -58,7 +58,7 @@ void random_write_read_test(bool pseudorandom)
     std::vector<uint8_t> buffer;
     buffer.resize(size);
 
-    endian::endian_stream<EndianType> stream(buffer.data(), size);
+    endian::endian_stream_writer<EndianType> stream(buffer.data(), size);
 
     ValueType highest_value = std::numeric_limits<ValueType>::max();
 
@@ -99,7 +99,7 @@ void various_write_read_test(bool pseudorandom)
     std::vector<uint8_t> buffer;
     buffer.resize(size);
 
-    endian::endian_stream<EndianType> stream(buffer.data(), size);
+    endian::endian_stream_writer<EndianType> stream(buffer.data(), size);
 
     std::vector<uint64_t> values;
     values.resize(elements);

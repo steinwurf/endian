@@ -15,7 +15,7 @@
 #include <endian/big_endian.hpp>
 #include <endian/little_endian.hpp>
 
-#include <endian/endian_stream.hpp>
+#include <endian/endian_stream_writer.hpp>
 
 #include <gtest/gtest.h>
 
@@ -26,7 +26,7 @@ static void run_test_create()
     std::vector<uint8_t> buffer;
     buffer.resize(size);
 
-    endian::endian_stream<EndianType> stream(buffer.data(), size);
+    endian::endian_stream_writer<EndianType> stream(buffer.data(), size);
 
     EXPECT_EQ(size, stream.size());
     EXPECT_EQ(0U, stream.position());
@@ -42,7 +42,7 @@ static void run_test_create_for_storage()
     std::vector<uint8_t> buffer;
     buffer.resize(size);
     // Create endian stream directly from storage::storage
-    endian::endian_stream<EndianType>
+    endian::endian_stream_writer<EndianType>
         stream(storage::storage(buffer));
 
     EXPECT_EQ(size, stream.size());
@@ -107,7 +107,7 @@ static void run_read_write_string_test()
     std::vector<uint8_t> buffer;
     buffer.resize(size);
 
-    endian::endian_stream<EndianType> stream(buffer.data(), size);
+    endian::endian_stream_writer<EndianType> stream(buffer.data(), size);
 
     std::string first("first first first");
     std::string second("second second");
@@ -156,7 +156,7 @@ static void run_read_write_vector_test()
     const uint32_t size = 1024;
     std::vector<uint8_t> buffer;
     buffer.resize(size);
-    endian::endian_stream<EndianType> stream(buffer.data(), size);
+    endian::endian_stream_writer<EndianType> stream(buffer.data(), size);
 
     std::vector<uint8_t> first(100, 'a');
     std::vector<uint32_t> second(200, 1234);
@@ -239,12 +239,12 @@ static void test_basic_api()
 }
 
 
-TEST(big_endian_stream_test, test_basic_api)
+TEST(big_endian_stream_writer_test, test_basic_api)
 {
     test_basic_api<endian::big_endian>();
 }
 
-TEST(little_endian_stream_test, test_basic_api)
+TEST(little_endian_stream_writer_test, test_basic_api)
 {
     test_basic_api<endian::little_endian>();
 }
