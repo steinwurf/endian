@@ -98,9 +98,8 @@ namespace endian
     private:
 
         /// Pointer to the buffer
-        const uint8_t* m_buffer;
+        uint8_t* m_buffer;
 
-    protected:
         /// The size of the buffer
         uint32_t m_size;
 

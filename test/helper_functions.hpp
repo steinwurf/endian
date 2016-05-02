@@ -6,6 +6,7 @@
 #include <endian/big_endian.hpp>
 #include <endian/little_endian.hpp>
 #include <endian/endian_stream_writer.hpp>
+#include <endian/endian_stream_reader.hpp>
 
 #include <gtest/gtest.h>
 
