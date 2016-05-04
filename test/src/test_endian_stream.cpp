@@ -42,26 +42,32 @@ static void run_test_create_for_storage()
     std::vector<uint8_t> buffer;
     buffer.resize(size);
     // Create endian stream directly from storage::storage
-    endian::endian_stream_writer<EndianType>
-        stream(storage::storage(buffer));
+    endian::endian_stream_reader<EndianType>
+        stream_reader(storage::storage(buffer));
 
-    EXPECT_EQ(size, stream.size());
-    EXPECT_EQ(0U, stream.position());
+    endian::endian_stream_writer<EndianType>
+        stream_writer(storage::storage(buffer));
+
+    EXPECT_EQ(size, stream_reader.size());
+    EXPECT_EQ(0U, stream_reader.position());
+
+    EXPECT_EQ(size, stream_writer.size());
+    EXPECT_EQ(0U, stream_writer.position());
 
     for (uint32_t i = 0; i < elements; i++)
     {
-        stream.write(i);
+        stream_writer.write(i);
     }
 
-    EXPECT_EQ(size, stream.size());
-    EXPECT_EQ(size, stream.position());
+    EXPECT_EQ(size, stream_writer.size());
+    EXPECT_EQ(size, stream_writer.position());
 
     // Go back to the beginning of the stream
-    stream.seek(0);
+    //stream.seek(0); -- is this needed ?
     uint32_t last_value = 0;
     for (uint32_t i = 0; i < elements; i++)
     {
-        stream.read(last_value);
+        stream_reader.read(last_value);
         EXPECT_EQ(i, last_value);
     }
 }

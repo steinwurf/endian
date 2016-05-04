@@ -1,4 +1,3 @@
-
 // Copyright (c) 2016 Steinwurf ApS
 // All Rights Reserved
 //
