@@ -16,43 +16,87 @@
 #include <endian/little_endian.hpp>
 
 #include <endian/endian_stream_writer.hpp>
-
+#include <endian/endian_stream_reader.hpp>
 #include <gtest/gtest.h>
 
 template<class EndianType>
-static void run_test_create()
+static void run_test_create_writer()
 {
     const uint32_t size = 1024;
     std::vector<uint8_t> buffer;
     buffer.resize(size);
 
-    endian::endian_stream_writer<EndianType> stream(buffer.data(), size);
+    endian::endian_stream_writer<EndianType> stream_writer(buffer.data(), size);
 
-    EXPECT_EQ(size, stream.size());
-    EXPECT_EQ(0U, stream.position());
-
+    EXPECT_EQ(size, stream_writer.size());
+    EXPECT_EQ(0u, stream_writer.position);
 }
 
 template<class EndianType>
-static void run_test_create_for_storage()
+static void run_test_create_storage_writer()
 {
-    const uint32_t elements = 10;               ///no. of elements
+    const uint32_t elements = 10;     /// no. of elements
     const uint32_t size = elements * sizeof(uint32_t);
 
     std::vector<uint8_t> buffer;
     buffer.resize(size);
-    // Create endian stream directly from storage::storage
-    endian::endian_stream_reader<EndianType>
-        stream_reader(storage::storage(buffer));
 
     endian::endian_stream_writer<EndianType>
         stream_writer(storage::storage(buffer));
 
+    EXPECT_EQ(size, stream_writer.size());
+    EXPECT_EQ(0u, stream_writer.position);
+}
+
+template<class EndianType>
+static void run_test_create_reader()
+{
+    const uint32_t size = 1024;
+    std::vector<uint8_t> buffer;
+    buffer.resize(size);
+
+    endian::endian_stream_reader<EndianType> stream_reader(buffer.data(), size);
+
     EXPECT_EQ(size, stream_reader.size());
-    EXPECT_EQ(0U, stream_reader.position());
+    EXPECT_EQ(0u, stream_reader.position);
+}
+
+template<class EndianType>
+static void run_test_create_storage_reader()
+{
+    const uint32_t elements = 10;     /// no. of elements
+    const uint32_t size = elements * sizeof(uint32_t);
+
+    std::vector<uint8_t> buffer;
+    buffer.resize(size);
+
+    endian::endian_stream_reader<EndianType>
+        stream_reader(storage::storage(buffer));
+
+    EXPECT_EQ(size, stream_reader.size());
+    EXPECT_EQ(0u, stream_reader.position);
+}
+
+tempalate<class EndianType>
+static void run_test_simple_read_write()
+{
+    const uint32_t elements = 10; /// no. of elements
+    const uint32_t size = elements * sizeof(uint32_t);
+
+    std::vector<uint8_t> buffer;
+    buffer.resize(size);
+
+    endian::endian_stream_writer<EndianType>
+        stream_writer(storage::storage(buffer));
+
+    endian::endian_stream_reader<EndianType>
+        stream_reader(storage::storage(buffer));
 
     EXPECT_EQ(size, stream_writer.size());
     EXPECT_EQ(0U, stream_writer.position());
+
+    EXPECT_EQ(size, stream_reader.size());
+    EXPECT_EQ(0U, stream_reader.position());
 
     for (uint32_t i = 0; i < elements; i++)
     {
@@ -60,12 +104,10 @@ static void run_test_create_for_storage()
     }
 
     EXPECT_EQ(size, stream_writer.size());
-    EXPECT_EQ(size, stream_writer.position());
+    EXPECT_EQ(0U, stream_writer.position());
 
-    // Go back to the beginning of the stream
-    //stream.seek(0); -- is this needed ?
     uint32_t last_value = 0;
-    for (uint32_t i = 0; i < elements; i++)
+    for(uint32_t i = 0; i < elements; i++)
     {
         stream_reader.read(last_value);
         EXPECT_EQ(i, last_value);
@@ -91,6 +133,19 @@ template<class ValueType, class EndianType>
 static void run_random_read_write_test()
 {
     random_write_read_test<ValueType, EndianType>(false);
+}
+
+/// Various read writes
+template<class EndianType>
+static void run_pseudorandom_various_read_writes_test()
+{
+    various_write_read_test<EndianType>(true);
+}
+
+template<class EndianType>
+static void run_random_various_read_writes_test()
+{
+    various_write_read_test<EndianType>(false);
 }
 
 /// Various read writes
@@ -156,6 +211,7 @@ static void run_read_write_string_test()
     EXPECT_EQ(third, current);
 }
 
+
 template<class EndianType>
 static void run_read_write_vector_test()
 {
@@ -206,8 +262,11 @@ static void run_read_write_vector_test()
 template<class EndianType>
 static void test_basic_api()
 {
-    run_test_create<EndianType>();
-    run_test_create_for_storage<EndianType>();
+    run_test_create_writer<EndianType>();
+    run_test_create_for_storage_writer<EndianType>();
+
+    run_test_create_reader<EndianType>();
+    run_test_create_for_storage_reader<EndianType>();
 
     SCOPED_TRACE(testing::Message() << "uint = uint8_t");
     {

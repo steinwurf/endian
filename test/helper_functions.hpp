@@ -10,6 +10,7 @@
 
 #include <gtest/gtest.h>
 
+
 /// Test Helper functions
 template<class ValueType, class EndianType>
 void write_read_test()
