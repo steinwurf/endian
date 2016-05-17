@@ -35,7 +35,9 @@ namespace endian
         /// a fixed size
         /// @param storage the const storage
         endian_stream(const storage::const_storage& storage) :
-            m_buffer(storage.m_data), m_size(storage.m_size), m_position(0)
+            m_buffer(storage.m_data),
+            m_size(storage.m_size),
+            m_position(0)
         {
             assert(m_buffer != nullptr);
             assert(m_size);
@@ -68,9 +70,9 @@ namespace endian
         uint8_t* m_buffer;
 
         /// The size of the buffer
-        uint32_t* m_size;
+        uint32_t m_size;
 
         /// The current position
         uint32_t m_position;
-    }
+    };
 }

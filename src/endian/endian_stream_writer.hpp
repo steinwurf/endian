@@ -9,10 +9,6 @@
 #include <cassert>
 #include <algorithm>
 
-#include <storage/storage.hpp>
-#include "big_endian.hpp"
-#include "little_endian.hpp"
-
 #include "endian_stream.hpp"
 
 namespace endian
@@ -21,7 +17,7 @@ namespace endian
     /// interface for accessing a fixed-size buffer.
     /// All complexity regarding endianness is encapsulated.
     template<class EndianType>
-    class endian_stream_writer
+    class endian_stream_writer : endian_stream
     {
     public:
         /// Creates an endian stream on top of a pre-allocated buffer of the
