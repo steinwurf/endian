@@ -17,7 +17,7 @@ namespace endian
     /// interface for accessing a fixed-size buffer.
     /// All complexity regarding endianness is encapsulated.
     template<class EndianType>
-    class endian_stream_reader : endian_stream
+    class endian_stream_reader : public endian_stream
     {
     public:
         /// Creates an endian stream on top of a pre-allocated buffer of the
