@@ -19,7 +19,9 @@ void write_read_test()
     const uint32_t size = 1024 * sizeof(ValueType); ///size in bytes
     std::vector<uint8_t> buffer;
     buffer.resize(size);
-    endian::endian_stream_writer<EndianType> stream(buffer.data(), size);
+    endian::endian_stream_reader<EndianType> stream_reader(buffer.data(), size);
+    endian::endian_stream_writer<EndianType> stream_writer(buffer.data(),
+                                                                  size);
 
     ValueType lowest_value = 0;
     ValueType highest_value = std::numeric_limits<ValueType>::max();
@@ -27,27 +29,27 @@ void write_read_test()
 
     for (uint32_t i = 0; i < elements; i++)
     {
-        stream.write(highest_value);
+        stream_writer.write(highest_value);
     }
 
     // Go back to the beginning of the stream
-    stream.seek(0);
+    stream_reader.seek(0);
     for (uint32_t i = 0; i < elements; i++)
     {
-        stream.read(last_value);
+        stream_reader.read(last_value);
         EXPECT_EQ(highest_value, last_value);
     }
 
-    stream.seek(0);
+    stream_writer.seek(0);
     for (uint32_t i = 0; i < elements; i++)
     {
-        stream.write(lowest_value);
+        stream_writer.write(lowest_value);
     }
 
-    stream.seek(0);
+    stream_reader.seek(0);
     for (uint32_t i = 0; i < elements; i++)
     {
-        stream.read(last_value);
+        stream_reader.read(last_value);
         EXPECT_EQ(lowest_value, last_value);
     }
 }
@@ -60,7 +62,8 @@ void random_write_read_test(bool pseudorandom)
     std::vector<uint8_t> buffer;
     buffer.resize(size);
 
-    endian::endian_stream_writer<EndianType> stream(buffer.data(), size);
+    endian::endian_stream_writer<EndianType> stream_writer(buffer.data(), size);
+    endian::endian_stream_writer<EndianType> stream_reader(buffer.data(), size);
 
     ValueType highest_value = std::numeric_limits<ValueType>::max();
 
@@ -79,16 +82,14 @@ void random_write_read_test(bool pseudorandom)
     for (uint32_t i = 0; i < elements; i++)
     {
         values[i] = rand() % (highest_value);
-        stream.write(values[i]);
+        stream_writer.write(values[i]);
     }
 
     ValueType last_value = 0;
-    // Go back to the beginning of the stream
-    stream.seek(0);
     // Read values in FIFO order
     for (uint32_t i = 0; i < elements; i++)
     {
-        stream.read(last_value);
+        stream_reader.read(last_value);
         EXPECT_EQ(values[i], last_value);
     }
 }

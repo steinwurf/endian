@@ -15,7 +15,6 @@
 
 namespace endian
 {
-    template<class EndianType>
     class endian_stream
     {
     public:
@@ -67,7 +66,7 @@ namespace endian
         }
     protected:
         /// Pointer to buffer
-        uint8_t* m_buffer;
+        const uint8_t* m_buffer;
 
         /// The size of the buffer
         uint32_t m_size;
