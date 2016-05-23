@@ -20,57 +20,70 @@ namespace endian
     class endian_stream_writer : public endian_stream
     {
     public:
+
         /// Creates an endian stream on top of a pre-allocated buffer of the
-        /// specified size
+        /// specified size.
+        ///
         /// @param buffer a pointer to the buffer
         /// @param size the size of the buffer in bytes
         endian_stream_writer(uint8_t* buffer, uint32_t size) :
             endian_stream(size),
             m_buffer(buffer)
-        { }
+        {
+            assert(m_buffer != nullptr);
+            assert(m_size > 0);
+        }
 
         /// Creates an endian stream on top of a const storage that has
-        /// a fixed size
+        /// a fixed size.
+        ///
         /// @param storage the const storage
         endian_stream_writer(const storage::mutable_storage& storage) :
             endian_stream(storage.m_size),
             m_buffer(storage.m_data)
-        { }
+        {
+            assert(m_buffer != nullptr);
+            assert(m_size > 0);
+        }
 
-        /// Writes a value of the size of ValueType to the stream
-        /// @param value the value to write
+        /// Writes a value of ValueType type and size to the stream.
+        ///
+        /// @param value the value to write.
         template<class ValueType>
         void write(ValueType value)
         {
             // Make sure there is enough space in the underlying buffer
             assert(m_size >= m_position + sizeof(ValueType));
+
             // Write the value at the current position
-            EndianType::template put<ValueType>(value, &m_buffer[m_position]);
+            EndianType::template put<ValueType>(value, m_buffer + m_position);
+
             // Advance the current position
             m_position += sizeof(ValueType);
         }
 
-        /// Writes the contents of a sak::storage container to the stream.
-        /// Note that this function is provided only for convenience and
-        /// it does not perform any endian conversions. Furthermore, the length
-        /// of the container is not written to the stream.
-        /// @param storage the storage to write
+        /// @copydoc write(const storage::const_storage&)
         void write(const storage::mutable_storage& storage)
         {
             write(storage::const_storage(storage));
         }
 
-        /// Writes the contents of a sak::storage container to the stream.
-        /// Note that this function is provided only for convenience and
-        /// it does not perform any endian conversions. Furthermore, the length
-        /// of the container is not written to the stream.
-        /// @param storage the storage to write
+        /// Writes the raw bytes represented by the storage::const_storage
+        /// object to the stream.
+        ///
+        /// Note, that this function is provided only for convenience and
+        /// it does not perform any endian conversions.
+        ///
+        /// @param storage the storage object which should be written to
+        ///        the stream.
         void write(const storage::const_storage& storage)
         {
             // Make sure there is enough space in the underlying buffer
             assert(m_size >= m_position + storage.m_size);
+
             // Copy the data to the buffer
-            std::copy_n(storage.m_data, storage.m_size, &m_buffer[m_position]);
+            std::copy_n(storage.m_data, storage.m_size, m_buffer + m_position);
+
             // Advance the current position
             m_position += storage.m_size;
         }
