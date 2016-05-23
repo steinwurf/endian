@@ -15,11 +15,14 @@
 
 namespace endian
 {
+    /// @brief Base-class for the endian stream reader and writer.
     class endian_stream
     {
     public:
+
         /// Creates an endian stream on top of a pre-allocated buffer of the
-        /// specified size
+        /// specified size.
+        ///
         /// @param buffer a pointer to the buffer
         /// @param size the size of the buffer in bytes
         endian_stream(uint32_t size) :
@@ -29,7 +32,8 @@ namespace endian
             assert(m_size);
         }
 
-        /// Gets the size of the underlying buffer
+        /// Gets the size of the underlying buffer in bytes.
+        ///
         /// @return the size of the buffer
         uint32_t size() const
         {
@@ -37,7 +41,8 @@ namespace endian
         }
 
         /// Gets the current read/write position in the stream
-        /// @return the current position
+        ///
+        /// @return the current position.
         uint32_t position() const
         {
             return m_position;
@@ -53,9 +58,10 @@ namespace endian
             assert(new_position <= m_size);
             m_position = new_position;
         }
+
     protected:
 
-        /// The size of the buffer
+        /// The size of the buffer in bytes
         uint32_t m_size;
 
         /// The current position
