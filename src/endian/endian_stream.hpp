@@ -22,26 +22,12 @@ namespace endian
         /// specified size
         /// @param buffer a pointer to the buffer
         /// @param size the size of the buffer in bytes
-        endian_stream(uint8_t* buffer, uint32_t size) :
-            m_buffer(buffer),
+        endian_stream(uint32_t size) :
             m_size(size),
             m_position(0)
         {
-            assert(m_buffer != nullptr);
             assert(m_size);
         }
-        /// Creates an endian stream on top of a const storage that has
-        /// a fixed size
-        /// @param storage the const storage
-        endian_stream(const storage::const_storage& storage) :
-            m_buffer(storage.m_data),
-            m_size(storage.m_size),
-            m_position(0)
-        {
-            assert(m_buffer != nullptr);
-            assert(m_size);
-        }
-
 
         /// Gets the size of the underlying buffer
         /// @return the size of the buffer
@@ -65,8 +51,6 @@ namespace endian
             m_position = new_position;
         }
     protected:
-        /// Pointer to buffer
-        const uint8_t* m_buffer;
 
         /// The size of the buffer
         uint32_t m_size;

@@ -63,7 +63,7 @@ void random_write_read_test(bool pseudorandom)
     buffer.resize(size);
 
     endian::endian_stream_writer<EndianType> stream_writer(buffer.data(), size);
-    endian::endian_stream_writer<EndianType> stream_reader(buffer.data(), size);
+    endian::endian_stream_reader<EndianType> stream_reader(buffer.data(), size);
 
     ValueType highest_value = std::numeric_limits<ValueType>::max();
 
@@ -102,7 +102,7 @@ void various_write_read_test(bool pseudorandom)
     std::vector<uint8_t> buffer;
     buffer.resize(size);
 
-    endian::endian_stream_writer<EndianType> stream(buffer.data(), size);
+    endian::endian_stream_writer<EndianType> writer(buffer.data(), size);
 
     std::vector<uint64_t> values;
     values.resize(elements);
@@ -122,19 +122,19 @@ void various_write_read_test(bool pseudorandom)
         {
             case 0:
                 values[i] = rand() % std::numeric_limits<uint8_t>::max();
-                stream.write((uint8_t)values[i]);
+                writer.write((uint8_t)values[i]);
                 break;
             case 1:
                 values[i] = rand() % std::numeric_limits<uint16_t>::max();
-                stream.write((uint16_t)values[i]);
+                writer.write((uint16_t)values[i]);
                 break;
             case 2:
                 values[i] = rand() % std::numeric_limits<uint32_t>::max();
-                stream.write((uint32_t)values[i]);
+                writer.write((uint32_t)values[i]);
                 break;
             case 3:
                 values[i] = rand() % std::numeric_limits<uint64_t>::max();
-                stream.write((uint64_t)values[i]);
+                writer.write((uint64_t)values[i]);
                 break;
         }
     }
@@ -143,27 +143,29 @@ void various_write_read_test(bool pseudorandom)
     uint16_t last_u16 = 0;
     uint32_t last_u32 = 0;
     uint64_t last_u64 = 0;
-    // Go back to the beginning of the stream
-    stream.seek(0);
+
+    // create reader
+    endian::endian_stream_reader<EndianType> reader(buffer.data(), size);
+
     // Read values in FIFO order
     for (uint32_t i = 0; i < elements; i++)
     {
         switch (i % 4)
         {
             case 0:
-                stream.read(last_u8);
+                reader.read(last_u8);
                 EXPECT_EQ(values[i], last_u8);
                 break;
             case 1:
-                stream.read(last_u16);
+                reader.read(last_u16);
                 EXPECT_EQ(values[i], last_u16);
                 break;
             case 2:
-                stream.read(last_u32);
+                reader.read(last_u32);
                 EXPECT_EQ(values[i], last_u32);
                 break;
             case 3:
-                stream.read(last_u64);
+                reader.read(last_u64);
                 EXPECT_EQ(values[i], last_u64);
                 break;
         }

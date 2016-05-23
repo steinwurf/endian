@@ -24,20 +24,18 @@ namespace endian
         /// specified size
         /// @param buffer a pointer to the buffer
         /// @param size the size of the buffer in bytes
-        endian_stream_reader(uint8_t* buffer, uint32_t size) :
-            endian_stream(buffer, size)
-        {
-
-        }
+        endian_stream_reader(const uint8_t* buffer, uint32_t size) :
+            endian_stream(size),
+            m_buffer(buffer)
+        { }
 
         /// Creates an endian stream on top of a const storage that has
         /// a fixed size
         /// @param storage the const storage
         endian_stream_reader(const storage::const_storage& storage) :
-            endian_stream(storage)
-        {
-
-        }
+            endian_stream(storage.m_size),
+            m_buffer(storage.m_data)
+        { }
 
         /// Reads from the stream and moves the read position.
         /// @param value reference to the value to be read
@@ -58,7 +56,7 @@ namespace endian
         /// of the storage is not read from the stream. Therefore, the
         /// const storage must resized before it can be filled.
         /// @param storage the storage to be filled
-        void read(const storage::const_storage& storage)
+        void read(const storage::mutable_storage& storage)
         {
             // Make sure there is enough data to read in the underlying buffer
             assert(m_size >= m_position + storage.m_size);
@@ -67,5 +65,10 @@ namespace endian
             // Advance the current position
             m_position += storage.m_size;
         }
+
+    private:
+
+        /// Pointer to buffer
+        const uint8_t* m_buffer;
     };
 }

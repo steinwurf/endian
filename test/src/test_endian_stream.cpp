@@ -155,7 +155,7 @@ static void run_read_write_string_test()
     std::vector<uint8_t> buffer;
     buffer.resize(size);
 
-    endian::endian_stream_writer<EndianType> stream(buffer.data(), size);
+    endian::endian_stream_writer<EndianType> writer(buffer.data(), size);
 
     std::string first("first first first");
     std::string second("second second");
@@ -163,38 +163,38 @@ static void run_read_write_string_test()
 
     // Write the strings together with their lengths
     // The length is written as 16-bit integers
-    stream.write((uint16_t)first.size());
-    stream.write(storage::storage(first));
-    stream.write((uint16_t)second.size());
-    stream.write(storage::storage(second));
-    stream.write((uint16_t)third.size());
-    stream.write(storage::storage(third));
+    writer.write((uint16_t)first.size());
+    writer.write(storage::storage(first));
+    writer.write((uint16_t)second.size());
+    writer.write(storage::storage(second));
+    writer.write((uint16_t)third.size());
+    writer.write(storage::storage(third));
 
     // Temp variables
     std::string current;
     uint16_t len = 0;
 
-    // Go back to the beginning of the stream
-    stream.seek(0);
+    // Create reader
+    endian::endian_stream_reader<EndianType> reader(buffer.data(), size);
 
     // Read the strings together with their lengths
-    stream.read(len);
+    reader.read(len);
     EXPECT_EQ(first.size(), len);
     // Resize the current string to accommodate 'len' bytes
     current.resize(len);
-    stream.read(storage::storage(current));
+    reader.read(storage::storage(current));
     EXPECT_EQ(first, current);
 
-    stream.read(len);
+    reader.read(len);
     EXPECT_EQ(second.size(), len);
     current.resize(len);
-    stream.read(storage::storage(current));
+    reader.read(storage::storage(current));
     EXPECT_EQ(second, current);
 
-    stream.read(len);
+    reader.read(len);
     EXPECT_EQ(third.size(), len);
     current.resize(len);
-    stream.read(storage::storage(current));
+    reader.read(storage::storage(current));
     EXPECT_EQ(third, current);
 }
 
@@ -205,43 +205,43 @@ static void run_read_write_vector_test()
     const uint32_t size = 1024;
     std::vector<uint8_t> buffer;
     buffer.resize(size);
-    endian::endian_stream_writer<EndianType> stream(buffer.data(), size);
+    endian::endian_stream_writer<EndianType> writer(buffer.data(), size);
 
     std::vector<uint8_t> first(100, 'a');
     std::vector<uint32_t> second(200, 1234);
 
     // Write the vectors together with their lengths
     // The length is written as 16-bit integers
-    stream.write((uint16_t)first.size());
-    stream.write(storage::storage(first));
+    writer.write((uint16_t)first.size());
+    writer.write(storage::storage(first));
     // The size here refers to the number of integers
     // stored in the second vector
-    stream.write((uint16_t)second.size());
-    stream.write(storage::storage(second));
+    writer.write((uint16_t)second.size());
+    writer.write(storage::storage(second));
 
     // Temp variables
     std::vector<uint8_t> first_out;
     std::vector<uint32_t> second_out;
     uint16_t len = 0;
 
-    // Go back to the beginning of the stream
-    stream.seek(0);
+    // Create reader
+    endian::endian_stream_reader<EndianType> reader(buffer.data(), size);
 
     // Read the vector length
-    stream.read(len);
+    reader.read(len);
     EXPECT_EQ(first.size(), len);
     // Resize the output vector to accommodate 'len' bytes
     first_out.resize(len);
-    stream.read(storage::storage(first_out));
+    reader.read(storage::storage(first_out));
     EXPECT_TRUE(
         std::equal(first.begin(), first.end(), first_out.begin()));
 
     // Read the vector length
-    stream.read(len);
+    reader.read(len);
     EXPECT_EQ(second.size(), len);
     // Resize the output vector to accommodate 'len' bytes
     second_out.resize(len);
-    stream.read(storage::storage(second_out));
+    reader.read(storage::storage(second_out));
     EXPECT_TRUE(
         std::equal(second.begin(), second.end(), second_out.begin()));
 }

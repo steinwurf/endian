@@ -25,19 +25,17 @@ namespace endian
         /// @param buffer a pointer to the buffer
         /// @param size the size of the buffer in bytes
         endian_stream_writer(uint8_t* buffer, uint32_t size) :
-            endian_stream(buffer, size)
-        {
-
-        }
+            endian_stream(size),
+            m_buffer(buffer)
+        { }
 
         /// Creates an endian stream on top of a const storage that has
         /// a fixed size
         /// @param storage the const storage
-        endian_stream_writer(const storage::const_storage& storage) :
-            endian_stream(storage)
-        {
-
-        }
+        endian_stream_writer(const storage::mutable_storage& storage) :
+            endian_stream(storage.m_size),
+            m_buffer(storage.m_data)
+        { }
 
         /// Writes a value of the size of ValueType to the stream
         /// @param value the value to write
@@ -76,5 +74,10 @@ namespace endian
             // Advance the current position
             m_position += storage.m_size;
         }
+
+    private:
+
+        /// Pointer to buffer
+        uint8_t* m_buffer;
     };
 }
