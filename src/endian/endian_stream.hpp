@@ -43,7 +43,10 @@ namespace endian
             return m_position;
         }
 
-        /// Changes the current read/write position in the stream
+        /// Changes the current read/write position in the stream. The
+        /// position is absolute i.e. it is always relative to the
+        /// beginning of the buffer which is position 0.
+        ///
         /// @param new_position the new position
         void seek(uint32_t new_position)
         {
