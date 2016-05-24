@@ -58,4 +58,4 @@ def build(bld):
         # Only build tests when executed from the top-level wscript,
         # i.e. not when included as a dependency
         bld.recurse('test')
-        bld.recurse('examples')
+#        bld.recurse('examples')

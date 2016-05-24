@@ -9,9 +9,12 @@
 
 namespace endian
 {
-    // Checks if the platform is big- or little-endian
-    // From a test proposed here:
-    // http://stackoverflow.com/questions/1001307/
+    /// Checks if the platform is big- or little-endian.
+    ///
+    /// From a test proposed here:
+    /// http://stackoverflow.com/questions/1001307/
+    ///
+    /// @return True if the platform is big endian otherwise false.
     inline bool is_big_endian()
     {
         union
