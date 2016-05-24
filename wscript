@@ -23,12 +23,6 @@ def resolve(ctx):
         git_repository='github.com/steinwurf/waf-tools.git',
         major=3))
 
-    ctx.add_dependency(resolve.ResolveVersion(
-        name='storage',
-        git_repository='github.com/steinwurf/storage.git',
-        major=1))
-
-
     # Internal dependencies
     if ctx.is_toplevel():
 
@@ -51,11 +45,13 @@ def build(bld):
         'STEINWURF_ENDIAN_VERSION="{}"'.format(
             VERSION))
 
-    bld.recurse('src/endian')
+    bld(name='endian_includes',
+        includes='./src',
+        export_includes='./src')
 
     if bld.is_toplevel():
 
         # Only build tests when executed from the top-level wscript,
         # i.e. not when included as a dependency
         bld.recurse('test')
-#        bld.recurse('examples')
+        bld.recurse('examples')

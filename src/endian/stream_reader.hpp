@@ -9,15 +9,15 @@
 #include <cassert>
 #include <algorithm>
 
-#include "endian_stream.hpp"
+#include "stream.hpp"
 
 namespace endian
 {
-    /// The idea behind the endian_stream_reader is to provide a stream-like
+    /// The idea behind the stream_reader is to provide a stream-like
     /// interface for accessing a fixed-size buffer.
     /// All complexity regarding endianness is encapsulated.
     template<class EndianType>
-    class endian_stream_reader : public endian_stream
+    class stream_reader : public stream
     {
     public:
 
@@ -26,21 +26,9 @@ namespace endian
         ///
         /// @param buffer a pointer to the buffer
         /// @param size the size of the buffer in bytes
-        endian_stream_reader(const uint8_t* buffer, uint32_t size) :
-            endian_stream(size),
+        stream_reader(const uint8_t* buffer, uint32_t size) :
+            stream(size),
             m_buffer(buffer)
-        {
-            assert(m_buffer != nullptr);
-            assert(m_size > 0);
-        }
-
-        /// Creates an endian stream on top of a const storage that has
-        /// a fixed size.
-        ///
-        /// @param storage the const storage
-        endian_stream_reader(const storage::const_storage& storage) :
-            endian_stream(storage.m_size),
-            m_buffer(storage.m_data)
         {
             assert(m_buffer != nullptr);
             assert(m_size > 0);
@@ -68,17 +56,18 @@ namespace endian
         /// Note, that this function is provided only for convenience and
         /// it does not perform any endian conversions.
         ///
-        /// @param storage the storage to be filled
-        void read(const storage::mutable_storage& storage)
+        /// @param data The data pointer to fill into
+        /// @param size The number of bytes to fill.
+        void read(uint8_t* data, uint32_t size)
         {
             // Make sure there is enough data to read in the underlying buffer
-            assert(m_size >= m_position + storage.m_size);
+            assert(m_size >= (m_position + size));
 
             // Copy the data from the buffer to the storage
-            std::copy_n(m_buffer + m_position, storage.m_size, storage.m_data);
+            std::copy_n(m_buffer + m_position, size, data);
 
             // Advance the current position
-            m_position += storage.m_size;
+            m_position += size;
         }
 
     private:

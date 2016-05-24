@@ -4,4 +4,4 @@ bld.program(
     features='cxx',
     source=['convert_to_little_endian.cpp'],
     target='convert_little_endian_to_big',
-    use=['endian'])
+    use=['endian_includes'])

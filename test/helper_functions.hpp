@@ -5,8 +5,8 @@
 
 #include <endian/big_endian.hpp>
 #include <endian/little_endian.hpp>
-#include <endian/endian_stream_writer.hpp>
-#include <endian/endian_stream_reader.hpp>
+#include <endian/stream_writer.hpp>
+#include <endian/stream_reader.hpp>
 
 #include <gtest/gtest.h>
 
@@ -19,8 +19,8 @@ void write_read_test()
     const uint32_t size = 1024 * sizeof(ValueType); ///size in bytes
     std::vector<uint8_t> buffer;
     buffer.resize(size);
-    endian::endian_stream_reader<EndianType> stream_reader(buffer.data(), size);
-    endian::endian_stream_writer<EndianType> stream_writer(buffer.data(),
+    endian::stream_reader<EndianType> stream_reader(buffer.data(), size);
+    endian::stream_writer<EndianType> stream_writer(buffer.data(),
                                                                   size);
 
     ValueType lowest_value = 0;
@@ -62,8 +62,8 @@ void random_write_read_test(bool pseudorandom)
     std::vector<uint8_t> buffer;
     buffer.resize(size);
 
-    endian::endian_stream_writer<EndianType> stream_writer(buffer.data(), size);
-    endian::endian_stream_reader<EndianType> stream_reader(buffer.data(), size);
+    endian::stream_writer<EndianType> stream_writer(buffer.data(), size);
+    endian::stream_reader<EndianType> stream_reader(buffer.data(), size);
 
     ValueType highest_value = std::numeric_limits<ValueType>::max();
 
@@ -102,7 +102,7 @@ void various_write_read_test(bool pseudorandom)
     std::vector<uint8_t> buffer;
     buffer.resize(size);
 
-    endian::endian_stream_writer<EndianType> writer(buffer.data(), size);
+    endian::stream_writer<EndianType> writer(buffer.data(), size);
 
     std::vector<uint64_t> values;
     values.resize(elements);
@@ -145,7 +145,7 @@ void various_write_read_test(bool pseudorandom)
     uint64_t last_u64 = 0;
 
     // create reader
-    endian::endian_stream_reader<EndianType> reader(buffer.data(), size);
+    endian::stream_reader<EndianType> reader(buffer.data(), size);
 
     // Read values in FIFO order
     for (uint32_t i = 0; i < elements; i++)
