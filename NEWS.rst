@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+2.0.0
+-----
 * Major: Removed ``storage`` dependency.
 * Major: Renamed use flag ``endian`` to ``endian_includes``.
 * Major: Renamed redundant names
