@@ -8,7 +8,7 @@
 #include <gtest/gtest.h>
 
 
-TEST(ConvertLittleEndian, Convert)
+TEST(test_little_endian, convert)
 {
     // Indicate endianness for debugging purposes
     SCOPED_TRACE(testing::Message() << "big_endian:" <<

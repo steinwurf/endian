@@ -11,7 +11,7 @@
 namespace endian
 {
     /// @brief Base-class for the endian stream reader and writer.
-    class endian_stream
+    class stream
     {
     public:
 
@@ -20,7 +20,7 @@ namespace endian
         ///
         /// @param buffer a pointer to the buffer
         /// @param size the size of the buffer in bytes
-        endian_stream(uint32_t size) :
+        stream(uint32_t size) :
             m_size(size),
             m_position(0)
         {

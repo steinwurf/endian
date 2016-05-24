@@ -10,7 +10,7 @@
 #include <gtest/gtest.h>
 
 
-TEST(ConvertBigEndian, Convert)
+TEST(test_big_endian, convert)
 {
     // Indicate endianness for debugging purposes
     SCOPED_TRACE(testing::Message() << "big_endian:" <<

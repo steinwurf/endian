@@ -10,11 +10,19 @@
 
 int main()
 {
-    std::cout << "Are we big endian " <<  endian::is_big_endian() << std::endl;
+    if (endian::is_big_endian())
+    {
+        std::cout << "This machine is big endian." << std::endl;
+    }
+    else
+    {
+        std::cout << "This machine is little endian." << std::endl;
+    }
     uint8_t data[4];
     uint32_t input = 0x11223344U;
 
     std::cout << "input is: " << std::hex << input << std::endl;
+
     // If the host is big endian, the put function
     // should change the byte order (no change for little endian)
     endian::little_endian::put32(input, data);
