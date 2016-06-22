@@ -6,7 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Minor: Added ``remaining`` function to ``stream``.
 
 2.0.0
 -----

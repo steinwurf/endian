@@ -43,6 +43,14 @@ namespace endian
             return m_position;
         }
 
+        /// The remaining bytes in the stream
+        ///
+        /// @return the remaining bytes.
+        uint32_t remaining() const
+        {
+            return m_size - m_position;
+        }
+
         /// Changes the current read/write position in the stream. The
         /// position is absolute i.e. it is always relative to the
         /// beginning of the buffer which is position 0.
