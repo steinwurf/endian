@@ -3,10 +3,12 @@
 //
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
 
+#include <endian/big_endian.hpp>
+
 #include <cstdint>
 
 #include <endian/is_big_endian.hpp>
-#include <endian/big_endian.hpp>
+
 #include <gtest/gtest.h>
 
 
