@@ -24,7 +24,7 @@ namespace endian
             m_size(size),
             m_position(0)
         {
-            assert(m_size);
+            assert(m_size > 0);
         }
 
         /// Gets the size of the underlying buffer in bytes.
@@ -46,7 +46,7 @@ namespace endian
         /// The remaining bytes in the stream
         ///
         /// @return the remaining bytes.
-        uint32_t remaining() const
+        uint32_t remaining_size() const
         {
             return m_size - m_position;
         }

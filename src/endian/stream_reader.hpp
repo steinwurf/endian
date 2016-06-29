@@ -31,7 +31,6 @@ namespace endian
             m_buffer(buffer)
         {
             assert(m_buffer != nullptr);
-            assert(m_size > 0);
         }
 
         /// Reads from the stream and moves the read position.
@@ -41,10 +40,10 @@ namespace endian
         void read(ValueType& value)
         {
             // Make sure there is enough data to read in the underlying buffer
-            assert(m_size >= m_position + sizeof(ValueType));
+            assert(sizeof(ValueType) <= remaining_size());
 
             // Read the value at the current position
-            value = EndianType::template get<ValueType>(m_buffer + m_position);
+            value = EndianType::template get<ValueType>(remaining_data());
 
             // Advance the current position
             m_position += sizeof(ValueType);
@@ -61,13 +60,29 @@ namespace endian
         void read(uint8_t* data, uint32_t size)
         {
             // Make sure there is enough data to read in the underlying buffer
-            assert(m_size >= (m_position + size));
+            assert(size <= remaining_size());
 
             // Copy the data from the buffer to the storage
-            std::copy_n(m_buffer + m_position, size, data);
+            std::copy_n(remaining_data(), size, data);
 
             // Advance the current position
             m_position += size;
+        }
+
+        /// A pointer to the stream's data.
+        ///
+        /// @return pointer to the stream's data.
+        const uint8_t* data() const
+        {
+            return m_buffer;
+        }
+
+        /// A pointer to the stream's data at the current position.
+        ///
+        /// @return pointer to the stream's data at the current position.
+        const uint8_t* remaining_data() const
+        {
+            return m_buffer + m_position;
         }
 
     private:
