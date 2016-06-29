@@ -26,13 +26,13 @@ TEST(test_stream, basic_api)
         // check initial state
         EXPECT_EQ(size, stream.size());
         EXPECT_EQ(0U, stream.position());
-        EXPECT_EQ(size, stream.remaining());
+        EXPECT_EQ(size, stream.remaining_size());
 
         // check state after seek
         stream.seek(1);
         EXPECT_EQ(size, stream.size());
         EXPECT_EQ(1U, stream.position());
-        EXPECT_EQ(0U, stream.remaining());
+        EXPECT_EQ(0U, stream.remaining_size());
     }
 
     {
@@ -43,13 +43,13 @@ TEST(test_stream, basic_api)
         // check initial state
         EXPECT_EQ(size, stream.size());
         EXPECT_EQ(0U, stream.position());
-        EXPECT_EQ(size, stream.remaining());
+        EXPECT_EQ(size, stream.remaining_size());
 
         // check state after seek
         stream.seek(size / 2);
         EXPECT_EQ(size, stream.size());
         EXPECT_EQ(size / 2, stream.position());
-        EXPECT_EQ(size / 2, stream.remaining());
+        EXPECT_EQ(size / 2, stream.remaining_size());
 
         // that consecutive seeks doesn't alter state.
         stream.seek(size / 2);
@@ -57,12 +57,12 @@ TEST(test_stream, basic_api)
         stream.seek(size / 2);
         EXPECT_EQ(size, stream.size());
         EXPECT_EQ(size / 2, stream.position());
-        EXPECT_EQ(size / 2, stream.remaining());
+        EXPECT_EQ(size / 2, stream.remaining_size());
 
         // seek to end
         stream.seek(size);
         EXPECT_EQ(size, stream.position());
-        EXPECT_EQ(0U, stream.remaining());
+        EXPECT_EQ(0U, stream.remaining_size());
     }
 }
 

@@ -31,7 +31,6 @@ namespace endian
             m_buffer(buffer)
         {
             assert(m_buffer != nullptr);
-            assert(m_size > 0);
         }
 
         /// Writes a value of ValueType type and size to the stream.
@@ -41,10 +40,10 @@ namespace endian
         void write(ValueType value)
         {
             // Make sure there is enough space in the underlying buffer
-            assert(m_size >= m_position + sizeof(ValueType));
+            assert(sizeof(ValueType) <= remaining_size());
 
             // Write the value at the current position
-            EndianType::template put<ValueType>(value, m_buffer + m_position);
+            EndianType::template put<ValueType>(value, remaining_data());
 
             // Advance the current position
             m_position += sizeof(ValueType);
@@ -56,19 +55,34 @@ namespace endian
         /// Note, that this function is provided only for convenience and
         /// it does not perform any endian conversions.
         ///
-        /// @param data Pointer to the data which should be written to
-        ///        the stream.
+        /// @param data Pointer to the data, to be written to the stream.
         /// @param size Number of bytes from the data pointer.
         void write(const uint8_t* data, uint32_t size)
         {
             // Make sure there is enough space in the underlying buffer
-            assert(m_size >= (m_position + size));
+            assert(size <= remaining_size());
 
             // Copy the data to the buffer
-            std::copy_n(data, size, m_buffer + m_position);
+            std::copy_n(data, size, remaining_data());
 
             // Advance the current position
             m_position += size;
+        }
+
+        /// A pointer to the stream's data.
+        ///
+        /// @return pointer to the stream's data.
+        uint8_t* data() const
+        {
+            return m_buffer;
+        }
+
+        /// A pointer to the stream's data at the current position.
+        ///
+        /// @return pointer to the stream's data at the current position.
+        uint8_t* remaining_data() const
+        {
+            return m_buffer + m_position;
         }
 
     private:

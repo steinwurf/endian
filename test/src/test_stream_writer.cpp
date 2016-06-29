@@ -27,13 +27,17 @@ static void test_basic_api()
         // check initial state
         EXPECT_EQ(size, stream.size());
         EXPECT_EQ(0U, stream.position());
-        EXPECT_EQ(size, stream.remaining());
+        EXPECT_EQ(size, stream.remaining_size());
+        EXPECT_EQ(buffer.data(), stream.remaining_data());
+        EXPECT_EQ(buffer.data(), stream.data());
 
         // check state after seek
         stream.seek(1);
         EXPECT_EQ(size, stream.size());
         EXPECT_EQ(1U, stream.position());
-        EXPECT_EQ(0U, stream.remaining());
+        EXPECT_EQ(0U, stream.remaining_size());
+        EXPECT_EQ(buffer.data() + 1, stream.remaining_data());
+        EXPECT_EQ(buffer.data(), stream.data());
     }
 
     {
@@ -46,13 +50,17 @@ static void test_basic_api()
         // check initial state
         EXPECT_EQ(size, stream.size());
         EXPECT_EQ(0U, stream.position());
-        EXPECT_EQ(size, stream.remaining());
+        EXPECT_EQ(size, stream.remaining_size());
+        EXPECT_EQ(buffer.data(), stream.remaining_data());
+        EXPECT_EQ(buffer.data(), stream.data());
 
         // check state after seek
         stream.seek(size / 2);
         EXPECT_EQ(size, stream.size());
         EXPECT_EQ(size / 2, stream.position());
-        EXPECT_EQ(size / 2, stream.remaining());
+        EXPECT_EQ(size / 2, stream.remaining_size());
+        EXPECT_EQ(buffer.data() + size / 2, stream.remaining_data());
+        EXPECT_EQ(buffer.data(), stream.data());
 
         // that consecutive seeks doesn't alter state.
         stream.seek(size / 2);
@@ -60,12 +68,16 @@ static void test_basic_api()
         stream.seek(size / 2);
         EXPECT_EQ(size, stream.size());
         EXPECT_EQ(size / 2, stream.position());
-        EXPECT_EQ(size / 2, stream.remaining());
+        EXPECT_EQ(size / 2, stream.remaining_size());
+        EXPECT_EQ(buffer.data() + size / 2, stream.remaining_data());
+        EXPECT_EQ(buffer.data(), stream.data());
 
         // seek to end
         stream.seek(size);
         EXPECT_EQ(size, stream.position());
-        EXPECT_EQ(0U, stream.remaining());
+        EXPECT_EQ(0U, stream.remaining_size());
+        EXPECT_EQ(buffer.data() + size, stream.remaining_data());
+        EXPECT_EQ(buffer.data(), stream.data());
     }
 }
 
