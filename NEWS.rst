@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+3.0.0
+-----
 * Major: Renamed ``remaining`` to ``remaining_size``.
 * Minor: Added ``data`` and ``remaining_data`` to ``stream_reader``
   and ``stream_writer``.
