@@ -43,9 +43,9 @@ namespace endian
             return m_position;
         }
 
-        /// The remaining bytes in the stream
+        /// The remaining number of bytes in the stream
         ///
-        /// @return the remaining bytes.
+        /// @return the remaining number of bytes.
         uint32_t remaining_size() const
         {
             return m_size - m_position;
