@@ -27,8 +27,8 @@ int main()
     // should change the byte order (no change for little endian)
     endian::little_endian::put32(input, data);
 
-    if(0x11u == data[3] && 0x22u == data[2] && 0x33u == data[1] &&
-       0x44u == data[0])
+    if (0x11u == data[3] && 0x22u == data[2] && 0x33u == data[1] &&
+        0x44u == data[0])
     {
         std::cout << "Success input converted" << std::endl;
     }

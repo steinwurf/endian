@@ -165,22 +165,22 @@ void write_and_read_variadic_types_test()
     {
         switch (i % 4)
         {
-            case 0:
-                values[i] = rand() % std::numeric_limits<uint8_t>::max();
-                writer.write((uint8_t)values[i]);
-                break;
-            case 1:
-                values[i] = rand() % std::numeric_limits<uint16_t>::max();
-                writer.write((uint16_t)values[i]);
-                break;
-            case 2:
-                values[i] = rand() % std::numeric_limits<uint32_t>::max();
-                writer.write((uint32_t)values[i]);
-                break;
-            case 3:
-                values[i] = rand() % std::numeric_limits<uint64_t>::max();
-                writer.write((uint64_t)values[i]);
-                break;
+        case 0:
+            values[i] = rand() % std::numeric_limits<uint8_t>::max();
+            writer.write((uint8_t)values[i]);
+            break;
+        case 1:
+            values[i] = rand() % std::numeric_limits<uint16_t>::max();
+            writer.write((uint16_t)values[i]);
+            break;
+        case 2:
+            values[i] = rand() % std::numeric_limits<uint32_t>::max();
+            writer.write((uint32_t)values[i]);
+            break;
+        case 3:
+            values[i] = rand() % std::numeric_limits<uint64_t>::max();
+            writer.write((uint64_t)values[i]);
+            break;
         }
     }
 
@@ -197,22 +197,22 @@ void write_and_read_variadic_types_test()
     {
         switch (i % 4)
         {
-            case 0:
-                reader.read(last_u8);
-                EXPECT_EQ(values[i], last_u8);
-                break;
-            case 1:
-                reader.read(last_u16);
-                EXPECT_EQ(values[i], last_u16);
-                break;
-            case 2:
-                reader.read(last_u32);
-                EXPECT_EQ(values[i], last_u32);
-                break;
-            case 3:
-                reader.read(last_u64);
-                EXPECT_EQ(values[i], last_u64);
-                break;
+        case 0:
+            reader.read(last_u8);
+            EXPECT_EQ(values[i], last_u8);
+            break;
+        case 1:
+            reader.read(last_u16);
+            EXPECT_EQ(values[i], last_u16);
+            break;
+        case 2:
+            reader.read(last_u32);
+            EXPECT_EQ(values[i], last_u32);
+            break;
+        case 3:
+            reader.read(last_u64);
+            EXPECT_EQ(values[i], last_u64);
+            break;
         }
     }
 }
