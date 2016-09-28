@@ -21,7 +21,7 @@ public:
     stream(uint32_t size) :
         m_size(size)
     {
-        assert(size > 0 && "Tracking buffer of size zero is not valid");
+        assert(m_size > 0 && "Tracking buffer of size zero is not valid");
     }
 
     /// Gets the size of the underlying buffer in bytes.

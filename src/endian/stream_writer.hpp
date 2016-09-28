@@ -30,7 +30,7 @@ public:
         stream(size),
         m_buffer(buffer)
     {
-        assert(buffer != nullptr && "Invalid buffer");
+        assert(m_buffer != nullptr && "Invalid buffer pointer provided");
     }
 
     /// Writes a value of ValueType type and size to the stream.
