@@ -30,7 +30,8 @@ public:
         stream(size),
         m_buffer(buffer)
     {
-        assert(m_buffer != nullptr);
+        assert(buffer != nullptr && "Invalid buffer");
+        assert(size > 0 && "Provided buffer is size zero");
     }
 
     /// Reads from the stream and moves the read position.

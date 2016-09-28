@@ -15,16 +15,13 @@ class stream
 {
 public:
 
-    /// Creates an endian stream on top of a pre-allocated buffer of the
-    /// specified size.
+    /// Creates an endian stream used to track a buffer of the specified size.
     ///
-    /// @param buffer a pointer to the buffer
     /// @param size the size of the buffer in bytes
     stream(uint32_t size) :
-        m_size(size),
-        m_position(0)
+        m_size(size)
     {
-        assert(m_size > 0);
+        assert(size > 0 && "Tracking buffer of size zero is not valid");
     }
 
     /// Gets the size of the underlying buffer in bytes.
@@ -68,6 +65,6 @@ protected:
     uint32_t m_size;
 
     /// The current position
-    uint32_t m_position;
+    uint32_t m_position = 0;
 };
 }
