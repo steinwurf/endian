@@ -8,6 +8,11 @@ Latest
 ------
 * tbd
 
+4.0.0
+-----
+* Major: Upgrade to waf-tools 4
+* Minor: Upgrade to gtest 4
+
 3.0.0
 -----
 * Major: Renamed ``remaining`` to ``remaining_size``.
