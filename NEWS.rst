@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+4.1.0
+-----
 * Minor: Added ``stream_writer::constructor(std::vector<uint8_t>&)`` and
   ``stream_reader::constructor(std::vector<uint8_t>&)``.
 
