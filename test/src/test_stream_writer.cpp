@@ -79,6 +79,18 @@ static void test_basic_api()
         EXPECT_EQ(buffer.data() + size, stream.remaining_data());
         EXPECT_EQ(buffer.data(), stream.data());
     }
+
+    {
+        SCOPED_TRACE(testing::Message() << "vector vs pointer");
+
+        uint32_t size = 10U;
+        std::vector<uint8_t> buffer;
+        buffer.resize(size);
+        endian::stream_writer<EndianType> stream1(buffer.data(), buffer.size());
+        endian::stream_writer<EndianType> stream2(buffer);
+        EXPECT_EQ(stream1.size(), stream2.size());
+        EXPECT_EQ(stream1.data(), stream2.data());
+    }
 }
 
 TEST(test_stream_writer, basic_api_little_endian)
