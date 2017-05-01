@@ -5,9 +5,10 @@
 
 #pragma once
 
-#include <cstdint>
-#include <cassert>
 #include <algorithm>
+#include <cassert>
+#include <cstdint>
+#include <vector>
 
 #include "stream.hpp"
 
@@ -24,14 +25,21 @@ public:
     /// Creates an endian stream on top of a pre-allocated buffer of the
     /// specified size.
     ///
-    /// @param buffer a pointer to the buffer
+    /// @param data a data pointer to the buffer
     /// @param size the size of the buffer in bytes
-    stream_reader(const uint8_t* buffer, uint32_t size) :
+    stream_reader(const uint8_t* data, uint32_t size) :
         stream(size),
-        m_buffer(buffer)
+        m_data(data)
     {
-        assert(m_buffer != nullptr && "Invalid buffer pointer provided");
+        assert(m_data != nullptr && "Invalid buffer pointer provided");
     }
+
+    /// Creates an endian stream on top of a pre-allocated buffer
+    ///
+    /// @param buffer a vector containing the buffer
+    stream_reader(const std::vector<uint8_t>& buffer) :
+        stream_reader(buffer.data(), buffer.size())
+    { }
 
     /// Reads from the stream and moves the read position.
     ///
@@ -74,7 +82,7 @@ public:
     /// @return pointer to the stream's data.
     const uint8_t* data() const
     {
-        return m_buffer;
+        return m_data;
     }
 
     /// A pointer to the stream's data at the current position.
@@ -82,12 +90,12 @@ public:
     /// @return pointer to the stream's data at the current position.
     const uint8_t* remaining_data() const
     {
-        return m_buffer + m_position;
+        return m_data + m_position;
     }
 
 private:
 
-    /// Pointer to buffer
-    const uint8_t* m_buffer;
+    /// Data pointer to buffer
+    const uint8_t* m_data;
 };
 }
