@@ -59,6 +59,15 @@ public:
         m_position = new_position;
     }
 
+    /// Skips over a given number of bytes in the stream
+    ///
+    /// @param bytes_to_skip the bytes to skip
+    void skip(uint32_t bytes_to_skip)
+    {
+        assert(bytes_to_skip + m_position <= m_size);
+        seek(m_position + bytes_to_skip);
+    }
+
 protected:
 
     /// The size of the buffer in bytes

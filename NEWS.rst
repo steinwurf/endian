@@ -6,7 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Minor: Added ``skip`` function to stream.
 
 4.1.0
 -----
