@@ -64,6 +64,56 @@ TEST(test_stream, basic_api)
         EXPECT_EQ(size, stream.position());
         EXPECT_EQ(0U, stream.remaining_size());
     }
+
+    {
+        SCOPED_TRACE(testing::Message() << "size 1");
+        uint32_t size = 1U;
+        endian::stream stream(size);
+
+        // check initial state
+        EXPECT_EQ(size, stream.size());
+        EXPECT_EQ(0U, stream.position());
+        EXPECT_EQ(size, stream.remaining_size());
+
+        // check state after skip
+        stream.skip(1);
+        EXPECT_EQ(size, stream.size());
+        EXPECT_EQ(1U, stream.position());
+        EXPECT_EQ(0U, stream.remaining_size());
+    }
+
+    {
+        SCOPED_TRACE(testing::Message() << "size 10000");
+        uint32_t size = 10000U;
+        endian::stream stream(size);
+
+        // check initial state
+        EXPECT_EQ(size, stream.size());
+        EXPECT_EQ(0U, stream.position());
+        EXPECT_EQ(size, stream.remaining_size());
+
+        // check state after skip
+        stream.skip(size / 2);
+        EXPECT_EQ(size, stream.size());
+        EXPECT_EQ(size / 2, stream.position());
+        EXPECT_EQ(size / 2, stream.remaining_size());
+        stream.skip(size / 2);
+        EXPECT_EQ(size, stream.size());
+        EXPECT_EQ(size, stream.position());
+        EXPECT_EQ(0U, stream.remaining_size());
+
+        // go back and skip each byte until the end
+        stream.seek(0);
+        for (uint32_t i = 0; i < size; ++i)
+        {
+            EXPECT_EQ(size - i, stream.remaining_size());
+            ASSERT_NE(0U, stream.remaining_size());
+            stream.skip(1);
+        }
+
+        EXPECT_EQ(size, stream.position());
+        EXPECT_EQ(0U, stream.remaining_size());
+    }
 }
 
 // ********************** //
