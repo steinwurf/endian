@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdint>
+#include <system_error>
 #include <vector>
 
 #include "stream.hpp"
@@ -44,17 +45,62 @@ public:
     /// Reads from the stream and moves the read position.
     ///
     /// @param value reference to the value to be read
+    /// @param error reference to the error code which will be set if the read
+    ///              failed
     template<class ValueType>
-    void read(ValueType& value)
+    void read(ValueType& value, std::error_code& error)
     {
+        assert(!error);
         // Make sure there is enough data to read in the underlying buffer
-        assert(sizeof(ValueType) <= remaining_size());
+        if (sizeof(ValueType) > remaining_size())
+        {
+            error = std::make_error_code(std::errc::value_too_large);
+            return;
+        }
 
         // Read the value at the current position
         value = EndianType::template get<ValueType>(remaining_data());
 
         // Advance the current position
         m_position += sizeof(ValueType);
+    }
+
+    /// Reads from the stream and moves the read position.
+    ///
+    /// @param value reference to the value to be read
+    template<class ValueType>
+    void read(ValueType& value)
+    {
+        std::error_code error;
+        read(value, error);
+        assert(!error);
+    }
+
+    /// Reads raw bytes from the stream to fill a buffer represented by
+    /// a mutable storage object.
+    ///
+    /// Note, that this function is provided only for convenience and
+    /// it does not perform any endian conversions.
+    ///
+    /// @param data The data pointer to fill into
+    /// @param size The number of bytes to fill.
+    /// @param error reference to the error code which will be set if the read
+    ///              failed
+    void read(uint8_t* data, uint32_t size, std::error_code& error)
+    {
+        assert(!error);
+        // Make sure there is enough data to read in the underlying buffer
+        if (size > remaining_size())
+        {
+            error = std::make_error_code(std::errc::value_too_large);
+            return;
+        }
+
+        // Copy the data from the buffer to the storage
+        std::copy_n(remaining_data(), size, data);
+
+        // Advance the current position
+        m_position += size;
     }
 
     /// Reads raw bytes from the stream to fill a buffer represented by
@@ -67,14 +113,9 @@ public:
     /// @param size The number of bytes to fill.
     void read(uint8_t* data, uint32_t size)
     {
-        // Make sure there is enough data to read in the underlying buffer
-        assert(size <= remaining_size());
-
-        // Copy the data from the buffer to the storage
-        std::copy_n(remaining_data(), size, data);
-
-        // Advance the current position
-        m_position += size;
+        std::error_code error;
+        read(data, size, error);
+        assert(!error);
     }
 
     /// A pointer to the stream's data.

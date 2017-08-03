@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdint>
+#include <system_error>
 #include <vector>
 
 #include "stream.hpp"
@@ -44,17 +45,62 @@ public:
     /// Writes a value of ValueType type and size to the stream.
     ///
     /// @param value the value to write.
+    /// @param error reference to the error code which will be set if the write
+    ///              failed
     template<class ValueType>
-    void write(ValueType value)
+    void write(ValueType value, std::error_code& error)
     {
+        assert(!error);
         // Make sure there is enough space in the underlying buffer
-        assert(sizeof(ValueType) <= remaining_size());
+        if (sizeof(ValueType) > remaining_size())
+        {
+            error = std::make_error_code(std::errc::value_too_large);
+            return;
+        }
 
         // Write the value at the current position
         EndianType::template put<ValueType>(value, remaining_data());
 
         // Advance the current position
         m_position += sizeof(ValueType);
+    }
+
+    /// Writes a value of ValueType type and size to the stream.
+    ///
+    /// @param value the value to write.
+    template<class ValueType>
+    void write(ValueType value)
+    {
+        std::error_code error;
+        write(value, error);
+        assert(!error);
+    }
+
+    /// Writes the raw bytes represented by the storage::const_storage
+    /// object to the stream.
+    ///
+    /// Note, that this function is provided only for convenience and
+    /// it does not perform any endian conversions.
+    ///
+    /// @param data Pointer to the data, to be written to the stream.
+    /// @param size Number of bytes from the data pointer.
+    /// @param error reference to the error code which will be set if the write
+    ///              failed
+    void write(const uint8_t* data, uint32_t size, std::error_code& error)
+    {
+        assert(!error);
+        // Make sure there is enough space in the underlying buffer
+        if (size > remaining_size())
+        {
+            error = std::make_error_code(std::errc::value_too_large);
+            return;
+        }
+
+        // Copy the data to the buffer
+        std::copy_n(data, size, remaining_data());
+
+        // Advance the current position
+        m_position += size;
     }
 
     /// Writes the raw bytes represented by the storage::const_storage
@@ -67,14 +113,9 @@ public:
     /// @param size Number of bytes from the data pointer.
     void write(const uint8_t* data, uint32_t size)
     {
-        // Make sure there is enough space in the underlying buffer
-        assert(size <= remaining_size());
-
-        // Copy the data to the buffer
-        std::copy_n(data, size, remaining_data());
-
-        // Advance the current position
-        m_position += size;
+        std::error_code error;
+        write(data, size, error);
+        assert(!error);
     }
 
     /// A pointer to the stream's data.

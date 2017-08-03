@@ -116,6 +116,37 @@ TEST(test_stream, basic_api)
     }
 }
 
+TEST(test_stream, basic_error_api)
+{
+    uint32_t size = 1U;
+    endian::stream stream(size);
+
+    // check initial state
+    EXPECT_EQ(size, stream.size());
+    EXPECT_EQ(0U, stream.position());
+    EXPECT_EQ(size, stream.remaining_size());
+    {
+        std::error_code error;
+        stream.seek(size + 1, error);
+        EXPECT_EQ(std::make_error_code(std::errc::value_too_large), error);
+    }
+    // check state after failed seek
+    EXPECT_EQ(size, stream.size());
+    EXPECT_EQ(0U, stream.position());
+    EXPECT_EQ(size, stream.remaining_size());
+
+    {
+        std::error_code error;
+        stream.skip(size + 1, error);
+        EXPECT_EQ(std::make_error_code(std::errc::value_too_large), error);
+    }
+
+    // check state after failed skip
+    EXPECT_EQ(size, stream.size());
+    EXPECT_EQ(0U, stream.position());
+    EXPECT_EQ(size, stream.remaining_size());
+}
+
 // ********************** //
 //  Reader writer tests:  //
 // ********************** //
