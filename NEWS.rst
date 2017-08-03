@@ -6,7 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Minor: Added error code API for making out of bounds reads non-fatal.
 
 4.2.0
 * Minor: Added ``skip`` function to stream.

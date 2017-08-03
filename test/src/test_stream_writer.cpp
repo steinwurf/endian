@@ -91,6 +91,41 @@ static void test_basic_api()
         EXPECT_EQ(stream1.size(), stream2.size());
         EXPECT_EQ(stream1.data(), stream2.data());
     }
+
+    {
+        SCOPED_TRACE(testing::Message() << "error code api");
+        uint32_t size = 4U;
+        std::vector<uint8_t> buffer(size);
+        endian::stream_writer<EndianType> stream(buffer.data(), buffer.size());
+
+        // check initial state
+        EXPECT_EQ(size, stream.size());
+        EXPECT_EQ(0U, stream.position());
+        EXPECT_EQ(size, stream.remaining_size());
+        {
+            std::error_code error;
+            uint64_t value = 42;
+            ASSERT_GE(sizeof(value), stream.size());
+            stream.write(value, error);
+            EXPECT_EQ(std::make_error_code(std::errc::value_too_large), error);
+        }
+        // check state after failed read
+        EXPECT_EQ(size, stream.size());
+        EXPECT_EQ(0U, stream.position());
+        EXPECT_EQ(size, stream.remaining_size());
+
+        {
+            std::vector<uint8_t> data(size + 1);
+            std::error_code error;
+            stream.write(data.data(), data.size(), error);
+            EXPECT_EQ(std::make_error_code(std::errc::value_too_large), error);
+        }
+
+        // check state after failed read
+        EXPECT_EQ(size, stream.size());
+        EXPECT_EQ(0U, stream.position());
+        EXPECT_EQ(size, stream.remaining_size());
+    }
 }
 
 TEST(test_stream_writer, basic_api_little_endian)
