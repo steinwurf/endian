@@ -27,7 +27,7 @@ public:
     ///
     /// @param data a data pointer to the buffer
     /// @param size the size of the buffer in bytes
-    stream_reader(const uint8_t* data, uint32_t size) :
+    stream_reader(const uint8_t* data, uint64_t size) :
         stream(size),
         m_data(data)
     {
@@ -65,7 +65,7 @@ public:
     ///
     /// @param data The data pointer to fill into
     /// @param size The number of bytes to fill.
-    void read(uint8_t* data, uint32_t size)
+    void read(uint8_t* data, uint64_t size)
     {
         // Make sure there is enough data to read in the underlying buffer
         assert(size <= remaining_size());
