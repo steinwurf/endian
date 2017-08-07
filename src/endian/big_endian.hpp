@@ -43,7 +43,7 @@ struct big_endian
         return (buffer[0] << 8) | buffer[1];
     }
 
-    /// Inserts a 16-bit value into a byte stream in big-endian format.
+    /// Inserts a 16-bit value integer into a byte stream in big-endian format.
     /// @copydetails put8()
     static void put16(uint16_t value, uint8_t* buffer)
     {
@@ -63,7 +63,7 @@ struct big_endian
                (buffer[2] << 8)  | buffer[3];
     }
 
-    /// Inserts a 32-bit value into a byte stream in big-endian format.
+    /// Inserts a 32-bit value integer into a byte stream in big-endian format.
     /// @copydetails put8()
     static void put32(uint32_t value, uint8_t* buffer)
     {
@@ -91,7 +91,7 @@ struct big_endian
                ((uint64_t) buffer[7]);
     }
 
-    /// Inserts a 64-bit value into a byte stream in big-endian format.
+    /// Inserts a 64-bit value integer into a byte stream in big-endian format.
     /// @copydetails put8()
     static void put64(uint64_t value, uint8_t* buffer)
     {
@@ -124,7 +124,19 @@ inline void big_endian::put<uint8_t>(uint8_t value, uint8_t* buffer)
 }
 
 template<>
+inline void big_endian::put<int8_t>(int8_t value, uint8_t* buffer)
+{
+    big_endian::put8(value, buffer);
+}
+
+template<>
 inline void big_endian::put<uint16_t>(uint16_t value, uint8_t* buffer)
+{
+    big_endian::put16(value, buffer);
+}
+
+template<>
+inline void big_endian::put<int16_t>(int16_t value, uint8_t* buffer)
 {
     big_endian::put16(value, buffer);
 }
@@ -136,7 +148,19 @@ inline void big_endian::put<uint32_t>(uint32_t value, uint8_t* buffer)
 }
 
 template<>
+inline void big_endian::put<int32_t>(int32_t value, uint8_t* buffer)
+{
+    big_endian::put32(value, buffer);
+}
+
+template<>
 inline void big_endian::put<uint64_t>(uint64_t value, uint8_t* buffer)
+{
+    big_endian::put64(value, buffer);
+}
+
+template<>
+inline void big_endian::put<int64_t>(int64_t value, uint8_t* buffer)
 {
     big_endian::put64(value, buffer);
 }
@@ -148,7 +172,19 @@ inline uint8_t big_endian::get<uint8_t>(const uint8_t* buffer)
 }
 
 template<>
+inline int8_t big_endian::get<int8_t>(const uint8_t* buffer)
+{
+    return big_endian::get8(buffer);
+}
+
+template<>
 inline uint16_t big_endian::get<uint16_t>(const uint8_t* buffer)
+{
+    return big_endian::get16(buffer);
+}
+
+template<>
+inline int16_t big_endian::get<int16_t>(const uint8_t* buffer)
 {
     return big_endian::get16(buffer);
 }
@@ -160,7 +196,19 @@ inline uint32_t big_endian::get<uint32_t>(const uint8_t* buffer)
 }
 
 template<>
+inline int32_t big_endian::get<int32_t>(const uint8_t* buffer)
+{
+    return big_endian::get32(buffer);
+}
+
+template<>
 inline uint64_t big_endian::get<uint64_t>(const uint8_t* buffer)
+{
+    return big_endian::get64(buffer);
+}
+
+template<>
+inline int64_t big_endian::get<int64_t>(const uint8_t* buffer)
 {
     return big_endian::get64(buffer);
 }
