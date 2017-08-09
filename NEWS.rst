@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+5.0.0
+-----
 * Minor: Added functions for reading and writing signed integers.
 * Major: Changed size to be of type uint64_t instead of uint32_t.
 
