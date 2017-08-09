@@ -27,7 +27,7 @@ public:
     ///
     /// @param data a data pointer to the buffer
     /// @param size the size of the buffer in bytes
-    stream_writer(uint8_t* data, uint32_t size) :
+    stream_writer(uint8_t* data, uint64_t size) :
         stream(size),
         m_data(data)
     {
@@ -65,13 +65,13 @@ public:
     ///
     /// @param data Pointer to the data, to be written to the stream.
     /// @param size Number of bytes from the data pointer.
-    void write(const uint8_t* data, uint32_t size)
+    void write(const uint8_t* data, uint64_t size)
     {
         // Make sure there is enough space in the underlying buffer
         assert(size <= remaining_size());
 
         // Copy the data to the buffer
-        std::copy_n(data, size, remaining_data());
+        std::copy_n(data, (std::size_t)size, remaining_data());
 
         // Advance the current position
         m_position += size;

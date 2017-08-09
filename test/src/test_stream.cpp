@@ -20,7 +20,7 @@ TEST(test_stream, basic_api)
 {
     {
         SCOPED_TRACE(testing::Message() << "size 1");
-        uint32_t size = 1U;
+        uint64_t size = 1U;
         endian::stream stream(size);
 
         // check initial state
@@ -37,7 +37,7 @@ TEST(test_stream, basic_api)
 
     {
         SCOPED_TRACE(testing::Message() << "size 10000");
-        uint32_t size = 10000U;
+        uint64_t size = 10000U;
         endian::stream stream(size);
 
         // check initial state
@@ -67,7 +67,7 @@ TEST(test_stream, basic_api)
 
     {
         SCOPED_TRACE(testing::Message() << "size 1");
-        uint32_t size = 1U;
+        uint64_t size = 1U;
         endian::stream stream(size);
 
         // check initial state
@@ -84,7 +84,7 @@ TEST(test_stream, basic_api)
 
     {
         SCOPED_TRACE(testing::Message() << "size 10000");
-        uint32_t size = 10000U;
+        uint64_t size = 10000U;
         endian::stream stream(size);
 
         // check initial state
@@ -104,7 +104,7 @@ TEST(test_stream, basic_api)
 
         // go back and skip each byte until the end
         stream.seek(0);
-        for (uint32_t i = 0; i < size; ++i)
+        for (uint64_t i = 0; i < size; ++i)
         {
             EXPECT_EQ(size - i, stream.remaining_size());
             ASSERT_NE(0U, stream.remaining_size());
@@ -124,7 +124,7 @@ template<class ValueType, class EndianType>
 void write_and_read_value_type_test()
 {
     const uint32_t elements = 1024;
-    const uint32_t size = 1024 * sizeof(ValueType);
+    const uint64_t size = 1024 * sizeof(ValueType);
     std::vector<uint8_t> buffer;
     buffer.resize(size);
     endian::stream_reader<EndianType> stream_reader(buffer.data(), size);
@@ -165,7 +165,7 @@ template<class ValueType, class EndianType>
 void write_and_read_random_value_type_test()
 {
     const uint32_t elements = 1024;
-    const uint32_t size = 1024 * sizeof(ValueType);
+    const uint64_t size = 1024 * sizeof(ValueType);
     std::vector<uint8_t> buffer;
     buffer.resize(size);
 
@@ -198,7 +198,7 @@ template<class EndianType>
 void write_and_read_variadic_types_test()
 {
     const uint32_t elements = 1024;
-    const uint32_t size = 1024 * sizeof(uint64_t);
+    const uint64_t size = 1024 * sizeof(uint64_t);
     std::vector<uint8_t> buffer;
     buffer.resize(size);
 
@@ -270,7 +270,7 @@ void write_and_read_variadic_types_test()
 template<class EndianType>
 static void write_and_read_string_test()
 {
-    const uint32_t size = 1024;
+    const uint64_t size = 1024;
     std::vector<uint8_t> buffer;
     buffer.resize(size);
 
@@ -325,7 +325,7 @@ static void write_and_read_string_test()
 template<class EndianType>
 static void run_read_write_vector_test()
 {
-    const uint32_t size = 1024;
+    const uint64_t size = 1024;
     std::vector<uint8_t> buffer;
     buffer.resize(size);
     endian::stream_writer<EndianType> writer(buffer.data(), size);

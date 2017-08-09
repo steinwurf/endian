@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <cassert>
+#include <limits>
 
 namespace endian
 {
@@ -18,16 +19,18 @@ public:
     /// Creates an endian stream used to track a buffer of the specified size.
     ///
     /// @param size the size of the buffer in bytes
-    stream(uint32_t size) :
+    stream(uint64_t size) :
         m_size(size)
     {
         assert(m_size > 0 && "Tracking buffer of size zero is not valid");
+        assert(m_size <= std::numeric_limits<std::size_t>::max() &&
+               "Size is too large to be handled on this OS.");
     }
 
     /// Gets the size of the underlying buffer in bytes.
     ///
     /// @return the size of the buffer
-    uint32_t size() const
+    uint64_t size() const
     {
         return m_size;
     }
@@ -35,7 +38,7 @@ public:
     /// Gets the current read/write position in the stream
     ///
     /// @return the current position.
-    uint32_t position() const
+    uint64_t position() const
     {
         return m_position;
     }
@@ -43,7 +46,7 @@ public:
     /// The remaining number of bytes in the stream
     ///
     /// @return the remaining number of bytes.
-    uint32_t remaining_size() const
+    uint64_t remaining_size() const
     {
         return m_size - m_position;
     }
@@ -53,7 +56,7 @@ public:
     /// beginning of the buffer which is position 0.
     ///
     /// @param new_position the new position
-    void seek(uint32_t new_position)
+    void seek(uint64_t new_position)
     {
         assert(new_position <= m_size);
         m_position = new_position;
@@ -62,7 +65,7 @@ public:
     /// Skips over a given number of bytes in the stream
     ///
     /// @param bytes_to_skip the bytes to skip
-    void skip(uint32_t bytes_to_skip)
+    void skip(uint64_t bytes_to_skip)
     {
         assert(bytes_to_skip + m_position <= m_size);
         seek(m_position + bytes_to_skip);
@@ -71,9 +74,9 @@ public:
 protected:
 
     /// The size of the buffer in bytes
-    uint32_t m_size;
+    uint64_t m_size;
 
     /// The current position
-    uint32_t m_position = 0;
+    uint64_t m_position = 0;
 };
 }

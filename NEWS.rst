@@ -6,9 +6,11 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Minor: Added functions for reading and writing signed integers.
+* Minor: Changed size to be of type uint64_t instead of uint32_t.
 
 4.2.0
+-----
 * Minor: Added ``skip`` function to stream.
 
 4.1.0

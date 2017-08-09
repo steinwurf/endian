@@ -124,7 +124,19 @@ inline void little_endian::put<uint8_t>(uint8_t value, uint8_t* buffer)
 }
 
 template<>
+inline void little_endian::put<int8_t>(int8_t value, uint8_t* buffer)
+{
+    little_endian::put8(value, buffer);
+}
+
+template<>
 inline void little_endian::put<uint16_t>(uint16_t value, uint8_t* buffer)
+{
+    little_endian::put16(value, buffer);
+}
+
+template<>
+inline void little_endian::put<int16_t>(int16_t value, uint8_t* buffer)
 {
     little_endian::put16(value, buffer);
 }
@@ -136,7 +148,19 @@ inline void little_endian::put<uint32_t>(uint32_t value, uint8_t* buffer)
 }
 
 template<>
+inline void little_endian::put<int32_t>(int32_t value, uint8_t* buffer)
+{
+    little_endian::put32(value, buffer);
+}
+
+template<>
 inline void little_endian::put<uint64_t>(uint64_t value, uint8_t* buffer)
+{
+    little_endian::put64(value, buffer);
+}
+
+template<>
+inline void little_endian::put<int64_t>(int64_t value, uint8_t* buffer)
 {
     little_endian::put64(value, buffer);
 }
@@ -148,7 +172,19 @@ inline uint8_t little_endian::get<uint8_t>(const uint8_t* buffer)
 }
 
 template<>
+inline int8_t little_endian::get<int8_t>(const uint8_t* buffer)
+{
+    return little_endian::get8(buffer);
+}
+
+template<>
 inline uint16_t little_endian::get<uint16_t>(const uint8_t* buffer)
+{
+    return little_endian::get16(buffer);
+}
+
+template<>
+inline int16_t little_endian::get<int16_t>(const uint8_t* buffer)
 {
     return little_endian::get16(buffer);
 }
@@ -160,7 +196,19 @@ inline uint32_t little_endian::get<uint32_t>(const uint8_t* buffer)
 }
 
 template<>
+inline int32_t little_endian::get<int32_t>(const uint8_t* buffer)
+{
+    return little_endian::get32(buffer);
+}
+
+template<>
 inline uint64_t little_endian::get<uint64_t>(const uint8_t* buffer)
+{
+    return little_endian::get64(buffer);
+}
+
+template<>
+inline int64_t little_endian::get<int64_t>(const uint8_t* buffer)
 {
     return little_endian::get64(buffer);
 }
