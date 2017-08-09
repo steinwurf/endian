@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <cassert>
+#include <limits>
 
 namespace endian
 {
@@ -22,6 +23,8 @@ public:
         m_size(size)
     {
         assert(m_size > 0 && "Tracking buffer of size zero is not valid");
+        assert(m_size <= std::numeric_limits<std::size_t>::max() &&
+            "Size is too large to be handled on this OS.");
     }
 
     /// Gets the size of the underlying buffer in bytes.
