@@ -7,7 +7,7 @@ every change, see the Git log.
 Latest
 ------
 * Minor: Added functions for reading and writing signed integers.
-* Minor: Changed size to be of type uint64_t instead of uint32_t.
+* Major: Changed size to be of type uint64_t instead of uint32_t.
 
 4.2.0
 -----
