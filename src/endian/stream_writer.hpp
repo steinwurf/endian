@@ -71,7 +71,7 @@ public:
         assert(size <= remaining_size());
 
         // Copy the data to the buffer
-        std::copy_n(data, size, remaining_data());
+        std::copy_n(data, (std::size_t)size, remaining_data());
 
         // Advance the current position
         m_position += size;
