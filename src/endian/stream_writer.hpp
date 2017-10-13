@@ -44,17 +44,17 @@ public:
     /// Writes a value of ValueType type and size to the stream.
     ///
     /// @param value the value to write.
-    template<class ValueType>
-    void write(ValueType value)
+    template<class Type>
+    void write(typename Type::type value)
     {
         // Make sure there is enough space in the underlying buffer
-        assert(sizeof(ValueType) <= remaining_size());
+        assert(Type::size <= remaining_size());
 
         // Write the value at the current position
-        EndianType::template put<ValueType>(value, remaining_data());
+        EndianType::template put<Type>(value, remaining_data());
 
         // Advance the current position
-        m_position += sizeof(ValueType);
+        m_position += Type::size;
     }
 
     /// Writes the raw bytes represented by the storage::const_storage
