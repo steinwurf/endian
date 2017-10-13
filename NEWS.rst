@@ -6,8 +6,8 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
-
+* Major: Removed put* and get* static functions form api.
+* Major: changed API to take endian::u* structs which defines the type to read.
 5.0.0
 -----
 * Minor: Added functions for reading and writing signed integers.
