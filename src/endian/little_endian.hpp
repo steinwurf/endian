@@ -22,10 +22,9 @@ struct little_endian
     static void put(typename Type::type value, uint8_t* buffer);
 };
 
-/// Gets an 8-bit value integer from a byte stream. Only exists for
-/// convenience in the template-based getters and putters.
-/// @param buffer pointer to the byte stream buffer
-/// @return retrieved value from the byte stream
+/// Gets an 8-bit value integer from a data buffer.
+/// @param buffer pointer to the data buffer
+/// @return retrieved value from the data buffer
 template<>
 inline u8::type little_endian::get<u8>(const uint8_t* buffer)
 {
@@ -33,10 +32,9 @@ inline u8::type little_endian::get<u8>(const uint8_t* buffer)
     return *buffer;
 }
 
-/// Inserts an 8-bit value integer into the byte stream. Only exists
-/// for convenience in the template-based getters and putters.
-/// @param value to put in the stream
-/// @param buffer pointer to the byte stream buffer
+/// Inserts an 8-bit value integer into the data buffer.
+/// @param value to put in the data buffer
+/// @param buffer pointer to the data buffer
 template<>
 inline void little_endian::put<u8>(u8::type value, uint8_t* buffer)
 {
@@ -44,20 +42,27 @@ inline void little_endian::put<u8>(u8::type value, uint8_t* buffer)
     *buffer = value;
 }
 
+/// Gets an 8-bit signed value integer from a data buffer.
+/// @param buffer pointer to the data buffer
+/// @return retrieved value from the data buffer
 template<>
 inline i8::type little_endian::get<i8>(const uint8_t* buffer)
 {
     return little_endian::get<u8>(buffer);
 }
 
+/// Inserts an 8-bit signed value integer into the data buffer.
+/// @param value to put in the data buffer
+/// @param buffer pointer to the data buffer
 template<>
 inline void little_endian::put<i8>(i8::type value, uint8_t* buffer)
 {
     little_endian::put<u8>(value, buffer);
 }
 
-/// Gets a 16-bit value integer which is in little-endian format from
-/// a byte stream.
+/// Gets an 16-bit value integer from a data buffer.
+/// @param buffer pointer to the data buffer
+/// @return retrieved value from the data buffer
 template<>
 inline u16::type little_endian::get<u16>(const uint8_t* buffer)
 {
@@ -65,8 +70,9 @@ inline u16::type little_endian::get<u16>(const uint8_t* buffer)
     return (buffer[1] << 8) | buffer[0];
 }
 
-/// Inserts a 16-bit value into a byte stream in little-endian format.
-/// @copydetails put8()
+/// Inserts an 16-bit value integer into the data buffer.
+/// @param value to put in the data buffer
+/// @param buffer pointer to the data buffer
 template<>
 inline void little_endian::put<u16>(u16::type value, uint8_t* buffer)
 {
@@ -75,20 +81,27 @@ inline void little_endian::put<u16>(u16::type value, uint8_t* buffer)
     buffer[1] = (value >> 8 & 0xFF);
 }
 
+/// Gets an 16-bit signed value integer from a data buffer.
+/// @param buffer pointer to the data buffer
+/// @return retrieved value from the data buffer
 template<>
 inline i16::type little_endian::get<i16>(const uint8_t* buffer)
 {
     return little_endian::get<u16>(buffer);
 }
 
+/// Inserts an 16-bit signed value integer into the data buffer.
+/// @param value to put in the data buffer
+/// @param buffer pointer to the data buffer
 template<>
 inline void little_endian::put<i16>(i16::type value, uint8_t* buffer)
 {
     little_endian::put<u16>(value, buffer);
 }
 
-/// Gets a 24-bit value integer which is in little-endian format from
-/// a byte stream.
+/// Gets an 24-bit value integer from a data buffer.
+/// @param buffer pointer to the data buffer
+/// @return retrieved value from the data buffer
 template<>
 inline u24::type little_endian::get<u24>(const uint8_t* buffer)
 {
@@ -96,8 +109,9 @@ inline u24::type little_endian::get<u24>(const uint8_t* buffer)
     return (buffer[2] << 16) | (buffer[1] << 8)  | buffer[0];
 }
 
-/// Inserts a 24-bit value into a byte stream in little-endian format.
-/// @copydetails put8()
+/// Inserts an 24-bit value integer into the data buffer.
+/// @param value to put in the data buffer
+/// @param buffer pointer to the data buffer
 template<>
 inline void little_endian::put<u24>(u24::type value, uint8_t* buffer)
 {
@@ -107,8 +121,9 @@ inline void little_endian::put<u24>(u24::type value, uint8_t* buffer)
     buffer[2] = ((value >> 16) & 0xFF);
 }
 
-/// Gets a 32-bit value integer which is in little-endian format from a
-/// byte stream.
+/// Gets an 32-bit value integer from a data buffer.
+/// @param buffer pointer to the data buffer
+/// @return retrieved value from the data buffer
 template<>
 inline u32::type little_endian::get<u32>(const uint8_t* buffer)
 {
@@ -117,8 +132,9 @@ inline u32::type little_endian::get<u32>(const uint8_t* buffer)
            (buffer[1] << 8)  | buffer[0];
 }
 
-/// Inserts a 32-bit value into a byte stream in little-endian format.
-/// @copydetails put8()
+/// Inserts an 32-bit value integer into the data buffer.
+/// @param value to put in the data buffer
+/// @param buffer pointer to the data buffer
 template<>
 inline void little_endian::put<u32>(u32::type value, uint8_t* buffer)
 {
@@ -129,20 +145,27 @@ inline void little_endian::put<u32>(u32::type value, uint8_t* buffer)
     buffer[3] = ((value >> 24) & 0xFF);
 }
 
+/// Gets an 32-bit signed value integer from a data buffer.
+/// @param buffer pointer to the data buffer
+/// @return retrieved value from the data buffer
 template<>
 inline i32::type little_endian::get<i32>(const uint8_t* buffer)
 {
     return little_endian::get<u32>(buffer);
 }
 
+/// Inserts an 32-bit signed value integer into the data buffer.
+/// @param value to put in the data buffer
+/// @param buffer pointer to the data buffer
 template<>
 inline void little_endian::put<i32>(i32::type value, uint8_t* buffer)
 {
     little_endian::put<u32>(value, buffer);
 }
 
-/// Gets a 40-bit value integer which is in little-endian format from a
-/// byte stream.
+/// Gets an 40-bit value integer from a data buffer.
+/// @param buffer pointer to the data buffer
+/// @return retrieved value from the data buffer
 template<>
 inline u40::type little_endian::get<u40>(const uint8_t* buffer)
 {
@@ -154,9 +177,9 @@ inline u40::type little_endian::get<u40>(const uint8_t* buffer)
            ((uint64_t) buffer[0]);
 }
 
-
-/// Inserts a 64-bit value into a byte stream in little-endian format.
-/// @copydetails put8()
+/// Inserts an 40-bit value integer into the data buffer.
+/// @param value to put in the data buffer
+/// @param buffer pointer to the data buffer
 template<>
 inline void little_endian::put<u40>(u40::type value, uint8_t* buffer)
 {
@@ -168,8 +191,9 @@ inline void little_endian::put<u40>(u40::type value, uint8_t* buffer)
     buffer[4] = ((value >> 32) & 0xFF);
 }
 
-/// Gets a 48-bit value integer which is in little-endian format from a
-/// byte stream.
+/// Gets an 48-bit value integer from a data buffer.
+/// @param buffer pointer to the data buffer
+/// @return retrieved value from the data buffer
 template<>
 inline u48::type little_endian::get<u48>(const uint8_t* buffer)
 {
@@ -182,9 +206,9 @@ inline u48::type little_endian::get<u48>(const uint8_t* buffer)
            (((uint64_t) buffer[0]));
 }
 
-
-/// Inserts a 48-bit value into a byte stream in little-endian format.
-/// @copydetails put8()
+/// Inserts an 48-bit value integer into the data buffer.
+/// @param value to put in the data buffer
+/// @param buffer pointer to the data buffer
 template<>
 inline void little_endian::put<u48>(u48::type value, uint8_t* buffer)
 {
@@ -197,8 +221,9 @@ inline void little_endian::put<u48>(u48::type value, uint8_t* buffer)
     buffer[5] = ((value >> 40) & 0xFF);
 }
 
-/// Gets a 56-bit value integer which is in little-endian format from a
-/// byte stream.
+/// Gets an 56-bit value integer from a data buffer.
+/// @param buffer pointer to the data buffer
+/// @return retrieved value from the data buffer
 template<>
 inline u56::type little_endian::get<u56>(const uint8_t* buffer)
 {
@@ -212,9 +237,9 @@ inline u56::type little_endian::get<u56>(const uint8_t* buffer)
            (((uint64_t) buffer[0]));
 }
 
-
-/// Inserts a 56-bit value into a byte stream in little-endian format.
-/// @copydetails put8()
+/// Inserts an 56-bit value integer into the data buffer.
+/// @param value to put in the data buffer
+/// @param buffer pointer to the data buffer
 template<>
 inline void little_endian::put<u56>(u56::type value, uint8_t* buffer)
 {
@@ -228,8 +253,9 @@ inline void little_endian::put<u56>(u56::type value, uint8_t* buffer)
     buffer[6] = ((value >> 48) & 0xFF);
 }
 
-/// Gets a 64-bit value integer which is in little-endian format from a
-/// byte stream.
+/// Gets an 64-bit value integer from a data buffer.
+/// @param buffer pointer to the data buffer
+/// @return retrieved value from the data buffer
 template<>
 inline u64::type little_endian::get<u64>(const uint8_t* buffer)
 {
@@ -244,9 +270,9 @@ inline u64::type little_endian::get<u64>(const uint8_t* buffer)
            (((uint64_t) buffer[0]));
 }
 
-
-/// Inserts a 64-bit value into a byte stream in little-endian format.
-/// @copydetails put8()
+/// Inserts an 64-bit value integer into the data buffer.
+/// @param value to put in the data buffer
+/// @param buffer pointer to the data buffer
 template<>
 inline void little_endian::put<u64>(u64::type value, uint8_t* buffer)
 {
@@ -261,12 +287,18 @@ inline void little_endian::put<u64>(u64::type value, uint8_t* buffer)
     buffer[7] = ((value >> 56) & 0xFF);
 }
 
+/// Gets an 64-bit signed value integer from a data buffer.
+/// @param buffer pointer to the data buffer
+/// @return retrieved value from the data buffer
 template<>
 inline i64::type little_endian::get<i64>(const uint8_t* buffer)
 {
     return little_endian::get<u64>(buffer);
 }
 
+/// Inserts an 64-bit signed value integer into the data buffer.
+/// @param value to put in the data buffer
+/// @param buffer pointer to the data buffer
 template<>
 inline void little_endian::put<i64>(i64::type value, uint8_t* buffer)
 {

@@ -6,8 +6,11 @@ every change, see the Git log.
 
 Latest
 ------
-* Major: Removed put* and get* static functions form api.
-* Major: changed API to take endian::u* structs which defines the type to read.
+* Major: Removed put* and get* static functions.
+* Major: Changed API to use endian::u* structs which defines the type to read.
+  This extends the capabilities of the library to also support reads of values
+  which consists of 24, 40, 48, and 56 bits.
+
 5.0.0
 -----
 * Minor: Added functions for reading and writing signed integers.
