@@ -7,9 +7,9 @@ every change, see the Git log.
 Latest
 ------
 * Major: Removed put* and get* static functions.
-* Major: Changed API to use endian::u* structs which defines the type to read.
-  This extends the capabilities of the library to also support reads of values
-  which consists of 24, 40, 48, and 56 bits.
+* Major: Added support for additional byte sized fields. Instead of
+  directly using the native types. endian now uses the types defined in
+  ``src/endian/types.hpp`` such as ``u8``, ``u16``, ``u24``, ``u32``, etc.
 
 5.0.0
 -----
