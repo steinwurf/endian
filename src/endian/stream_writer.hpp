@@ -49,6 +49,7 @@ public:
     {
         // Make sure there is enough space in the underlying buffer
         assert(Type::size <= remaining_size());
+        assert(value <= Type::max);
 
         // Write the value at the current position
         EndianType::template put<Type>(value, remaining_data());

@@ -100,6 +100,7 @@ template<>
 inline void big_endian::put<u24>(u24::type value, uint8_t* buffer)
 {
     assert(buffer != nullptr);
+    assert(value <= u24::max);
     buffer[2] = (value & 0xFF);
     buffer[1] = ((value >> 8) & 0xFF);
     buffer[0] = ((value >> 16) & 0xFF);
@@ -156,6 +157,7 @@ template<>
 inline void big_endian::put<u40>(u40::type value, uint8_t* buffer)
 {
     assert(buffer != nullptr);
+    assert(value <= u40::max);
     buffer[4] = (value & 0xFF);
     buffer[3] = ((value >> 8) & 0xFF);
     buffer[2] = ((value >> 16) & 0xFF);
@@ -182,6 +184,7 @@ template<>
 inline void big_endian::put<u48>(u48::type value, uint8_t* buffer)
 {
     assert(buffer != nullptr);
+    assert(value <= u48::max);
     buffer[5] = (value & 0xFF);
     buffer[4] = ((value >> 8) & 0xFF);
     buffer[3] = ((value >> 16) & 0xFF);
@@ -210,6 +213,7 @@ template<>
 inline void big_endian::put<u56>(u56::type value, uint8_t* buffer)
 {
     assert(buffer != nullptr);
+    assert(value <= u56::max);
     buffer[6] = (value & 0xFF);
     buffer[5] = ((value >> 8) & 0xFF);
     buffer[4] = ((value >> 16) & 0xFF);

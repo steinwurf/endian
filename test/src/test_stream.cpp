@@ -179,12 +179,12 @@ void write_and_read_random_value_type_test()
 
     std::random_device device;
     std::mt19937 engine(device());
-    std::uniform_int_distribution<value_type> distribution(
+    std::uniform_int_distribution<uint64_t> distribution(
         Type::min, Type::max);
 
     for (uint32_t i = 0; i < elements; i++)
     {
-        values[i] = distribution(engine);
+        values[i] = (value_type)distribution(engine);
         stream_writer.template write<Type>(values[i]);
     }
     for (uint32_t i = 0; i < elements; i++)
@@ -217,65 +217,65 @@ void write_and_read_variadic_types_test()
         {
         case 0:
         {
-            std::uniform_int_distribution<endian::u8::type> distribution(
+            std::uniform_int_distribution<uint64_t> distribution(
                 endian::u8::min, endian::u8::max);
-            values[i] = distribution(engine);
+            values[i] = (endian::u8::type)distribution(engine);
             writer.template write<endian::u8>(values[i]);
             break;
         }
         case 1:
         {
-            std::uniform_int_distribution<endian::u16::type> distribution(
+            std::uniform_int_distribution<uint64_t> distribution(
                 endian::u16::min, endian::u16::max);
-            values[i] = distribution(engine);
+            values[i] = (endian::u16::type)distribution(engine);
             writer.template write<endian::u16>(values[i]);
             break;
         }
         case 2:
         {
-            std::uniform_int_distribution<endian::u24::type> distribution(
+            std::uniform_int_distribution<uint64_t> distribution(
                 endian::u24::min, endian::u24::max);
-            values[i] = distribution(engine);
+            values[i] = (endian::u24::type)distribution(engine);
             writer.template write<endian::u24>(values[i]);
             break;
         }
         case 3:
         {
-            std::uniform_int_distribution<endian::u32::type> distribution(
+            std::uniform_int_distribution<uint64_t> distribution(
                 endian::u32::min, endian::u32::max);
-            values[i] = distribution(engine);
+            values[i] = (endian::u32::type)distribution(engine);
             writer.template write<endian::u32>(values[i]);
             break;
         }
         case 4:
         {
-            std::uniform_int_distribution<endian::u40::type> distribution(
+            std::uniform_int_distribution<uint64_t> distribution(
                 endian::u40::min, endian::u40::max);
-            values[i] = distribution(engine);
+            values[i] = (endian::u40::type)distribution(engine);
             writer.template write<endian::u40>(values[i]);
             break;
         }
         case 5:
         {
-            std::uniform_int_distribution<endian::u48::type> distribution(
+            std::uniform_int_distribution<uint64_t> distribution(
                 endian::u48::min, endian::u48::max);
-            values[i] = distribution(engine);
+            values[i] = (endian::u48::type)distribution(engine);
             writer.template write<endian::u48>(values[i]);
             break;
         }
         case 6:
         {
-            std::uniform_int_distribution<endian::u56::type> distribution(
+            std::uniform_int_distribution<uint64_t> distribution(
                 endian::u56::min, endian::u56::max);
-            values[i] = distribution(engine);
+            values[i] = (endian::u56::type)distribution(engine);
             writer.template write<endian::u56>(values[i]);
             break;
         }
         case 7:
         {
-            std::uniform_int_distribution<endian::u64::type> distribution(
+            std::uniform_int_distribution<uint64_t> distribution(
                 endian::u64::min, endian::u64::max);
-            values[i] = distribution(engine);
+            values[i] = (endian::u64::type)distribution(engine);
             writer.template write<endian::u64>(values[i]);
             break;
         }
