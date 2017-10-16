@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+6.0.0
+-----
 * Major: Removed put* and get* static functions.
 * Major: Added support for additional byte sized fields. Instead of
   directly using the native types. endian now uses the types defined in
