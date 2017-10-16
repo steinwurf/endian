@@ -60,9 +60,9 @@ TEST(test_big_endian, convert)
         EXPECT_EQ(0x22U, data[1]);
         EXPECT_EQ(0x33U, data[2]);
 
-        // // Get should swap the value back (no change for big endian)
-        // uint32_t out = endian::big_endian::get<endian::u24>(data);
-        // EXPECT_EQ(out, input);
+        // Get should swap the value back (no change for big endian)
+        uint32_t out = endian::big_endian::get<endian::u24>(data);
+        EXPECT_EQ(out, input);
     }
 
     // Test 32-bit integer
