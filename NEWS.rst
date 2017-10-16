@@ -6,7 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Major: Removed put* and get* static functions.
+* Major: Added support for additional byte sized fields. Instead of
+  directly using the native types. endian now uses the types defined in
+  ``src/endian/types.hpp`` such as ``u8``, ``u16``, ``u24``, ``u32``, etc.
 
 5.0.0
 -----

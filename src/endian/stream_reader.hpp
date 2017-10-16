@@ -44,17 +44,17 @@ public:
     /// Reads from the stream and moves the read position.
     ///
     /// @param value reference to the value to be read
-    template<class ValueType>
-    void read(ValueType& value)
+    template<class Type>
+    void read(typename Type::type& value)
     {
         // Make sure there is enough data to read in the underlying buffer
-        assert(sizeof(ValueType) <= remaining_size());
+        assert(Type::size <= remaining_size());
 
         // Read the value at the current position
-        value = EndianType::template get<ValueType>(remaining_data());
+        value = EndianType::template get<Type>(remaining_data());
 
         // Advance the current position
-        m_position += sizeof(ValueType);
+        m_position += Type::size;
     }
 
     /// Reads raw bytes from the stream to fill a buffer represented by

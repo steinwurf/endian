@@ -13,7 +13,6 @@
 
 #include <gtest/gtest.h>
 
-
 template<class EndianType>
 static void test_basic_api()
 {
