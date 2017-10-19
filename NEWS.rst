@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+6.0.1
+-----
 * Patch: Allow streams of size 0.
 
 6.0.0
