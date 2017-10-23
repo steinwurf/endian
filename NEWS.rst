@@ -6,7 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Minor: Added `peek` which allows reading without moving the read position.
 
 6.0.1
 -----

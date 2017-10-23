@@ -50,8 +50,8 @@ public:
         // Make sure there is enough data to read in the underlying buffer
         assert(Type::size <= remaining_size());
 
-        // Read the value at the current position
-        value = EndianType::template get<Type>(remaining_data());
+        // Get the value at the current position
+        peek<Type>(value);
 
         // Advance the current position
         m_position += Type::size;
@@ -75,6 +75,20 @@ public:
 
         // Advance the current position
         m_position += size;
+    }
+
+    /// Peeks in the stream by reading at the current position
+    /// without moving it.
+    ///
+    /// @param value reference to the value to be read
+    template<class Type>
+    void peek(typename Type::type& value)
+    {
+        // Make sure there is enough data to read in the underlying buffer
+        assert(Type::size <= remaining_size());
+
+        // Get the value at the current position
+        value = EndianType::template get<Type>(remaining_data());
     }
 
     /// A pointer to the stream's data.

@@ -300,34 +300,82 @@ void write_and_read_variadic_types_test()
         switch (i % 4)
         {
         case 0:
+            // test peek
+            reader.template peek<endian::u8>(last_u8);
+            EXPECT_EQ(values[i], last_u8);
+
+            // test read
+            last_u8 = 0;
             reader.template read<endian::u8>(last_u8);
             EXPECT_EQ(values[i], last_u8);
             break;
         case 1:
+            // test peek
+            reader.template peek<endian::u16>(last_u16);
+            EXPECT_EQ(values[i], last_u16);
+
+            // test read
+            last_u16 = 0;
             reader.template read<endian::u16>(last_u16);
             EXPECT_EQ(values[i], last_u16);
             break;
         case 2:
+            // test peek
+            reader.template peek<endian::u24>(last_u24);
+            EXPECT_EQ(values[i], last_u24);
+
+            // test read
+            last_u24 = 0;
             reader.template read<endian::u24>(last_u24);
             EXPECT_EQ(values[i], last_u24);
             break;
         case 3:
+            // test peek
+            reader.template peek<endian::u32>(last_u32);
+            EXPECT_EQ(values[i], last_u32);
+
+            // test read
+            last_u32 = 0;
             reader.template read<endian::u32>(last_u32);
             EXPECT_EQ(values[i], last_u32);
             break;
         case 4:
+            // test peek
+            reader.template peek<endian::u40>(last_u40);
+            EXPECT_EQ(values[i], last_u40);
+
+            // test read
+            last_u40 = 0;
             reader.template read<endian::u40>(last_u40);
             EXPECT_EQ(values[i], last_u40);
             break;
         case 5:
+            // test peek
+            reader.template peek<endian::u48>(last_u48);
+            EXPECT_EQ(values[i], last_u48);
+
+            // test read
+            last_u48 = 0;
             reader.template read<endian::u48>(last_u48);
             EXPECT_EQ(values[i], last_u48);
             break;
         case 6:
+            // test peek
+            reader.template peek<endian::u56>(last_u56);
+            EXPECT_EQ(values[i], last_u56);
+
+            // test read
+            last_u56 = 0;
             reader.template read<endian::u56>(last_u56);
             EXPECT_EQ(values[i], last_u56);
             break;
         case 7:
+            // test peek
+            reader.template peek<endian::u64>(last_u64);
+            EXPECT_EQ(values[i], last_u64);
+
+            // test read
+            last_u64 = 0;
             reader.template read<endian::u64>(last_u64);
             EXPECT_EQ(values[i], last_u64);
             break;
