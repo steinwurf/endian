@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+7.0.0
+-----
 * Major: Renamed ``get`` and ``put`` to ``get_bytes`` and ``put_bytes``.
 * Minor: Added possiblity to read native types with ``get`` and ``put``.
 
