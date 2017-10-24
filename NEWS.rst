@@ -6,7 +6,9 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Minor: Made ``peek`` const.
+* Minor: ``peek`` now takes a defaulted offset parameter for peeking further
+  ahead in the stream.
 
 6.1.0
 -----

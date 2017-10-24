@@ -82,13 +82,15 @@ public:
     ///
     /// @param value reference to the value to be read
     template<class Type>
-    void peek(typename Type::type& value)
+    void peek(typename Type::type& value, uint64_t offset=0) const
     {
+        assert(remaining_size() >= offset);
         // Make sure there is enough data to read in the underlying buffer
-        assert(Type::size <= remaining_size());
+        assert(Type::size <= remaining_size() - offset);
 
+        const uint8_t* data_position = remaining_data() + offset;
         // Get the value at the current position
-        value = EndianType::template get<Type>(remaining_data());
+        value = EndianType::template get<Type>(data_position);
     }
 
     /// A pointer to the stream's data.

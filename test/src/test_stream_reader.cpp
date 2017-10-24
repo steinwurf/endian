@@ -90,6 +90,42 @@ static void test_basic_api()
         EXPECT_EQ(stream1.size(), stream2.size());
         EXPECT_EQ(stream1.data(), stream2.data());
     }
+
+    {
+        SCOPED_TRACE(testing::Message() << "peek");
+        std::vector<uint8_t> buffer = { 1, 2 };
+        endian::stream_reader<EndianType> stream(buffer.data(), buffer.size());
+        uint8_t first_peek = 0;
+        uint8_t second_peek = 0;
+        uint8_t first_read = 0;
+        stream.template peek<endian::u8>(first_peek);
+        stream.template peek<endian::u8>(second_peek);
+        stream.template read<endian::u8>(first_read);
+        EXPECT_EQ(first_peek, second_peek);
+        EXPECT_EQ(first_peek, first_read);
+
+        uint8_t second_read = 0;
+        uint8_t third_peek = 0;
+        stream.template peek<endian::u8>(third_peek);
+        stream.template read<endian::u8>(second_read);
+        EXPECT_NE(first_peek, third_peek);
+        EXPECT_EQ(third_peek, second_read);
+    }
+
+    {
+        SCOPED_TRACE(testing::Message() << "offset peek");
+        std::vector<uint8_t> buffer = { 1, 2, 3, 4 };
+        endian::stream_reader<EndianType> stream(buffer.data(), buffer.size());
+        uint8_t first_peek_at_3 = 0;
+        uint8_t second_peek_at_1 = 0;
+        uint8_t first_read = 0;
+        stream.template peek<endian::u8>(first_peek_at_3, 2);
+        stream.template peek<endian::u8>(second_peek_at_1, 0);
+        stream.template read<endian::u8>(first_read);
+        EXPECT_NE(first_peek_at_3, second_peek_at_1);
+        EXPECT_NE(first_peek_at_3, first_read);
+        EXPECT_EQ(second_peek_at_1, first_read);
+    }
 }
 
 TEST(test_stream_reader, basic_api_little_endian)
