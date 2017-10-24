@@ -52,7 +52,7 @@ public:
         assert(value <= Type::max);
 
         // Write the value at the current position
-        EndianType::template put<Type>(value, remaining_data());
+        EndianType::template put_bytes<Type>(value, remaining_data());
 
         // Advance the current position
         m_position += Type::size;

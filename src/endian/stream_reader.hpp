@@ -91,7 +91,7 @@ public:
 
         const uint8_t* data_position = remaining_data() + offset;
         // Get the value at the current position
-        value = EndianType::template get<Type>(data_position);
+        value = EndianType::template get_bytes<Type>(data_position);
     }
 
     /// A pointer to the stream's data.
