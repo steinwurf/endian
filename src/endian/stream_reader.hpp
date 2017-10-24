@@ -81,6 +81,7 @@ public:
     /// without moving it.
     ///
     /// @param value reference to the value to be read
+    /// @param offset number of bytes to offset the peeking with
     template<class Type>
     void peek(typename Type::type& value, uint64_t offset=0) const
     {
