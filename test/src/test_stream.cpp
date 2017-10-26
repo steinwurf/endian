@@ -136,28 +136,28 @@ void write_and_read_value_type_test()
 
     for (uint32_t i = 0; i < elements; i++)
     {
-        stream_writer.template write<Type>(highest_value);
+        stream_writer.template write_bytes<Type>(highest_value);
     }
 
     stream_reader.seek(0);
     for (uint32_t i = 0; i < elements; i++)
     {
         value_type value = 0;
-        stream_reader.template read<Type>(value);
+        stream_reader.template read_bytes<Type>(value);
         EXPECT_EQ(highest_value, value);
     }
 
     stream_writer.seek(0);
     for (uint32_t i = 0; i < elements; i++)
     {
-        stream_writer.template write<Type>(lowest_value);
+        stream_writer.template write_bytes<Type>(lowest_value);
     }
 
     stream_reader.seek(0);
     for (uint32_t i = 0; i < elements; i++)
     {
         value_type value = 0;
-        stream_reader.template read<Type>(value);
+        stream_reader.template read_bytes<Type>(value);
         EXPECT_EQ(lowest_value, value);
     }
 }
@@ -185,42 +185,39 @@ void write_and_read_random_value_type_test()
     for (uint32_t i = 0; i < elements; i++)
     {
         values[i] = (value_type)distribution(engine);
-        stream_writer.template write<Type>(values[i]);
+        stream_writer.template write_bytes<Type>(values[i]);
     }
     for (uint32_t i = 0; i < elements; i++)
     {
         value_type value;
-        stream_reader.template read<Type>(value);
+        stream_reader.template read_bytes<Type>(value);
         EXPECT_EQ(values[i], value);
     }
 }
 
 template<class EndianType>
-void write_and_read_variadic_types_test()
+void run_write_peek_and_read_variadic_bytes_test()
 {
     const uint32_t elements = 1024;
-    const uint64_t size = 1024 * sizeof(uint64_t);
-    std::vector<uint8_t> buffer;
-    buffer.resize(size);
+    const uint64_t size = elements * sizeof(uint64_t);
+    std::vector<uint8_t> buffer(size);
 
     endian::stream_writer<EndianType> writer(buffer.data(), size);
-
-    std::vector<uint64_t> values;
-    values.resize(elements);
 
     std::random_device device;
     std::mt19937 engine(device());
 
+    std::vector<uint64_t> values(elements);
     for (uint32_t i = 0; i < elements; i++)
     {
-        switch (i % 4)
+        switch (i % 8)
         {
         case 0:
         {
             std::uniform_int_distribution<uint64_t> distribution(
                 endian::u8::min, endian::u8::max);
             values[i] = (endian::u8::type)distribution(engine);
-            writer.template write<endian::u8>(values[i]);
+            writer.template write_bytes<endian::u8>(values[i]);
             break;
         }
         case 1:
@@ -228,7 +225,7 @@ void write_and_read_variadic_types_test()
             std::uniform_int_distribution<uint64_t> distribution(
                 endian::u16::min, endian::u16::max);
             values[i] = (endian::u16::type)distribution(engine);
-            writer.template write<endian::u16>(values[i]);
+            writer.template write_bytes<endian::u16>(values[i]);
             break;
         }
         case 2:
@@ -236,7 +233,7 @@ void write_and_read_variadic_types_test()
             std::uniform_int_distribution<uint64_t> distribution(
                 endian::u24::min, endian::u24::max);
             values[i] = (endian::u24::type)distribution(engine);
-            writer.template write<endian::u24>(values[i]);
+            writer.template write_bytes<endian::u24>(values[i]);
             break;
         }
         case 3:
@@ -244,7 +241,7 @@ void write_and_read_variadic_types_test()
             std::uniform_int_distribution<uint64_t> distribution(
                 endian::u32::min, endian::u32::max);
             values[i] = (endian::u32::type)distribution(engine);
-            writer.template write<endian::u32>(values[i]);
+            writer.template write_bytes<endian::u32>(values[i]);
             break;
         }
         case 4:
@@ -252,7 +249,7 @@ void write_and_read_variadic_types_test()
             std::uniform_int_distribution<uint64_t> distribution(
                 endian::u40::min, endian::u40::max);
             values[i] = (endian::u40::type)distribution(engine);
-            writer.template write<endian::u40>(values[i]);
+            writer.template write_bytes<endian::u40>(values[i]);
             break;
         }
         case 5:
@@ -260,7 +257,7 @@ void write_and_read_variadic_types_test()
             std::uniform_int_distribution<uint64_t> distribution(
                 endian::u48::min, endian::u48::max);
             values[i] = (endian::u48::type)distribution(engine);
-            writer.template write<endian::u48>(values[i]);
+            writer.template write_bytes<endian::u48>(values[i]);
             break;
         }
         case 6:
@@ -268,7 +265,7 @@ void write_and_read_variadic_types_test()
             std::uniform_int_distribution<uint64_t> distribution(
                 endian::u56::min, endian::u56::max);
             values[i] = (endian::u56::type)distribution(engine);
-            writer.template write<endian::u56>(values[i]);
+            writer.template write_bytes<endian::u56>(values[i]);
             break;
         }
         case 7:
@@ -276,7 +273,7 @@ void write_and_read_variadic_types_test()
             std::uniform_int_distribution<uint64_t> distribution(
                 endian::u64::min, endian::u64::max);
             values[i] = (endian::u64::type)distribution(engine);
-            writer.template write<endian::u64>(values[i]);
+            writer.template write_bytes<endian::u64>(values[i]);
             break;
         }
         }
@@ -297,86 +294,86 @@ void write_and_read_variadic_types_test()
     // Read values in FIFO order
     for (uint32_t i = 0; i < elements; i++)
     {
-        switch (i % 4)
+        switch (i % 8)
         {
         case 0:
             // test peek
-            reader.template peek<endian::u8>(last_u8);
+            reader.template peek_bytes<endian::u8>(last_u8);
             EXPECT_EQ(values[i], last_u8);
 
             // test read
             last_u8 = 0;
-            reader.template read<endian::u8>(last_u8);
+            reader.template read_bytes<endian::u8>(last_u8);
             EXPECT_EQ(values[i], last_u8);
             break;
         case 1:
             // test peek
-            reader.template peek<endian::u16>(last_u16);
+            reader.template peek_bytes<endian::u16>(last_u16);
             EXPECT_EQ(values[i], last_u16);
 
             // test read
             last_u16 = 0;
-            reader.template read<endian::u16>(last_u16);
+            reader.template read_bytes<endian::u16>(last_u16);
             EXPECT_EQ(values[i], last_u16);
             break;
         case 2:
             // test peek
-            reader.template peek<endian::u24>(last_u24);
+            reader.template peek_bytes<endian::u24>(last_u24);
             EXPECT_EQ(values[i], last_u24);
 
             // test read
             last_u24 = 0;
-            reader.template read<endian::u24>(last_u24);
+            reader.template read_bytes<endian::u24>(last_u24);
             EXPECT_EQ(values[i], last_u24);
             break;
         case 3:
             // test peek
-            reader.template peek<endian::u32>(last_u32);
+            reader.template peek_bytes<endian::u32>(last_u32);
             EXPECT_EQ(values[i], last_u32);
 
             // test read
             last_u32 = 0;
-            reader.template read<endian::u32>(last_u32);
+            reader.template read_bytes<endian::u32>(last_u32);
             EXPECT_EQ(values[i], last_u32);
             break;
         case 4:
             // test peek
-            reader.template peek<endian::u40>(last_u40);
+            reader.template peek_bytes<endian::u40>(last_u40);
             EXPECT_EQ(values[i], last_u40);
 
             // test read
             last_u40 = 0;
-            reader.template read<endian::u40>(last_u40);
+            reader.template read_bytes<endian::u40>(last_u40);
             EXPECT_EQ(values[i], last_u40);
             break;
         case 5:
             // test peek
-            reader.template peek<endian::u48>(last_u48);
+            reader.template peek_bytes<endian::u48>(last_u48);
             EXPECT_EQ(values[i], last_u48);
 
             // test read
             last_u48 = 0;
-            reader.template read<endian::u48>(last_u48);
+            reader.template read_bytes<endian::u48>(last_u48);
             EXPECT_EQ(values[i], last_u48);
             break;
         case 6:
             // test peek
-            reader.template peek<endian::u56>(last_u56);
+            reader.template peek_bytes<endian::u56>(last_u56);
             EXPECT_EQ(values[i], last_u56);
 
             // test read
             last_u56 = 0;
-            reader.template read<endian::u56>(last_u56);
+            reader.template read_bytes<endian::u56>(last_u56);
             EXPECT_EQ(values[i], last_u56);
             break;
         case 7:
             // test peek
-            reader.template peek<endian::u64>(last_u64);
+            reader.template peek_bytes<endian::u64>(last_u64);
             EXPECT_EQ(values[i], last_u64);
 
             // test read
             last_u64 = 0;
-            reader.template read<endian::u64>(last_u64);
+            reader.template read_bytes<endian::u64>(last_u64);
             EXPECT_EQ(values[i], last_u64);
             break;
         }
@@ -384,7 +381,7 @@ void write_and_read_variadic_types_test()
 }
 
 template<class EndianType>
-static void write_and_read_string_test()
+static void run_write_and_read_string_test()
 {
     const uint64_t size = 1024;
     std::vector<uint8_t> buffer;
@@ -398,11 +395,11 @@ static void write_and_read_string_test()
 
     // Write the strings together with their lengths
     // The length is written as 16-bit integers
-    writer.template write<endian::u16>(first.size());
+    writer.template write_bytes<endian::u16>(first.size());
     writer.write((uint8_t*)first.c_str(), first.size());
-    writer.template write<endian::u16>(second.size());
+    writer.template write_bytes<endian::u16>(second.size());
     writer.write((uint8_t*)second.c_str(), second.size());
-    writer.template write<endian::u16>(third.size());
+    writer.template write_bytes<endian::u16>(third.size());
     writer.write((uint8_t*)third.c_str(), third.size());
 
     // Create reader
@@ -412,7 +409,7 @@ static void write_and_read_string_test()
     {
         std::string string;
         uint16_t length;
-        reader.template read<endian::u16>(length);
+        reader.template read_bytes<endian::u16>(length);
         EXPECT_EQ(first.size(), length);
         string.resize(length);
         reader.read((uint8_t*)string.c_str(), length);
@@ -421,7 +418,7 @@ static void write_and_read_string_test()
     {
         std::string string;
         uint16_t length;
-        reader.template read<endian::u16>(length);
+        reader.template read_bytes<endian::u16>(length);
         EXPECT_EQ(second.size(), length);
         string.resize(length);
         reader.read((uint8_t*)string.c_str(), length);
@@ -430,7 +427,7 @@ static void write_and_read_string_test()
     {
         std::string string;
         uint16_t length;
-        reader.template read<endian::u16>(length);
+        reader.template read_bytes<endian::u16>(length);
         EXPECT_EQ(third.size(), length);
         string.resize(length);
         reader.read((uint8_t*)string.c_str(), length);
@@ -439,7 +436,7 @@ static void write_and_read_string_test()
 }
 
 template<class EndianType>
-static void run_read_write_vector_test()
+static void run_write_read_vector_test()
 {
     const uint64_t size = 1024;
     std::vector<uint8_t> buffer;
@@ -453,12 +450,12 @@ static void run_read_write_vector_test()
 
     // Write the vectors together with their lengths
     // The length is written as 16-bit integers
-    writer.template write<endian::u16>(first.size());
+    writer.template write_bytes<endian::u16>(first.size());
     writer.write((uint8_t*)first.data(), first.size() * sizeof(first_type));
 
     // The size here refers to the number of integers
     // stored in the second vector
-    writer.template write<endian::u16>(second.size());
+    writer.template write_bytes<endian::u16>(second.size());
     writer.write((uint8_t*)second.data(), second.size() * sizeof(second_type));
 
     // Temp variables
@@ -470,7 +467,7 @@ static void run_read_write_vector_test()
 
     {
         uint16_t length;
-        reader.template read<endian::u16>(length);
+        reader.template read_bytes<endian::u16>(length);
         EXPECT_EQ(first.size(), length);
 
         std::vector<first_type> vector;
@@ -480,13 +477,127 @@ static void run_read_write_vector_test()
     }
     {
         uint16_t length;
-        reader.template read<endian::u16>(length);
+        reader.template read_bytes<endian::u16>(length);
         EXPECT_EQ(second.size(), length);
 
         std::vector<second_type> vector;
         vector.resize(length);
         reader.read((uint8_t*)vector.data(), length * sizeof(second_type));
         EXPECT_EQ(second, vector);
+    }
+}
+
+template<class EndianType>
+static void run_write_peek_and_read_variadic_uintx_t_test()
+{
+    const uint32_t elements = 1024;
+    const uint64_t size = elements * sizeof(uint64_t);
+    std::vector<uint8_t> buffer(size);
+
+    endian::stream_writer<EndianType> writer(buffer.data(), size);
+
+    std::random_device device;
+    std::mt19937 engine(device());
+
+    std::vector<uint64_t> values(elements);
+    for (uint32_t i = 0; i < elements; i++)
+    {
+        switch (i % 4)
+        {
+        case 0:
+        {
+            std::uniform_int_distribution<uint64_t> distribution(
+                std::numeric_limits<uint8_t>::max(),
+                std::numeric_limits<uint8_t>::max());
+
+            values[i] = (uint8_t)distribution(engine);
+            writer.template write<uint8_t>(values[i]);
+            break;
+        }
+        case 1:
+        {
+            std::uniform_int_distribution<uint64_t> distribution(
+                std::numeric_limits<uint16_t>::min(),
+                std::numeric_limits<uint16_t>::max());
+            values[i] = (uint16_t)distribution(engine);
+            writer.template write<uint16_t>(values[i]);
+            break;
+        }
+        case 2:
+        {
+            std::uniform_int_distribution<uint64_t> distribution(
+                std::numeric_limits<uint32_t>::min(),
+                std::numeric_limits<uint32_t>::max());
+            values[i] = (uint32_t)distribution(engine);
+            writer.template write<uint32_t>(values[i]);
+            break;
+        }
+        case 3:
+        {
+            std::uniform_int_distribution<uint64_t> distribution(
+                std::numeric_limits<uint64_t>::min(),
+                std::numeric_limits<uint64_t>::max());
+            values[i] = (uint64_t)distribution(engine);
+            writer.template write<uint64_t>(values[i]);
+            break;
+        }
+        }
+    }
+
+    uint8_t last_uint8_t = 0;
+    uint16_t last_uint16_t = 0;
+    uint32_t last_uint32_t = 0;
+    uint64_t last_uint64_t = 0;
+
+    // create reader
+    endian::stream_reader<EndianType> reader(buffer.data(), size);
+
+    // Read values in FIFO order
+    for (uint32_t i = 0; i < elements; i++)
+    {
+        switch (i % 4)
+        {
+        case 0:
+            // test peek
+            reader.template peek<uint8_t>(last_uint8_t);
+            EXPECT_EQ(values[i], last_uint8_t);
+
+            // test read
+            last_uint8_t = 0;
+            reader.template read<uint8_t>(last_uint8_t);
+            EXPECT_EQ(values[i], last_uint8_t);
+            break;
+        case 1:
+            // test peek
+            reader.template peek<uint16_t>(last_uint16_t);
+            EXPECT_EQ(values[i], last_uint16_t);
+
+            // test read
+            last_uint16_t = 0;
+            reader.template read<uint16_t>(last_uint16_t);
+            EXPECT_EQ(values[i], last_uint16_t);
+            break;
+        case 2:
+            // test peek
+            reader.template peek<uint32_t>(last_uint32_t);
+            EXPECT_EQ(values[i], last_uint32_t);
+
+            // test read
+            last_uint32_t = 0;
+            reader.template read<uint32_t>(last_uint32_t);
+            EXPECT_EQ(values[i], last_uint32_t);
+            break;
+        case 3:
+            // test peek
+            reader.template peek<uint64_t>(last_uint64_t);
+            EXPECT_EQ(values[i], last_uint64_t);
+
+            // test read
+            last_uint64_t = 0;
+            reader.template read<uint64_t>(last_uint64_t);
+            EXPECT_EQ(values[i], last_uint64_t);
+            break;
+        }
     }
 }
 
@@ -554,9 +665,10 @@ static void test_reader_and_writer_api()
         write_and_read_random_value_type_test<endian::i64, EndianType>();
     }
 
-    write_and_read_variadic_types_test<EndianType>();
-    write_and_read_string_test<EndianType>();
-    run_read_write_vector_test<EndianType>();
+    run_write_peek_and_read_variadic_bytes_test<EndianType>();
+    run_write_and_read_string_test<EndianType>();
+    run_write_read_vector_test<EndianType>();
+    run_write_peek_and_read_variadic_uintx_t_test<EndianType>();
 }
 
 TEST(test_stream, test_reader_and_writer)

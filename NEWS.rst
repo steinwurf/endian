@@ -6,7 +6,16 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Major: Renamed ``types.hpp`` to ``bytes.hpp``.
+* Major: Renamed ``stream_reader.read`` to ``stream_reader.read_bytes``.
+* Major: Renamed ``stream_reader.read`` to ``stream_reader.read_bytes``.
+* Major: Renamed ``stream_writer.write`` to ``stream_writer.write_bytes``.
+* Major: Added ``stream_writer.write`` which allows writing ``uint8_t``,
+  ``uint16_t``, ``uint32_t``, and ``uint64_t``.
+* Major: Added ``stream_reader.read`` which allows reading ``uint8_t``,
+  ``uint16_t``, ``uint32_t``, and ``uint64_t``.
+* Major: Added ``stream_reader.peek`` which allows peeking ``uint8_t``,
+  ``uint16_t``, ``uint32_t``, and ``uint64_t``.
 
 7.0.0
 -----

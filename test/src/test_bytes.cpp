@@ -3,6 +3,6 @@
 //
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
 
-#include <endian/types.hpp>
+#include <endian/bytes.hpp>
 
 #include <gtest/gtest.h>

@@ -8,24 +8,24 @@
 #include <cstdint>
 #include <cassert>
 
-#include "types.hpp"
+#include "bytes.hpp"
 
 namespace endian
 {
 // Inserts and extracts integers in big-endian format.
 struct big_endian
 {
-    template<class IntegerType>
-    static IntegerType get(const uint8_t* buffer);
+    template<class ValueType>
+    static ValueType get(const uint8_t* buffer);
 
-    template<class IntegerType>
-    static void put(IntegerType value, uint8_t* buffer);
+    template<class ValueType>
+    static void put(ValueType value, uint8_t* buffer);
 
-    template<class Type>
-    static typename Type::type get_bytes(const uint8_t* buffer);
+    template<class Bytes>
+    static typename Bytes::type get_bytes(const uint8_t* buffer);
 
-    template<class Type>
-    static void put_bytes(typename Type::type value, uint8_t* buffer);
+    template<class Bytes>
+    static void put_bytes(typename Bytes::type value, uint8_t* buffer);
 };
 
 template<>
