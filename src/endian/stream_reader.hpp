@@ -41,36 +41,20 @@ public:
         stream_reader(buffer.data(), buffer.size())
     { }
 
-    /// Reads bytes from the stream and moves the read position.
-    ///
-    /// @param value reference to the value to be read
-    template<class Bytes>
-    void read_bytes(typename Bytes::type& value)
-    {
-        // Make sure there is enough data to read in the underlying buffer
-        assert(Bytes::size <= remaining_size());
-
-        // Get the value at the current position
-        peek_bytes<Bytes>(value);
-
-        // Advance the current position
-        m_position += Bytes::size;
-    }
-
     /// Reads from the stream and moves the read position.
     ///
     /// @param value reference to the value to be read
-    template<class ValueType>
+    template<uint8_t Bytes, class ValueType>
     void read(ValueType& value)
     {
         // Make sure there is enough data to read in the underlying buffer
-        assert(sizeof(ValueType) <= remaining_size());
+        assert(Bytes <= remaining_size());
 
         // Get the value at the current position
-        peek<ValueType>(value);
+        peek<Bytes, ValueType>(value);
 
         // Advance the current position
-        m_position += sizeof(ValueType);
+        m_position += Bytes;
     }
 
     /// Reads raw bytes from the stream to fill a buffer represented by
@@ -93,37 +77,21 @@ public:
         m_position += size;
     }
 
-    /// Peeks bytes in the stream at the current position.
-    ///
-    /// @param value reference to the value to be read
-    /// @param offset number of bytes to offset the peeking with
-    template<class Bytes>
-    void peek_bytes(typename Bytes::type& value, uint64_t offset=0) const
-    {
-        assert(remaining_size() >= offset);
-        // Make sure there is enough data to read in the underlying buffer
-        assert(Bytes::size <= remaining_size() - offset);
-
-        const uint8_t* data_position = remaining_data() + offset;
-        // Get the value at the current position
-        value = EndianType::template get_bytes<Bytes>(data_position);
-    }
-
     /// Peeks in the stream by reading at the current position
     /// without moving it.
     ///
     /// @param value reference to the value to be read
     /// @param offset number of bytes to offset the peeking with
-    template<class ValueType>
+    template<uint8_t Bytes, class ValueType>
     void peek(ValueType& value, uint64_t offset=0) const
     {
         assert(remaining_size() >= offset);
         // Make sure there is enough data to read in the underlying buffer
-        assert(sizeof(ValueType) <= remaining_size() - offset);
+        assert(Bytes <= remaining_size() - offset);
 
         const uint8_t* data_position = remaining_data() + offset;
         // Get the value at the current position
-        value = EndianType::template get<ValueType>(data_position);
+        EndianType::template get<Bytes>(value, data_position);
     }
 
     /// A pointer to the stream's data.

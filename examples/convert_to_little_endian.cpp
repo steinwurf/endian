@@ -25,7 +25,7 @@ int main()
 
     // If the host is big endian, the put function
     // should change the byte order (no change for little endian)
-    endian::little_endian::put_bytes<endian::u32>(input, data);
+    endian::little_endian::put<4>(input, data);
 
     if (0x11u == data[3] && 0x22u == data[2] && 0x33u == data[1] &&
         0x44u == data[0])
