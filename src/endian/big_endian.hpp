@@ -249,5 +249,17 @@ struct big_endian
     {
         detail::big<ValueType, Bytes>::get(value, buffer);
     }
+
+    template<class ValueType>
+    static void put(ValueType value, uint8_t* buffer)
+    {
+        detail::big<ValueType, sizeof(ValueType)>::put(value, buffer);
+    }
+
+    template<class ValueType>
+    static void get(ValueType& value, const uint8_t* buffer)
+    {
+        detail::big<ValueType, sizeof(ValueType)>::get(value, buffer);
+    }
 };
 }
