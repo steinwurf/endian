@@ -7,363 +7,267 @@
 
 #include <cstdint>
 #include <cassert>
-
-#include "types.hpp"
+#include <type_traits>
 
 namespace endian
 {
+namespace detail
+{
+template<class ValueType, uint8_t Bytes>
+struct little
+{
+    static void put(ValueType value, uint8_t* buffer);
+    static void get(ValueType& value, const uint8_t* buffer);
+};
+
+template<class ValueType>
+struct little<ValueType, 1>
+{
+    static void put(ValueType value, uint8_t* buffer)
+    {
+        static_assert(sizeof(ValueType) <= 1, "ValueType too big.");
+        assert(buffer != nullptr);
+        assert(value <= 0xFF);
+        *buffer = value;
+    }
+
+    static void get(ValueType& value, const uint8_t* buffer)
+    {
+        static_assert(sizeof(ValueType) >= 1, "ValueType too small.");
+        assert(buffer != nullptr);
+        value = *buffer;
+    }
+};
+
+template<class ValueType>
+struct little<ValueType, 2>
+{
+    static void put(ValueType value, uint8_t* buffer)
+    {
+        static_assert(sizeof(ValueType) <= 2, "ValueType too big.");
+        assert(buffer != nullptr);
+        assert(value <= 0xFFFF);
+        buffer[0] = (value >> 0 & 0xFF);
+        buffer[1] = (value >> 8 & 0xFF);
+    }
+
+    static void get(ValueType& value, const uint8_t* buffer)
+    {
+        static_assert(sizeof(ValueType) >= 2, "ValueType too small.");
+        assert(buffer != nullptr);
+        value = (((ValueType) buffer[1]) << 8) |
+                (((ValueType) buffer[0]) << 0);
+    }
+};
+
+template<class ValueType>
+struct little<ValueType, 3>
+{
+    static void put(ValueType value, uint8_t* buffer)
+    {
+        static_assert(std::is_unsigned<ValueType>::value, "Must be unsigned");
+        assert(buffer != nullptr);
+        assert(value <= 0x00FFFFFF);
+        buffer[0] = ((value) & 0xFF);
+        buffer[1] = ((value >> 8) & 0xFF);
+        buffer[2] = ((value >> 16) & 0xFF);
+    }
+
+    static void get(ValueType& value, const uint8_t* buffer)
+    {
+        static_assert(sizeof(ValueType) >= 3, "ValueType too small.");
+        static_assert(std::is_unsigned<ValueType>::value, "Must be unsigned");
+        assert(buffer != nullptr);
+        value = (((ValueType) buffer[2]) << 16) |
+                (((ValueType) buffer[1]) << 8)  |
+                (((ValueType) buffer[0]) << 0);
+    }
+};
+
+template<class ValueType>
+struct little<ValueType, 4>
+{
+    static void put(ValueType value, uint8_t* buffer)
+    {
+        static_assert(sizeof(ValueType) <= 4, "ValueType too big.");
+        assert(buffer != nullptr);
+        buffer[0] = ((value >> 0) & 0xFF);
+        buffer[1] = ((value >> 8) & 0xFF);
+        buffer[2] = ((value >> 16) & 0xFF);
+        buffer[3] = ((value >> 24) & 0xFF);
+    }
+
+    static void get(ValueType& value, const uint8_t* buffer)
+    {
+        static_assert(sizeof(ValueType) >= 4, "ValueType too small.");
+        assert(buffer != nullptr);
+        value = (((ValueType) buffer[3]) << 24) |
+                (((ValueType) buffer[2]) << 16) |
+                (((ValueType) buffer[1]) << 8)  |
+                (((ValueType) buffer[0]) << 0);
+    }
+};
+
+template<class ValueType>
+struct little<ValueType, 5>
+{
+    static void put(ValueType value, uint8_t* buffer)
+    {
+        static_assert(std::is_unsigned<ValueType>::value, "Must be unsigned");
+        assert(buffer != nullptr);
+        assert(value <= 0x000000FFFFFFFFFF);
+        buffer[0] = ((value >> 0) & 0xFF);
+        buffer[1] = ((value >> 8) & 0xFF);
+        buffer[2] = ((value >> 16) & 0xFF);
+        buffer[3] = ((value >> 24) & 0xFF);
+        buffer[4] = ((value >> 32) & 0xFF);
+    }
+
+    static void get(ValueType& value, const uint8_t* buffer)
+    {
+        static_assert(sizeof(ValueType) >= 5, "ValueType too small.");
+        static_assert(std::is_unsigned<ValueType>::value, "Must be unsigned");
+        assert(buffer != nullptr);
+        value = (((ValueType) buffer[4]) << 32) |
+                (((ValueType) buffer[3]) << 24) |
+                (((ValueType) buffer[2]) << 16) |
+                (((ValueType) buffer[1]) << 8)  |
+                (((ValueType) buffer[0]) << 0);
+    }
+};
+
+template<class ValueType>
+struct little<ValueType, 6>
+{
+    static void put(ValueType value, uint8_t* buffer)
+    {
+        static_assert(std::is_unsigned<ValueType>::value, "Must be unsigned");
+        assert(buffer != nullptr);
+        assert(value <= 0x0000FFFFFFFFFFFF);
+        buffer[0] = ((value >> 0) & 0xFF);
+        buffer[1] = ((value >> 8) & 0xFF);
+        buffer[2] = ((value >> 16) & 0xFF);
+        buffer[3] = ((value >> 24) & 0xFF);
+        buffer[4] = ((value >> 32) & 0xFF);
+        buffer[5] = ((value >> 40) & 0xFF);
+    }
+
+    static void get(ValueType& value, const uint8_t* buffer)
+    {
+        static_assert(sizeof(ValueType) >= 6, "ValueType too small.");
+        static_assert(std::is_unsigned<ValueType>::value, "Must be unsigned");
+        assert(buffer != nullptr);
+        value = (((ValueType) buffer[5]) << 40) |
+                (((ValueType) buffer[4]) << 32) |
+                (((ValueType) buffer[3]) << 24) |
+                (((ValueType) buffer[2]) << 16) |
+                (((ValueType) buffer[1]) << 8)  |
+                (((ValueType) buffer[0]) << 0);
+    }
+};
+
+template<class ValueType>
+struct little<ValueType, 7>
+{
+    static void put(ValueType value, uint8_t* buffer)
+    {
+        static_assert(std::is_unsigned<ValueType>::value, "Must be unsigned");
+        assert(buffer != nullptr);
+        assert(value <= 0x00FFFFFFFFFFFFFF);
+        buffer[0] = ((value >> 0) & 0xFF);
+        buffer[1] = ((value >> 8) & 0xFF);
+        buffer[2] = ((value >> 16) & 0xFF);
+        buffer[3] = ((value >> 24) & 0xFF);
+        buffer[4] = ((value >> 32) & 0xFF);
+        buffer[5] = ((value >> 40) & 0xFF);
+        buffer[6] = ((value >> 48) & 0xFF);
+    }
+
+    static void get(ValueType& value, const uint8_t* buffer)
+    {
+        static_assert(sizeof(ValueType) >= 7, "ValueType too small.");
+        static_assert(std::is_unsigned<ValueType>::value, "Must be unsigned");
+        assert(buffer != nullptr);
+        value = (((ValueType) buffer[6]) << 48) |
+                (((ValueType) buffer[5]) << 40) |
+                (((ValueType) buffer[4]) << 32) |
+                (((ValueType) buffer[3]) << 24) |
+                (((ValueType) buffer[2]) << 16) |
+                (((ValueType) buffer[1]) << 8)  |
+                (((ValueType) buffer[0]) << 0);
+    }
+};
+
+template<class ValueType>
+struct little<ValueType, 8>
+{
+    static void put(ValueType value, uint8_t* buffer)
+    {
+        static_assert(sizeof(ValueType) <= 8, "ValueType too big.");
+        assert(buffer != nullptr);
+        buffer[0] = ((value >> 0) & 0xFF);
+        buffer[1] = ((value >> 8) & 0xFF);
+        buffer[2] = ((value >> 16) & 0xFF);
+        buffer[3] = ((value >> 24) & 0xFF);
+        buffer[4] = ((value >> 32) & 0xFF);
+        buffer[5] = ((value >> 40) & 0xFF);
+        buffer[6] = ((value >> 48) & 0xFF);
+        buffer[7] = ((value >> 56) & 0xFF);
+    }
+
+    static void get(ValueType& value, const uint8_t* buffer)
+    {
+        static_assert(sizeof(ValueType) >= 8, "ValueType too small.");
+        assert(buffer != nullptr);
+        value = (((ValueType) buffer[7]) << 56) |
+                (((ValueType) buffer[6]) << 48) |
+                (((ValueType) buffer[5]) << 40) |
+                (((ValueType) buffer[4]) << 32) |
+                (((ValueType) buffer[3]) << 24) |
+                (((ValueType) buffer[2]) << 16) |
+                (((ValueType) buffer[1]) << 8)  |
+                (((ValueType) buffer[0]) << 0);
+    }
+};
+}
+
 // Inserts and extracts integers in little-endian format.
 struct little_endian
 {
-    template<class IntegerType>
-    static IntegerType get(const uint8_t* buffer);
+    /// Inserts a Bytes-sized integer value into the data buffer.
+    /// @param value to put in the data buffer
+    /// @param buffer pointer to the data buffer
+    template<uint8_t Bytes, class ValueType>
+    static void put_bytes(ValueType value, uint8_t* buffer)
+    {
+        detail::little<ValueType, Bytes>::put(value, buffer);
+    }
 
-    template<class IntegerType>
-    static void put(IntegerType value, uint8_t* buffer);
+    /// Gets a Bytes-sized integer value from a data buffer.
+    /// @param value to insert into the data buffer
+    /// @param buffer pointer to the data buffer
+    template<uint8_t Bytes, class ValueType>
+    static void get_bytes(ValueType& value, const uint8_t* buffer)
+    {
+        detail::little<ValueType, Bytes>::get(value, buffer);
+    }
 
-    template<class Type>
-    static typename Type::type get_bytes(const uint8_t* buffer);
+    /// Inserts a ValueType-sized integer value into the data buffer.
+    /// @param value to put in the data buffer
+    /// @param buffer pointer to the data buffer
+    template<class ValueType>
+    static void put(ValueType value, uint8_t* buffer)
+    {
+        detail::little<ValueType, sizeof(ValueType)>::put(value, buffer);
+    }
 
-    template<class Type>
-    static void put_bytes(typename Type::type value, uint8_t* buffer);
+    /// Gets a ValueType-sized integer value from a data buffer.
+    /// @param value to insert into the data buffer
+    /// @param buffer pointer to the data buffer
+    template<class ValueType>
+    static void get(ValueType& value, const uint8_t* buffer)
+    {
+        detail::little<ValueType, sizeof(ValueType)>::get(value, buffer);
+    }
 };
-
-template<>
-inline uint8_t little_endian::get<uint8_t>(const uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    return *buffer;
-}
-
-template<>
-inline void little_endian::put<uint8_t>(uint8_t value, uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    *buffer = value;
-}
-
-template<>
-inline uint16_t little_endian::get<uint16_t>(const uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    return (buffer[1] << 8) | buffer[0];
-}
-
-template<>
-inline void little_endian::put<uint16_t>(uint16_t value, uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    buffer[0] = (value & 0xFF);
-    buffer[1] = (value >> 8 & 0xFF);
-}
-
-template<>
-inline uint32_t little_endian::get<uint32_t>(const uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    return (buffer[3] << 24) | (buffer[2] << 16) |
-           (buffer[1] << 8)  | buffer[0];
-}
-
-template<>
-inline void little_endian::put<uint32_t>(uint32_t value, uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    buffer[0] = (value & 0xFF);
-    buffer[1] = ((value >> 8) & 0xFF);
-    buffer[2] = ((value >> 16) & 0xFF);
-    buffer[3] = ((value >> 24) & 0xFF);
-}
-
-template<>
-inline uint64_t little_endian::get<uint64_t>(const uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    return (((uint64_t) buffer[7]) << 56) |
-           (((uint64_t) buffer[6]) << 48) |
-           (((uint64_t) buffer[5]) << 40) |
-           (((uint64_t) buffer[4]) << 32) |
-           (((uint64_t) buffer[3]) << 24) |
-           (((uint64_t) buffer[2]) << 16) |
-           (((uint64_t) buffer[1]) << 8)  |
-           (((uint64_t) buffer[0]));
-}
-
-template<>
-inline void little_endian::put<uint64_t>(uint64_t value, uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    buffer[0] = (value & 0xFF);
-    buffer[1] = ((value >> 8) & 0xFF);
-    buffer[2] = ((value >> 16) & 0xFF);
-    buffer[3] = ((value >> 24) & 0xFF);
-    buffer[4] = ((value >> 32) & 0xFF);
-    buffer[5] = ((value >> 40) & 0xFF);
-    buffer[6] = ((value >> 48) & 0xFF);
-    buffer[7] = ((value >> 56) & 0xFF);
-}
-
-/// Gets an 8-bit value integer from a data buffer.
-/// @param buffer pointer to the data buffer
-/// @return retrieved value from the data buffer
-template<>
-inline u8::type little_endian::get_bytes<u8>(const uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    return get<u8::type>(buffer);
-}
-
-/// Inserts an 8-bit value integer into the data buffer.
-/// @param value to put in the data buffer
-/// @param buffer pointer to the data buffer
-template<>
-inline void little_endian::put_bytes<u8>(u8::type value, uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    put<u8::type>(value, buffer);
-}
-
-/// Gets an 8-bit signed value integer from a data buffer.
-/// @param buffer pointer to the data buffer
-/// @return retrieved value from the data buffer
-template<>
-inline i8::type little_endian::get_bytes<i8>(const uint8_t* buffer)
-{
-    return little_endian::get_bytes<u8>(buffer);
-}
-
-/// Inserts an 8-bit signed value integer into the data buffer.
-/// @param value to put in the data buffer
-/// @param buffer pointer to the data buffer
-template<>
-inline void little_endian::put_bytes<i8>(i8::type value, uint8_t* buffer)
-{
-    little_endian::put_bytes<u8>(value, buffer);
-}
-
-/// Gets an 16-bit value integer from a data buffer.
-/// @param buffer pointer to the data buffer
-/// @return retrieved value from the data buffer
-template<>
-inline u16::type little_endian::get_bytes<u16>(const uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    return get<u16::type>(buffer);
-}
-
-/// Inserts an 16-bit value integer into the data buffer.
-/// @param value to put in the data buffer
-/// @param buffer pointer to the data buffer
-template<>
-inline void little_endian::put_bytes<u16>(u16::type value, uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    put<u16::type>(value, buffer);
-}
-
-/// Gets an 16-bit signed value integer from a data buffer.
-/// @param buffer pointer to the data buffer
-/// @return retrieved value from the data buffer
-template<>
-inline i16::type little_endian::get_bytes<i16>(const uint8_t* buffer)
-{
-    return little_endian::get_bytes<u16>(buffer);
-}
-
-/// Inserts an 16-bit signed value integer into the data buffer.
-/// @param value to put in the data buffer
-/// @param buffer pointer to the data buffer
-template<>
-inline void little_endian::put_bytes<i16>(i16::type value, uint8_t* buffer)
-{
-    little_endian::put_bytes<u16>(value, buffer);
-}
-
-/// Gets an 24-bit value integer from a data buffer.
-/// @param buffer pointer to the data buffer
-/// @return retrieved value from the data buffer
-template<>
-inline u24::type little_endian::get_bytes<u24>(const uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    return (buffer[2] << 16) | (buffer[1] << 8)  | buffer[0];
-}
-
-/// Inserts an 24-bit value integer into the data buffer.
-/// @param value to put in the data buffer
-/// @param buffer pointer to the data buffer
-template<>
-inline void little_endian::put_bytes<u24>(u24::type value, uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    buffer[0] = ((value) & 0xFF);
-    buffer[1] = ((value >> 8) & 0xFF);
-    buffer[2] = ((value >> 16) & 0xFF);
-}
-
-/// Gets an 32-bit value integer from a data buffer.
-/// @param buffer pointer to the data buffer
-/// @return retrieved value from the data buffer
-template<>
-inline u32::type little_endian::get_bytes<u32>(const uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    return get<u32::type>(buffer);
-}
-
-/// Inserts an 32-bit value integer into the data buffer.
-/// @param value to put in the data buffer
-/// @param buffer pointer to the data buffer
-template<>
-inline void little_endian::put_bytes<u32>(u32::type value, uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    put<u32::type>(value, buffer);
-}
-
-/// Gets an 32-bit signed value integer from a data buffer.
-/// @param buffer pointer to the data buffer
-/// @return retrieved value from the data buffer
-template<>
-inline i32::type little_endian::get_bytes<i32>(const uint8_t* buffer)
-{
-    return little_endian::get_bytes<u32>(buffer);
-}
-
-/// Inserts an 32-bit signed value integer into the data buffer.
-/// @param value to put in the data buffer
-/// @param buffer pointer to the data buffer
-template<>
-inline void little_endian::put_bytes<i32>(i32::type value, uint8_t* buffer)
-{
-    little_endian::put_bytes<u32>(value, buffer);
-}
-
-/// Gets an 40-bit value integer from a data buffer.
-/// @param buffer pointer to the data buffer
-/// @return retrieved value from the data buffer
-template<>
-inline u40::type little_endian::get_bytes<u40>(const uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    return (((uint64_t) buffer[4]) << 32) |
-           (((uint64_t) buffer[3]) << 24) |
-           (((uint64_t) buffer[2]) << 16) |
-           (((uint64_t) buffer[1]) << 8)  |
-           ((uint64_t) buffer[0]);
-}
-
-/// Inserts an 40-bit value integer into the data buffer.
-/// @param value to put in the data buffer
-/// @param buffer pointer to the data buffer
-template<>
-inline void little_endian::put_bytes<u40>(u40::type value, uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    buffer[0] = (value & 0xFF);
-    buffer[1] = ((value >> 8) & 0xFF);
-    buffer[2] = ((value >> 16) & 0xFF);
-    buffer[3] = ((value >> 24) & 0xFF);
-    buffer[4] = ((value >> 32) & 0xFF);
-}
-
-/// Gets an 48-bit value integer from a data buffer.
-/// @param buffer pointer to the data buffer
-/// @return retrieved value from the data buffer
-template<>
-inline u48::type little_endian::get_bytes<u48>(const uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    return (((uint64_t) buffer[5]) << 40) |
-           (((uint64_t) buffer[4]) << 32) |
-           (((uint64_t) buffer[3]) << 24) |
-           (((uint64_t) buffer[2]) << 16) |
-           (((uint64_t) buffer[1]) << 8)  |
-           (((uint64_t) buffer[0]));
-}
-
-/// Inserts an 48-bit value integer into the data buffer.
-/// @param value to put in the data buffer
-/// @param buffer pointer to the data buffer
-template<>
-inline void little_endian::put_bytes<u48>(u48::type value, uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    buffer[0] = (value & 0xFF);
-    buffer[1] = ((value >> 8) & 0xFF);
-    buffer[2] = ((value >> 16) & 0xFF);
-    buffer[3] = ((value >> 24) & 0xFF);
-    buffer[4] = ((value >> 32) & 0xFF);
-    buffer[5] = ((value >> 40) & 0xFF);
-}
-
-/// Gets an 56-bit value integer from a data buffer.
-/// @param buffer pointer to the data buffer
-/// @return retrieved value from the data buffer
-template<>
-inline u56::type little_endian::get_bytes<u56>(const uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    return (((uint64_t) buffer[6]) << 48) |
-           (((uint64_t) buffer[5]) << 40) |
-           (((uint64_t) buffer[4]) << 32) |
-           (((uint64_t) buffer[3]) << 24) |
-           (((uint64_t) buffer[2]) << 16) |
-           (((uint64_t) buffer[1]) << 8)  |
-           (((uint64_t) buffer[0]));
-}
-
-/// Inserts an 56-bit value integer into the data buffer.
-/// @param value to put in the data buffer
-/// @param buffer pointer to the data buffer
-template<>
-inline void little_endian::put_bytes<u56>(u56::type value, uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    buffer[0] = (value & 0xFF);
-    buffer[1] = ((value >> 8) & 0xFF);
-    buffer[2] = ((value >> 16) & 0xFF);
-    buffer[3] = ((value >> 24) & 0xFF);
-    buffer[4] = ((value >> 32) & 0xFF);
-    buffer[5] = ((value >> 40) & 0xFF);
-    buffer[6] = ((value >> 48) & 0xFF);
-}
-
-/// Gets an 64-bit value integer from a data buffer.
-/// @param buffer pointer to the data buffer
-/// @return retrieved value from the data buffer
-template<>
-inline u64::type little_endian::get_bytes<u64>(const uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    return get<u64::type>(buffer);
-}
-
-/// Inserts an 64-bit value integer into the data buffer.
-/// @param value to put in the data buffer
-/// @param buffer pointer to the data buffer
-template<>
-inline void little_endian::put_bytes<u64>(u64::type value, uint8_t* buffer)
-{
-    assert(buffer != nullptr);
-    put<u64::type>(value, buffer);
-}
-
-/// Gets an 64-bit signed value integer from a data buffer.
-/// @param buffer pointer to the data buffer
-/// @return retrieved value from the data buffer
-template<>
-inline i64::type little_endian::get_bytes<i64>(const uint8_t* buffer)
-{
-    return little_endian::get_bytes<u64>(buffer);
-}
-
-/// Inserts an 64-bit signed value integer into the data buffer.
-/// @param value to put in the data buffer
-/// @param buffer pointer to the data buffer
-template<>
-inline void little_endian::put_bytes<i64>(i64::type value, uint8_t* buffer)
-{
-    little_endian::put_bytes<u64>(value, buffer);
-}
 }

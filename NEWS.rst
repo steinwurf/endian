@@ -6,7 +6,19 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Major: Removed ``types.hpp``.
+* Major: Renamed ``stream_reader.read`` to ``stream_reader.read_bytes`` which
+  now takes a ``uint8_t`` template argument specifying the number of bytes.
+* Major: Renamed ``stream_reader.peek`` to ``stream_reader.peek_bytes`` which
+  now takes a ``uint8_t`` template argument specifying the number of bytes.
+* Major: Renamed ``stream_writer.write`` to ``stream_writer.write_bytes`` which
+  now takes a ``uint8_t`` template argument specifying the number of bytes.
+* Major: Added ``stream_writer.write`` which allows writing ``uint8_t``,
+  ``uint16_t``, ``uint32_t``, and ``uint64_t``.
+* Major: Added ``stream_reader.read`` which allows reading ``uint8_t``,
+  ``uint16_t``, ``uint32_t``, and ``uint64_t``.
+* Major: Added ``stream_reader.peek`` which allows peeking ``uint8_t``,
+  ``uint16_t``, ``uint32_t``, and ``uint64_t``.
 
 7.0.0
 -----
