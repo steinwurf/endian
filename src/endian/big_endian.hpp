@@ -236,7 +236,7 @@ struct big_endian
     /// @param value to put in the data buffer
     /// @param buffer pointer to the data buffer
     template<uint8_t Bytes, class ValueType>
-    static void put(ValueType value, uint8_t* buffer)
+    static void put_bytes(ValueType value, uint8_t* buffer)
     {
         detail::big<ValueType, Bytes>::put(value, buffer);
     }
@@ -245,17 +245,23 @@ struct big_endian
     /// @param value to insert into the data buffer
     /// @param buffer pointer to the data buffer
     template<uint8_t Bytes, class ValueType>
-    static void get(ValueType& value, const uint8_t* buffer)
+    static void get_bytes(ValueType& value, const uint8_t* buffer)
     {
         detail::big<ValueType, Bytes>::get(value, buffer);
     }
 
+    /// Inserts a ValueType-sized integer value into the data buffer.
+    /// @param value to put in the data buffer
+    /// @param buffer pointer to the data buffer
     template<class ValueType>
     static void put(ValueType value, uint8_t* buffer)
     {
         detail::big<ValueType, sizeof(ValueType)>::put(value, buffer);
     }
 
+    /// Gets a ValueType-sized integer value from a data buffer.
+    /// @param value to insert into the data buffer
+    /// @param buffer pointer to the data buffer
     template<class ValueType>
     static void get(ValueType& value, const uint8_t* buffer)
     {

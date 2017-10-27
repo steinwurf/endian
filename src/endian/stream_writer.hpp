@@ -41,20 +41,31 @@ public:
         stream_writer(buffer.data(), buffer.size())
     { }
 
-    /// Write to the stream.
+    /// Writes a Bytes-sized integer to the stream.
     ///
     /// @param value the value to write.
     template<uint8_t Bytes, class ValueType>
-    void write(ValueType value)
+    void write_bytes(ValueType value)
     {
         // Make sure there is enough space in the underlying buffer
         assert(Bytes <= remaining_size());
 
         // Write the value at the current position
-        EndianType::template put<Bytes>(value, remaining_data());
+        EndianType::template put_bytes<Bytes>(value, remaining_data());
 
         // Advance the current position
         m_position += Bytes;
+    }
+
+    /// Writes a Bytes-sized integer to the stream.
+    ///
+    /// @param value the value to write.
+    template<class ValueType>
+    void write(ValueType value)
+    {
+        // Make sure there is enough space in the underlying buffer
+        assert(sizeof(ValueType) <= remaining_size());
+        write_bytes<sizeof(ValueType), ValueType>(value);
     }
 
     /// Writes the raw bytes represented by the storage::const_storage

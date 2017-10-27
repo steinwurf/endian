@@ -24,12 +24,12 @@ TEST(test_little_endian, convert)
         uint8_t input = 0x11U;
 
         // No change will occur for a single-byte value
-        endian::little_endian::put<1>(input, data);
+        endian::little_endian::put_bytes<1>(input, data);
         EXPECT_EQ(0x11U, data[0]);
 
         // No change will occur for a single-byte value
         uint8_t out = 0;
-        endian::little_endian::get<1>(out, data);
+        endian::little_endian::get_bytes<1>(out, data);
         EXPECT_EQ(input, out);
     }
 
@@ -40,13 +40,13 @@ TEST(test_little_endian, convert)
 
         // If the host is little endian, the put function
         // should change the byte order (no change for big endian)
-        endian::little_endian::put<2>(input, data);
+        endian::little_endian::put_bytes<2>(input, data);
         EXPECT_EQ(0x22U, data[0]);
         EXPECT_EQ(0x11U, data[1]);
 
         // Get should swap the value back (no change for big endian)
         uint16_t out = 0;
-        endian::little_endian::get<2>(out, data);
+        endian::little_endian::get_bytes<2>(out, data);
         EXPECT_EQ(input, out);
     }
 
@@ -57,14 +57,14 @@ TEST(test_little_endian, convert)
 
         // If the host is little endian, the put function
         // should change the byte order (no change for big endian)
-        endian::little_endian::put<3>(input, data);
+        endian::little_endian::put_bytes<3>(input, data);
         EXPECT_EQ(0x33U, data[0]);
         EXPECT_EQ(0x22U, data[1]);
         EXPECT_EQ(0x11U, data[2]);
 
         // Get should swap the value back (no change for big endian)
         uint32_t out = 0;
-        endian::little_endian::get<3>(out, data);
+        endian::little_endian::get_bytes<3>(out, data);
         EXPECT_EQ(input, out);
     }
 
@@ -75,7 +75,7 @@ TEST(test_little_endian, convert)
 
         // If the host is little endian, the put function
         // should change the byte order (no change for big endian)
-        endian::little_endian::put<4>(input, data);
+        endian::little_endian::put_bytes<4>(input, data);
         EXPECT_EQ(0x44U, data[0]);
         EXPECT_EQ(0x33U, data[1]);
         EXPECT_EQ(0x22U, data[2]);
@@ -83,7 +83,7 @@ TEST(test_little_endian, convert)
 
         // Get should swap the value back (no change for big endian)
         uint32_t out = 0;
-        endian::little_endian::get<4>(out, data);
+        endian::little_endian::get_bytes<4>(out, data);
         EXPECT_EQ(input, out);
     }
 
@@ -94,7 +94,7 @@ TEST(test_little_endian, convert)
 
         // If the host is little endian, the put function
         // should change the byte order (no change for big endian)
-        endian::little_endian::put<5>(input, data);
+        endian::little_endian::put_bytes<5>(input, data);
         EXPECT_EQ(0x55U, data[0]);
         EXPECT_EQ(0x44U, data[1]);
         EXPECT_EQ(0x33U, data[2]);
@@ -103,7 +103,7 @@ TEST(test_little_endian, convert)
 
         // Get should swap the value back (no change for big endian)
         uint64_t out = 0;
-        endian::little_endian::get<5>(out, data);
+        endian::little_endian::get_bytes<5>(out, data);
         EXPECT_EQ(input, out);
     }
 
@@ -114,7 +114,7 @@ TEST(test_little_endian, convert)
 
         // If the host is little endian, the put function
         // should change the byte order (no change for big endian)
-        endian::little_endian::put<6>(input, data);
+        endian::little_endian::put_bytes<6>(input, data);
         EXPECT_EQ(0x66U, data[0]);
         EXPECT_EQ(0x55U, data[1]);
         EXPECT_EQ(0x44U, data[2]);
@@ -124,7 +124,7 @@ TEST(test_little_endian, convert)
 
         // Get should swap the value back (no change for big endian)
         uint64_t out = 0;
-        endian::little_endian::get<6>(out, data);
+        endian::little_endian::get_bytes<6>(out, data);
         EXPECT_EQ(input, out);
     }
 
@@ -135,7 +135,7 @@ TEST(test_little_endian, convert)
 
         // If the host is little endian, the put function
         // should change the byte order (no change for big endian)
-        endian::little_endian::put<7>(input, data);
+        endian::little_endian::put_bytes<7>(input, data);
         EXPECT_EQ(0x77U, data[0]);
         EXPECT_EQ(0x66U, data[1]);
         EXPECT_EQ(0x55U, data[2]);
@@ -146,7 +146,7 @@ TEST(test_little_endian, convert)
 
         // Get should swap the value back (no change for big endian)
         uint64_t out = 0;
-        endian::little_endian::get<7>(out, data);
+        endian::little_endian::get_bytes<7>(out, data);
         EXPECT_EQ(input, out);
     }
 
@@ -157,7 +157,7 @@ TEST(test_little_endian, convert)
 
         // If the host is little endian, the put function
         // should change the byte order (no change for big endian)
-        endian::little_endian::put<8>(input, data);
+        endian::little_endian::put_bytes<8>(input, data);
         EXPECT_EQ(0x88U, data[0]);
         EXPECT_EQ(0x77U, data[1]);
         EXPECT_EQ(0x66U, data[2]);
@@ -169,7 +169,7 @@ TEST(test_little_endian, convert)
 
         // Get should swap the value back (no change for big endian)
         uint64_t out = 0;
-        endian::little_endian::get<8>(out, data);
+        endian::little_endian::get_bytes<8>(out, data);
         EXPECT_EQ(input, out);
     }
 }
