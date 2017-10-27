@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+8.0.0
+-----
 * Major: Removed ``types.hpp``.
 * Major: Renamed ``stream_reader.read`` to ``stream_reader.read_bytes`` which
   now takes a ``uint8_t`` template argument specifying the number of bytes.
