@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+8.0.1
+-----
 * Patch: Fixed ``stream_reader.read``.
 
 8.0.0
