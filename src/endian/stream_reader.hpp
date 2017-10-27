@@ -66,7 +66,7 @@ public:
     {
         // Make sure there is enough data to read in the underlying buffer
         assert(sizeof(ValueType) <= remaining_size());
-        read<sizeof(ValueType)>(value);
+        read_bytes<sizeof(ValueType), ValueType>(value);
     }
 
     /// Reads raw bytes from the stream to fill a buffer represented by
