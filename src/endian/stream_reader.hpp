@@ -64,9 +64,22 @@ public:
     template<class ValueType>
     void read(ValueType& value)
     {
-        // Make sure there is enough data to read in the underlying buffer
-        assert(sizeof(ValueType) <= remaining_size());
+        assert(sizeof(ValueType) <= remaining_size() &&
+               "Reading over the end of the underlying buffer");
+
         read_bytes<sizeof(ValueType), ValueType>(value);
+    }
+
+    /// Reads a ValueType-sized integer from the stream and moves the read
+    /// position.
+    ///
+    /// @return the value to be read
+    template<class ValueType>
+    ValueType read()
+    {
+        ValueType value;
+        read(value);
+        return value;
     }
 
     /// Reads raw bytes from the stream to fill a buffer represented by
@@ -118,6 +131,24 @@ public:
         // Make sure there is enough data to read in the underlying buffer
         assert(sizeof(ValueType) <= remaining_size() - offset);
         peek_bytes<sizeof(ValueType), ValueType>(value, offset);
+    }
+
+    /// Peek a ValueType-sized integer in the stream without moving the read
+    /// position
+    ///
+    /// @param offset number of bytes to offset the peeking with
+    /// @return the peeked value
+    template<class ValueType>
+    ValueType peek(uint64_t offset=0) const
+    {
+        assert(remaining_size() >= offset && "Offset too large");
+
+        assert(sizeof(ValueType) <= remaining_size() - offset &&
+        "Reading over the end of the underlying buffer");
+
+        ValueType value;
+        peek(value, offset);
+        return value;
     }
 
     /// A pointer to the stream's data.

@@ -117,18 +117,14 @@ static void test_basic_api()
         std::vector<uint8_t> buffer = { 1, 2 };
         endian::stream_reader<EndianType> stream(buffer.data(), buffer.size());
         uint8_t first_peek = 0;
-        uint8_t second_peek = 0;
-        uint8_t first_read = 0;
         stream.peek(first_peek);
-        stream.peek(second_peek);
-        stream.read(first_read);
+        uint8_t second_peek = stream.template peek<uint8_t>();
+        uint8_t first_read = stream.template read<uint8_t>();
         EXPECT_EQ(first_peek, second_peek);
         EXPECT_EQ(first_peek, first_read);
 
-        uint8_t second_read = 0;
-        uint8_t third_peek = 0;
-        stream.peek(third_peek);
-        stream.read(second_read);
+        uint8_t third_peek = stream.template peek<uint8_t>();
+        uint8_t second_read = stream.template read<uint8_t>();
         EXPECT_NE(first_peek, third_peek);
         EXPECT_EQ(third_peek, second_read);
     }
