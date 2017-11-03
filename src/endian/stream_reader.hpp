@@ -144,7 +144,7 @@ public:
         assert(remaining_size() >= offset && "Offset too large");
 
         assert(sizeof(ValueType) <= remaining_size() - offset &&
-        "Reading over the end of the underlying buffer");
+               "Reading over the end of the underlying buffer");
 
         ValueType value;
         peek(value, offset);
