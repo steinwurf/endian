@@ -47,8 +47,8 @@ public:
     template<uint8_t Bytes, class ValueType>
     void read_bytes(ValueType& value)
     {
-        // Make sure there is enough data to read in the underlying buffer
-        assert(Bytes <= remaining_size());
+        assert(sizeof(ValueType) <= remaining_size() &&
+               "Reading over the end of the underlying buffer");
 
         // Get the value at the current position
         peek_bytes<Bytes, ValueType>(value);
@@ -64,9 +64,25 @@ public:
     template<class ValueType>
     void read(ValueType& value)
     {
-        // Make sure there is enough data to read in the underlying buffer
-        assert(sizeof(ValueType) <= remaining_size());
+        assert(sizeof(ValueType) <= remaining_size() &&
+               "Reading over the end of the underlying buffer");
+
         read_bytes<sizeof(ValueType), ValueType>(value);
+    }
+
+    /// Reads a ValueType-sized integer from the stream and moves the read
+    /// position.
+    ///
+    /// @return the read value
+    template<class ValueType>
+    ValueType read()
+    {
+        assert(sizeof(ValueType) <= remaining_size() &&
+               "Reading over the end of the underlying buffer");
+
+        ValueType value;
+        read(value);
+        return value;
     }
 
     /// Reads raw bytes from the stream to fill a buffer represented by
@@ -79,8 +95,8 @@ public:
     /// @param size The number of bytes to fill.
     void read(uint8_t* data, uint64_t size)
     {
-        // Make sure there is enough data to read in the underlying buffer
-        assert(size <= remaining_size());
+        assert(size <= remaining_size() &&
+               "Reading over the end of the underlying buffer");
 
         // Copy the data from the buffer to the storage
         std::copy_n(remaining_data(), (std::size_t)size, data);
@@ -97,9 +113,9 @@ public:
     template<uint8_t Bytes, class ValueType>
     void peek_bytes(ValueType& value, uint64_t offset=0) const
     {
-        assert(remaining_size() >= offset);
-        // Make sure there is enough data to read in the underlying buffer
-        assert(Bytes <= remaining_size() - offset);
+        assert(remaining_size() >= offset && "Offset too large");
+        assert(sizeof(ValueType) <= remaining_size() - offset &&
+               "Reading over the end of the underlying buffer");
 
         const uint8_t* data_position = remaining_data() + offset;
         // Get the value at the current position
@@ -114,10 +130,28 @@ public:
     template<class ValueType>
     void peek(ValueType& value, uint64_t offset=0) const
     {
-        assert(remaining_size() >= offset);
-        // Make sure there is enough data to read in the underlying buffer
-        assert(sizeof(ValueType) <= remaining_size() - offset);
+        assert(remaining_size() >= offset && "Offset too large");
+        assert(sizeof(ValueType) <= remaining_size() - offset &&
+               "Reading over the end of the underlying buffer");
+
         peek_bytes<sizeof(ValueType), ValueType>(value, offset);
+    }
+
+    /// Peek a ValueType-sized integer in the stream without moving the read
+    /// position
+    ///
+    /// @param offset number of bytes to offset the peeking with
+    /// @return the peeked value
+    template<class ValueType>
+    ValueType peek(uint64_t offset=0) const
+    {
+        assert(remaining_size() >= offset && "Offset too large");
+        assert(sizeof(ValueType) <= remaining_size() - offset &&
+               "Reading over the end of the underlying buffer");
+
+        ValueType value;
+        peek(value, offset);
+        return value;
     }
 
     /// A pointer to the stream's data.

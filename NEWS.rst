@@ -6,7 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Minor: Added ValueType read() and ValueType peek().
 
 8.0.1
 -----
