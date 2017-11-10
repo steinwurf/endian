@@ -113,6 +113,7 @@ public:
     template<uint8_t Bytes, class ValueType>
     void peek_bytes(ValueType& value, uint64_t offset=0) const
     {
+        assert(remaining_size() >= offset && "Offset too large");
         assert(Bytes <= remaining_size() - offset &&
                "Reading over the end of the underlying buffer");
 
@@ -129,6 +130,7 @@ public:
     template<class ValueType>
     void peek(ValueType& value, uint64_t offset=0) const
     {
+        assert(remaining_size() >= offset && "Offset too large");
         assert(sizeof(ValueType) <= remaining_size() - offset &&
                "Reading over the end of the underlying buffer");
 
@@ -143,6 +145,7 @@ public:
     template<class ValueType>
     ValueType peek(uint64_t offset=0) const
     {
+        assert(remaining_size() >= offset && "Offset too large");
         assert(sizeof(ValueType) <= remaining_size() - offset &&
                "Reading over the end of the underlying buffer");
 
