@@ -47,7 +47,7 @@ public:
     template<uint8_t Bytes, class ValueType>
     void read_bytes(ValueType& value)
     {
-        assert(sizeof(ValueType) <= remaining_size() &&
+        assert(Bytes <= remaining_size() &&
                "Reading over the end of the underlying buffer");
 
         // Get the value at the current position
@@ -114,7 +114,7 @@ public:
     void peek_bytes(ValueType& value, uint64_t offset=0) const
     {
         assert(remaining_size() >= offset && "Offset too large");
-        assert(sizeof(ValueType) <= remaining_size() - offset &&
+        assert(Bytes <= remaining_size() - offset &&
                "Reading over the end of the underlying buffer");
 
         const uint8_t* data_position = remaining_data() + offset;
