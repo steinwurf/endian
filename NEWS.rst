@@ -7,6 +7,7 @@ every change, see the Git log.
 Latest
 ------
 * tbd
+* Minor: Added ValueType get() and ValueType get_bytes().
 
 8.1.0
 -----

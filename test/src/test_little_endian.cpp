@@ -31,6 +31,12 @@ TEST(test_little_endian, convert)
         uint8_t out = 0;
         endian::little_endian::get_bytes<1>(out, data);
         EXPECT_EQ(input, out);
+
+        out = endian::little_endian::get<decltype(out)>(data);
+        EXPECT_EQ(input, out);
+
+        out = endian::little_endian::get_bytes<sizeof(out), decltype(out)>(data);
+        EXPECT_EQ(input, out);
     }
 
     // Test 16-bit integer
@@ -48,6 +54,13 @@ TEST(test_little_endian, convert)
         uint16_t out = 0;
         endian::little_endian::get_bytes<2>(out, data);
         EXPECT_EQ(input, out);
+
+        out = endian::little_endian::get<decltype(out)>(data);
+        EXPECT_EQ(input, out);
+
+        out = endian::little_endian::get_bytes<sizeof(out), decltype(out)>(data);
+        EXPECT_EQ(input, out);
+
     }
 
     // Test 24-bit integer
@@ -66,6 +79,10 @@ TEST(test_little_endian, convert)
         uint32_t out = 0;
         endian::little_endian::get_bytes<3>(out, data);
         EXPECT_EQ(input, out);
+
+        out = endian::little_endian::get_bytes<3, decltype(out)>(data);
+        EXPECT_EQ(input, out);
+
     }
 
     // Test 32-bit integer
@@ -84,6 +101,12 @@ TEST(test_little_endian, convert)
         // Get should swap the value back (no change for big endian)
         uint32_t out = 0;
         endian::little_endian::get_bytes<4>(out, data);
+        EXPECT_EQ(input, out);
+
+        out = endian::little_endian::get<decltype(out)>(data);
+        EXPECT_EQ(input, out);
+
+        out = endian::little_endian::get_bytes<sizeof(out), decltype(out)>(data);
         EXPECT_EQ(input, out);
     }
 
@@ -105,6 +128,10 @@ TEST(test_little_endian, convert)
         uint64_t out = 0;
         endian::little_endian::get_bytes<5>(out, data);
         EXPECT_EQ(input, out);
+
+        out = endian::little_endian::get_bytes<5, decltype(out)>(data);
+        EXPECT_EQ(input, out);
+
     }
 
     // Test 48-bit integer
@@ -125,6 +152,9 @@ TEST(test_little_endian, convert)
         // Get should swap the value back (no change for big endian)
         uint64_t out = 0;
         endian::little_endian::get_bytes<6>(out, data);
+        EXPECT_EQ(input, out);
+
+        out = endian::little_endian::get_bytes<6, decltype(out)>(data);
         EXPECT_EQ(input, out);
     }
 
@@ -148,6 +178,9 @@ TEST(test_little_endian, convert)
         uint64_t out = 0;
         endian::little_endian::get_bytes<7>(out, data);
         EXPECT_EQ(input, out);
+
+        out = endian::little_endian::get_bytes<7, decltype(out)>(data);
+        EXPECT_EQ(input, out);
     }
 
     // Test 64-bit integer
@@ -170,6 +203,12 @@ TEST(test_little_endian, convert)
         // Get should swap the value back (no change for big endian)
         uint64_t out = 0;
         endian::little_endian::get_bytes<8>(out, data);
+        EXPECT_EQ(input, out);
+
+        out = endian::little_endian::get<decltype(out)>(data);
+        EXPECT_EQ(input, out);
+
+        out = endian::little_endian::get_bytes<sizeof(out), decltype(out)>(data);
         EXPECT_EQ(input, out);
     }
 }
