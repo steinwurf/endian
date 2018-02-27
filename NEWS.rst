@@ -7,11 +7,11 @@ every change, see the Git log.
 Latest
 ------
 * tbd
-* Minor: Added ValueType get() and ValueType get_bytes().
+* Minor: Added ``ValueType get()`` and ``ValueType get_bytes()``.
 
 8.1.0
 -----
-* Minor: Added ValueType read() and ValueType peek().
+* Minor: Added ``ValueType read()`` and ``ValueType peek()``.
 
 8.0.1
 -----
