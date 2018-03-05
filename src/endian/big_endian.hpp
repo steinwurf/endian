@@ -232,22 +232,44 @@ struct big<ValueType, 8>
 // Inserts and extracts integers in big-endian format.
 struct big_endian
 {
-    /// Inserts a Bytes-sized integer value into the data buffer.
-    /// @param value to put in the data buffer
+    /// Gets a ValueType-sized integer value from a data buffer.
+    /// @param value variable where to get the value
     /// @param buffer pointer to the data buffer
-    template<uint8_t Bytes, class ValueType>
-    static void put_bytes(ValueType value, uint8_t* buffer)
+    template<class ValueType>
+    static void get(ValueType& value, const uint8_t* buffer)
     {
-        detail::big<ValueType, Bytes>::put(value, buffer);
+        detail::big<ValueType, sizeof(ValueType)>::get(value, buffer);
+    }
+
+    /// Gets a ValueType-sized integer value from a data buffer.
+    /// @return value variable where to get the value
+    /// @param buffer pointer to the data buffer
+    template<class ValueType>
+    static ValueType get(const uint8_t* buffer)
+    {
+        ValueType value;
+        get(value, buffer);
+        return value;
     }
 
     /// Gets a Bytes-sized integer value from a data buffer.
-    /// @param value to insert into the data buffer
+    /// @param value variable where to get the value
     /// @param buffer pointer to the data buffer
     template<uint8_t Bytes, class ValueType>
     static void get_bytes(ValueType& value, const uint8_t* buffer)
     {
         detail::big<ValueType, Bytes>::get(value, buffer);
+    }
+
+    /// Gets a Bytes-sized integer value from a data buffer.
+    /// @return value variable where to get the value
+    /// @param buffer pointer to the data buffer
+    template<uint8_t Bytes, class ValueType>
+    static ValueType get_bytes(const uint8_t* buffer)
+    {
+        ValueType value;
+        get_bytes<Bytes>(value, buffer);
+        return value;
     }
 
     /// Inserts a ValueType-sized integer value into the data buffer.
@@ -259,13 +281,13 @@ struct big_endian
         detail::big<ValueType, sizeof(ValueType)>::put(value, buffer);
     }
 
-    /// Gets a ValueType-sized integer value from a data buffer.
-    /// @param value to insert into the data buffer
+    /// Inserts a Bytes-sized integer value into the data buffer.
+    /// @param value to put in the data buffer
     /// @param buffer pointer to the data buffer
-    template<class ValueType>
-    static void get(ValueType& value, const uint8_t* buffer)
+    template<uint8_t Bytes, class ValueType>
+    static void put_bytes(ValueType value, uint8_t* buffer)
     {
-        detail::big<ValueType, sizeof(ValueType)>::get(value, buffer);
+        detail::big<ValueType, Bytes>::put(value, buffer);
     }
 };
 }
