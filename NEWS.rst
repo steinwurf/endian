@@ -8,6 +8,7 @@ Latest
 ------
 * tbd
 * Minor: Added ``ValueType get()`` and ``ValueType get_bytes()``.
+* Minor: Added support for Float type and Double types.
 
 8.1.0
 -----
