@@ -5,8 +5,10 @@
 
 #pragma once
 
-#include <cstdint>
 #include <cassert>
+#include <cstdint>
+#include <cstring>
+#include <limits>
 #include <type_traits>
 
 namespace endian
@@ -227,6 +229,33 @@ struct big<ValueType, 8>
                 (((ValueType) buffer[7]) << 0);
     }
 };
+
+template<>
+struct big<float, 4>
+{
+    static_assert(std::numeric_limits<float>::is_iec559,
+                  "Float type value is not iec559 compliant");
+    static_assert(sizeof(float) == 4, "Float type must have a size of 4 bytes");
+
+    static void put(float value, uint8_t* buffer)
+    {
+        assert(buffer != nullptr);
+
+        uint32_t temp;
+        memcpy(&temp, &value, 4U);
+        big<uint32_t, 4U>::put(temp, buffer);
+    }
+
+    static void get(float& value, const uint8_t* buffer)
+    {
+        assert(buffer != nullptr);
+
+        uint32_t temp;
+        big<uint32_t, 4U>::get(temp, buffer);
+        memcpy(&value, &temp, 4U);
+    }
+};
+
 }
 
 // Inserts and extracts integers in big-endian format.
