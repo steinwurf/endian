@@ -258,7 +258,6 @@ struct little<float, 4>
     }
 };
 
-
 template<>
 struct little<double, 8>
 {
@@ -284,7 +283,6 @@ struct little<double, 8>
         memcpy(&value, &temp, sizeof(double));
     }
 };
-
 
 }
 
