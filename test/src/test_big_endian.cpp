@@ -12,7 +12,7 @@
 #include <gtest/gtest.h>
 
 
-TEST(test_big_endian, convert)
+TEST(test_big_endian, convert_integers)
 {
     // Indicate endianness for debugging purposes
     SCOPED_TRACE(testing::Message() << "big_endian: " <<
@@ -208,4 +208,206 @@ TEST(test_big_endian, convert)
         out = endian::big_endian::get_bytes<sizeof(out), decltype(out)>(data);
         EXPECT_EQ(input, out);
     }
+}
+
+TEST(test_big_endian, convert_float)
+{
+    uint8_t data[4];
+    float input = 0.0f;
+
+    endian::big_endian::put_bytes<4>(input, data);
+    EXPECT_EQ(0x00U, data[0]);
+    EXPECT_EQ(0x00U, data[1]);
+    EXPECT_EQ(0x00U, data[2]);
+    EXPECT_EQ(0x00U, data[3]);
+
+    // Get should swap the value back (no change for big endian)
+    float out = 0.0f;
+    endian::big_endian::get_bytes<4>(out, data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get<decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get_bytes<sizeof(out), decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    input = 1.0f;
+    endian::big_endian::put_bytes<4>(input, data);
+    EXPECT_EQ(0x3FU, data[0]);
+    EXPECT_EQ(0x80U, data[1]);
+    EXPECT_EQ(0x00U, data[2]);
+    EXPECT_EQ(0x00U, data[3]);
+
+    out = 0.0f;
+    endian::big_endian::get_bytes<4>(out, data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get<decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get_bytes<sizeof(out), decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    input = 0.1f;
+    endian::big_endian::put_bytes<4>(input, data);
+    EXPECT_EQ(0x3DU, data[0]);
+    EXPECT_EQ(0xCCU, data[1]);
+    EXPECT_EQ(0xCCU, data[2]);
+    EXPECT_EQ(0xCDU, data[3]);
+
+    out = 0.0f;
+    endian::big_endian::get_bytes<4>(out, data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get<decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get_bytes<sizeof(out), decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    input = std::numeric_limits<float>::min();
+    endian::big_endian::put_bytes<4>(input, data);
+    EXPECT_EQ(0x00U, data[0]);
+    EXPECT_EQ(0x80U, data[1]);
+    EXPECT_EQ(0x00U, data[2]);
+    EXPECT_EQ(0x00U, data[3]);
+
+    out = 0;
+    endian::big_endian::get_bytes<4>(out, data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get<decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get_bytes<sizeof(out), decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    input = std::numeric_limits<float>::max();
+    endian::big_endian::put_bytes<4>(input, data);
+    EXPECT_EQ(0x7FU, data[0]);
+    EXPECT_EQ(0x7FU, data[1]);
+    EXPECT_EQ(0xFFU, data[2]);
+    EXPECT_EQ(0xFFU, data[3]);
+
+    out = 0;
+    endian::big_endian::get_bytes<4>(out, data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get<decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get_bytes<sizeof(out), decltype(out)>(data);
+    EXPECT_EQ(input, out);
+}
+
+TEST(test_big_endian, convert_double)
+{
+    uint8_t data[8];
+    double input = 0.0;
+
+    endian::big_endian::put_bytes<8>(input, data);
+    EXPECT_EQ(0x00U, data[0]);
+    EXPECT_EQ(0x00U, data[1]);
+    EXPECT_EQ(0x00U, data[2]);
+    EXPECT_EQ(0x00U, data[3]);
+    EXPECT_EQ(0x00U, data[4]);
+    EXPECT_EQ(0x00U, data[5]);
+    EXPECT_EQ(0x00U, data[6]);
+    EXPECT_EQ(0x00U, data[7]);
+
+    // Get should swap the value back (no change for big endian)
+    double out = 0.0;
+    endian::big_endian::get_bytes<8>(out, data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get<decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get_bytes<sizeof(out), decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    input = 1.0;
+    endian::big_endian::put_bytes<8>(input, data);
+    EXPECT_EQ(0x3FU, data[0]);
+    EXPECT_EQ(0xF0U, data[1]);
+    EXPECT_EQ(0x00U, data[2]);
+    EXPECT_EQ(0x00U, data[3]);
+    EXPECT_EQ(0x00U, data[4]);
+    EXPECT_EQ(0x00U, data[5]);
+    EXPECT_EQ(0x00U, data[6]);
+    EXPECT_EQ(0x00U, data[7]);
+
+    out = 0.0f;
+    endian::big_endian::get_bytes<8>(out, data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get<decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get_bytes<sizeof(out), decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    input = 0.1;
+    endian::big_endian::put_bytes<8>(input, data);
+    EXPECT_EQ(0x3FU, data[0]);
+    EXPECT_EQ(0xb9U, data[1]);
+    EXPECT_EQ(0x99U, data[2]);
+    EXPECT_EQ(0x99U, data[3]);
+    EXPECT_EQ(0x99U, data[4]);
+    EXPECT_EQ(0x99U, data[5]);
+    EXPECT_EQ(0x99U, data[6]);
+    EXPECT_EQ(0x9AU, data[7]);
+
+    out = 0;
+    endian::big_endian::get_bytes<8>(out, data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get<decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get_bytes<sizeof(out), decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    input = std::numeric_limits<double>::min();
+    endian::big_endian::put_bytes<8>(input, data);
+    EXPECT_EQ(0x00U, data[0]);
+    EXPECT_EQ(0x10U, data[1]);
+    EXPECT_EQ(0x00U, data[2]);
+    EXPECT_EQ(0x00U, data[3]);
+    EXPECT_EQ(0x00U, data[4]);
+    EXPECT_EQ(0x00U, data[5]);
+    EXPECT_EQ(0x00U, data[6]);
+    EXPECT_EQ(0x00U, data[7]);
+
+    out = 0;
+    endian::big_endian::get_bytes<8>(out, data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get<decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get_bytes<sizeof(out), decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    input = std::numeric_limits<double>::max();
+    endian::big_endian::put_bytes<8>(input, data);
+    EXPECT_EQ(0x7FU, data[0]);
+    EXPECT_EQ(0xEFU, data[1]);
+    EXPECT_EQ(0xFFU, data[2]);
+    EXPECT_EQ(0xFFU, data[3]);
+    EXPECT_EQ(0xFFU, data[4]);
+    EXPECT_EQ(0xFFU, data[5]);
+    EXPECT_EQ(0xFFU, data[6]);
+    EXPECT_EQ(0xFFU, data[7]);
+
+    out = 0;
+    endian::big_endian::get_bytes<8>(out, data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get<decltype(out)>(data);
+    EXPECT_EQ(input, out);
+
+    out = endian::big_endian::get_bytes<sizeof(out), decltype(out)>(data);
+    EXPECT_EQ(input, out);
 }

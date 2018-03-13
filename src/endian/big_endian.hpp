@@ -5,8 +5,10 @@
 
 #pragma once
 
-#include <cstdint>
 #include <cassert>
+#include <cstdint>
+#include <cstring>
+#include <limits>
 #include <type_traits>
 
 namespace endian
@@ -227,6 +229,59 @@ struct big<ValueType, 8>
                 (((ValueType) buffer[7]) << 0);
     }
 };
+
+template<>
+struct big<float, 4>
+{
+    static_assert(std::numeric_limits<float>::is_iec559,
+                  "Float type value is not iec559 compliant");
+    static_assert(sizeof(float) == 4, "Float type must have a size of 4 bytes");
+
+    static void put(float value, uint8_t* buffer)
+    {
+        assert(buffer != nullptr);
+
+        uint32_t temp;
+        memcpy(&temp, &value, sizeof(float));
+        big<uint32_t, sizeof(float)>::put(temp, buffer);
+    }
+
+    static void get(float& value, const uint8_t* buffer)
+    {
+        assert(buffer != nullptr);
+
+        uint32_t temp;
+        big<uint32_t, sizeof(float)>::get(temp, buffer);
+        memcpy(&value, &temp, sizeof(float));
+    }
+};
+
+template<>
+struct big<double, 8>
+{
+    static_assert(std::numeric_limits<double>::is_iec559,
+                  "Double type value is not iec559 compliant");
+    static_assert(sizeof(double) == 8, "Double type must have a size of 8 bytes");
+
+    static void put(double value, uint8_t* buffer)
+    {
+        assert(buffer != nullptr);
+
+        uint64_t temp;
+        memcpy(&temp, &value, sizeof(double));
+        big<uint64_t, sizeof(double)>::put(temp, buffer);
+    }
+
+    static void get(double& value, const uint8_t* buffer)
+    {
+        assert(buffer != nullptr);
+
+        uint64_t temp;
+        big<uint64_t, sizeof(double)>::get(temp, buffer);
+        memcpy(&value, &temp, sizeof(double));
+    }
+};
+
 }
 
 // Inserts and extracts integers in big-endian format.
