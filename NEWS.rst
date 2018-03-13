@@ -7,6 +7,9 @@ every change, see the Git log.
 Latest
 ------
 * tbd
+
+8.2.0
+-----
 * Minor: Added ``ValueType get()`` and ``ValueType get_bytes()``.
 * Minor: Added support for Float type and Double types.
 
