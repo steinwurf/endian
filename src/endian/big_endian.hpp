@@ -24,32 +24,30 @@ struct big
     {
         big<ValueType, Bytes - 1>::put(value, buffer + 1);
 
-        *buffer = value & 0xFF;
         value = (value >> 8);
+        *buffer = value & 0xFF;
     }
 
     static void get(ValueType& value, const uint8_t* buffer)
     {
-        value = (value << 8);
         value |= ((ValueType) *buffer);
+        value = (value << 8);
 
         big<ValueType, Bytes - 1>::get(value, buffer + 1);
     }
 };
 
 template<class ValueType>
-struct big<ValueType, 0>
+struct big<ValueType, 1>
 {
     static void put(ValueType& value, uint8_t* buffer)
     {
-        (void) buffer;
-        (void) value;
+        *buffer = value & 0xFF;
     }
 
     static void get(ValueType& value, const uint8_t* buffer)
     {
-        (void) buffer;
-        (void) value;
+        value |= ((ValueType) *buffer);
     }
 };
 
@@ -60,7 +58,7 @@ struct big<float, 4>
                   "Float type value is not iec559 compliant");
     static_assert(sizeof(float) == 4, "Float type must have a size of 4 bytes");
 
-    static void put(float value, uint8_t* buffer)
+    static void put(float& value, uint8_t* buffer)
     {
         assert(buffer != nullptr);
 
@@ -86,7 +84,7 @@ struct big<double, 8>
                   "Double type value is not iec559 compliant");
     static_assert(sizeof(double) == 8, "Double type must have a size of 8 bytes");
 
-    static void put(double value, uint8_t* buffer)
+    static void put(double& value, uint8_t* buffer)
     {
         assert(buffer != nullptr);
 
@@ -186,8 +184,6 @@ struct big_endian
         static_assert(Bytes == sizeof(ValueType) ||
                       std::is_unsigned<ValueType>::value, "Must be unsigned");
         static_assert(sizeof(ValueType) >= Bytes, "ValueType too small");
-        assert((std::is_unsigned<ValueType>::value == false ||
-               Bytes * 8 >= log2(value)) && "Value too big for bytes");
         assert(buffer != nullptr);
 
         detail::big<ValueType, Bytes>::put(value, buffer);

@@ -7,6 +7,7 @@ every change, see the Git log.
 Latest
 ------
 * tbd
+* Patch: Recursive implementation of convertion
 
 8.2.0
 -----
