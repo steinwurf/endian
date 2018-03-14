@@ -8,7 +8,9 @@
 #include <cassert>
 #include <cstdint>
 #include <cstring>
+#include <cmath>
 #include <limits>
+#include <type_traits>
 
 namespace endian
 {
@@ -21,6 +23,7 @@ struct big
     static void put(ValueType& value, uint8_t* buffer)
     {
         big<ValueType, Bytes - 1>::put(value, buffer + 1);
+
         *buffer = value & 0xFF;
         value = (value >> 8);
     }
@@ -29,6 +32,7 @@ struct big
     {
         value = (value << 8);
         value |= ((ValueType) *buffer);
+
         big<ValueType, Bytes - 1>::get(value, buffer + 1);
     }
 };
@@ -137,7 +141,9 @@ struct big_endian
     template<uint8_t Bytes, class ValueType>
     static void get_bytes(ValueType& value, const uint8_t* buffer)
     {
-        // static_assert(std::is_unsigned<ValueType>::value, "Must be unsigned");
+        static_assert(Bytes == sizeof(ValueType) ||
+                      std::is_unsigned<ValueType>::value, "Must be unsigned");
+        static_assert(sizeof(ValueType) >= Bytes, "ValueType too small");
         assert(buffer != nullptr);
 
         value = 0;
@@ -150,6 +156,9 @@ struct big_endian
     template<uint8_t Bytes, class ValueType>
     static ValueType get_bytes(const uint8_t* buffer)
     {
+        static_assert(Bytes == sizeof(ValueType) ||
+                      std::is_unsigned<ValueType>::value, "Must be unsigned");
+        static_assert(sizeof(ValueType) >= Bytes, "ValueType too small");
         assert(buffer != nullptr);
 
         ValueType value = 0;
@@ -174,8 +183,12 @@ struct big_endian
     template<uint8_t Bytes, class ValueType>
     static void put_bytes(ValueType value, uint8_t* buffer)
     {
+        static_assert(Bytes == sizeof(ValueType) ||
+                      std::is_unsigned<ValueType>::value, "Must be unsigned");
+        static_assert(sizeof(ValueType) >= Bytes, "ValueType too small");
+        assert((std::is_unsigned<ValueType>::value == false ||
+               Bytes * 8 >= log2(value)) && "Value too big for bytes");
         assert(buffer != nullptr);
-        // @TODO add a check that the value is not too big - in case of partial valuetypes
 
         detail::big<ValueType, Bytes>::put(value, buffer);
     }
