@@ -18,23 +18,25 @@ namespace detail
 template<class ValueType, uint8_t Bytes>
 struct big
 {
-    static void put(ValueType value, uint8_t* buffer)
+    static void put(ValueType& value, uint8_t* buffer)
     {
-        *buffer = ((value >> (Bytes - 1) * 8) & 0xFF);
         big<ValueType, Bytes - 1>::put(value, buffer + 1);
+        *buffer = value & 0xFF;
+        value = (value >> 8);
     }
 
     static void get(ValueType& value, const uint8_t* buffer)
     {
+        value = (value << 8);
+        value |= ((ValueType) *buffer);
         big<ValueType, Bytes - 1>::get(value, buffer + 1);
-        value |= ((ValueType) *buffer) << (Bytes - 1) * 8;
     }
 };
 
 template<class ValueType>
 struct big<ValueType, 0>
 {
-    static void put(ValueType value, uint8_t* buffer)
+    static void put(ValueType& value, uint8_t* buffer)
     {
         (void) buffer;
         (void) value;
@@ -43,7 +45,7 @@ struct big<ValueType, 0>
     static void get(ValueType& value, const uint8_t* buffer)
     {
         (void) buffer;
-        value = 0;
+        (void) value;
     }
 };
 
@@ -58,7 +60,7 @@ struct big<float, 4>
     {
         assert(buffer != nullptr);
 
-        uint32_t temp;
+        uint32_t temp = 0;
         memcpy(&temp, &value, sizeof(float));
         big<uint32_t, sizeof(float)>::put(temp, buffer);
     }
@@ -67,7 +69,7 @@ struct big<float, 4>
     {
         assert(buffer != nullptr);
 
-        uint32_t temp;
+        uint32_t temp = 0;
         big<uint32_t, sizeof(float)>::get(temp, buffer);
         memcpy(&value, &temp, sizeof(float));
     }
@@ -84,7 +86,7 @@ struct big<double, 8>
     {
         assert(buffer != nullptr);
 
-        uint64_t temp;
+        uint64_t temp = 0;
         memcpy(&temp, &value, sizeof(double));
         big<uint64_t, sizeof(double)>::put(temp, buffer);
     }
@@ -93,7 +95,7 @@ struct big<double, 8>
     {
         assert(buffer != nullptr);
 
-        uint64_t temp;
+        uint64_t temp = 0;
         big<uint64_t, sizeof(double)>::get(temp, buffer);
         memcpy(&value, &temp, sizeof(double));
     }
@@ -112,6 +114,7 @@ struct big_endian
     {
         assert(buffer != nullptr);
 
+        value = 0;
         detail::big<ValueType, sizeof(ValueType)>::get(value, buffer);
     }
 
@@ -123,7 +126,7 @@ struct big_endian
     {
         assert(buffer != nullptr);
 
-        ValueType value;
+        ValueType value = 0;
         get(value, buffer);
         return value;
     }
@@ -137,6 +140,7 @@ struct big_endian
         // static_assert(std::is_unsigned<ValueType>::value, "Must be unsigned");
         assert(buffer != nullptr);
 
+        value = 0;
         detail::big<ValueType, Bytes>::get(value, buffer);
     }
 
@@ -148,7 +152,7 @@ struct big_endian
     {
         assert(buffer != nullptr);
 
-        ValueType value;
+        ValueType value = 0;
         get_bytes<Bytes>(value, buffer);
         return value;
     }
