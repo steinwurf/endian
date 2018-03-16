@@ -1,18 +1,16 @@
-// Copyright (c) 2016 Steinwurf ApS
+// Copyright (c) 2018 Steinwurf ApS
 // All Rights Reserved
 //
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
 
 #pragma once
 
-#include <cstdint>
 #include <cassert>
-#include <cmath>
 #include <cstring>
+#include <cstdint>
 #include <limits>
-#include <type_traits>
 
-#include <iostream>
+#include "helpers.hpp"
 
 namespace endian
 {
@@ -20,19 +18,19 @@ namespace detail
 {
 
 template<class ValueType, uint8_t Bytes>
-struct little
+struct little_impl
 {
     static void put(ValueType& value, uint8_t* buffer)
     {
         *buffer = value & 0xFF;
         value = (value >> 8);
 
-        little<ValueType, Bytes - 1>::put(value, buffer + 1);
+        little_impl<ValueType, Bytes - 1>::put(value, buffer + 1);
     }
 
     static void get(ValueType& value, const uint8_t* buffer)
     {
-        little<ValueType, Bytes - 1>::get(value, buffer + 1);
+        little_impl<ValueType, Bytes - 1>::get(value, buffer + 1);
 
         value = (value << 8);
         value |= ((ValueType) *buffer);
@@ -40,7 +38,7 @@ struct little
 };
 
 template<class ValueType>
-struct little<ValueType, 1>
+struct little_impl<ValueType, 1>
 {
     static void put(ValueType& value, uint8_t* buffer)
     {
@@ -54,55 +52,89 @@ struct little<ValueType, 1>
     }
 };
 
-template<>
-struct little<float, 4>
+// Helper to delegate to the appropiate specialization depednign on the type
+// @TODO remove these wrappers when we have CXX17 support and "if constexpr"
+template<class ValueType, uint8_t Bytes,
+         bool isUnsigened = std::is_unsigned<ValueType>::value,
+         bool isFloat = std::is_floating_point<ValueType>::value>
+struct little
 {
-    static_assert(std::numeric_limits<float>::is_iec559,
-                  "Float type value is not iec559 compliant");
-    static_assert(sizeof(float) == 4, "Float type must have a size of 4 bytes");
-
-    static void put(float& value, uint8_t* buffer)
+    static void put(ValueType& value, uint8_t* buffer)
     {
-        assert(buffer != nullptr);
-
-        uint32_t temp = 0;
-        memcpy(&temp, &value, sizeof(float));
-        little<uint32_t, sizeof(float)>::put(temp, buffer);
+        little<ValueType, Bytes, isUnsigened, isFloat>::put(value, buffer);
     }
 
-    static void get(float& value, const uint8_t* buffer)
+    static void get(ValueType& value, const uint8_t* buffer)
     {
-        assert(buffer != nullptr);
-
-        uint32_t temp = 0;
-        little<uint32_t, sizeof(float)>::get(temp, buffer);
-        memcpy(&value, &temp, sizeof(float));
+        little<ValueType, Bytes, isUnsigened, isFloat>::get(value, buffer);
     }
 };
 
-template<>
-struct little<double, 8>
+// Unsigned specialization
+template<class ValueType, uint8_t Bytes>
+struct little<ValueType, Bytes, true, false>
 {
-    static_assert(std::numeric_limits<double>::is_iec559,
-                  "Double type value is not iec559 compliant");
-    static_assert(sizeof(double) == 8, "Double type must have a size of 8 bytes");
+    static_assert(
+        Bytes > sizeof(ValueType) / 2, "ValueType fits in type of"
+        "half the size compared to the provide one, use a smaller type");
 
-    static void put(double& value, uint8_t* buffer)
+    static void put(ValueType& value, uint8_t* buffer)
     {
-        assert(buffer != nullptr);
+        assert((check<ValueType, Bytes>::value(value)) &&
+               "Value too big to fit in the provided bytes");
 
-        uint64_t temp = 0;
-        memcpy(&temp, &value, sizeof(double));
-        little<uint64_t, sizeof(double)>::put(temp, buffer);
+        little_impl<ValueType, Bytes>::put(value, buffer);
     }
 
-    static void get(double& value, const uint8_t* buffer)
+    static void get(ValueType& value, const uint8_t* buffer)
     {
-        assert(buffer != nullptr);
+        little_impl<ValueType, Bytes>::get(value, buffer);
+    }
+};
 
-        uint64_t temp = 0;
-        little<uint64_t, sizeof(double)>::get(temp, buffer);
-        memcpy(&value, &temp, sizeof(double));
+// Signed specialization
+template<class ValueType, uint8_t Bytes>
+struct little<ValueType, Bytes, false, false>
+{
+    static_assert(
+        Bytes == sizeof(ValueType),
+        "The number of bytes must match the size of the signed type");
+
+    static void put(ValueType& value, uint8_t* buffer)
+    {
+        little_impl<ValueType, Bytes>::put(value, buffer);
+    }
+
+    static void get(ValueType& value, const uint8_t* buffer)
+    {
+        little_impl<ValueType, Bytes>::get(value, buffer);
+    }
+};
+
+// Floating point type specialization
+template<class ValueType, uint8_t Bytes>
+struct little<ValueType, Bytes, false, true>
+{
+    static_assert(
+        std::numeric_limits<ValueType>::is_iec559,
+        "Platform must be iec559 compliant when floating point types are used");
+
+    static_assert(
+        Bytes == sizeof(ValueType),
+        "The number of bytes must match the size of the floating type");
+
+    static void put(ValueType& value, uint8_t* buffer)
+    {
+        typename floating_point<ValueType>::UnsignedType temp = 0;
+        memcpy(&temp, &value, sizeof(ValueType));
+        little_impl<decltype(temp), sizeof(ValueType)>::put(temp, buffer);
+    }
+
+    static void get(ValueType& value, const uint8_t* buffer)
+    {
+        typename floating_point<ValueType>::UnsignedType temp = 0;
+        little_impl<decltype(temp), sizeof(ValueType)>::get(temp, buffer);
+        memcpy(&value, &temp, sizeof(ValueType));
     }
 };
 

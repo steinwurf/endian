@@ -6,8 +6,8 @@
 #pragma once
 
 #include <cassert>
-#include <cstdint>
 #include <cstring>
+#include <cstdint>
 #include <limits>
 
 #include "helpers.hpp"
@@ -70,7 +70,6 @@ struct big
     {
         big<ValueType, Bytes, isUnsigened, isFloat>::get(value, buffer);
     }
-
 };
 
 // Unsigned specialization
@@ -83,7 +82,8 @@ struct big<ValueType, Bytes, true, false>
 
     static void put(ValueType& value, uint8_t* buffer)
     {
-        assert((check<ValueType, Bytes>::value(value)) && "hej");
+        assert((check<ValueType, Bytes>::value(value)) &&
+               "Value too big to fit in the provided bytes");
 
         big_impl<ValueType, Bytes>::put(value, buffer);
     }
@@ -121,21 +121,21 @@ struct big<ValueType, Bytes, false, true>
         std::numeric_limits<ValueType>::is_iec559,
         "Platform must be iec559 compliant when floating point types are used");
 
+    static_assert(
+        Bytes == sizeof(ValueType),
+        "The number of bytes must match the size of the floating type");
+
     static void put(ValueType& value, uint8_t* buffer)
     {
-        assert(buffer != nullptr);
-
         typename floating_point<ValueType>::UnsignedType temp = 0;
         memcpy(&temp, &value, sizeof(ValueType));
-        big<decltype(temp), sizeof(ValueType), true, false>::put(temp, buffer);
+        big_impl<decltype(temp), sizeof(ValueType)>::put(temp, buffer);
     }
 
     static void get(ValueType& value, const uint8_t* buffer)
     {
-        assert(buffer != nullptr);
-
         typename floating_point<ValueType>::UnsignedType temp = 0;
-        big<decltype(temp), sizeof(ValueType), true, false>::get(temp, buffer);
+        big_impl<decltype(temp), sizeof(ValueType)>::get(temp, buffer);
         memcpy(&value, &temp, sizeof(ValueType));
     }
 };

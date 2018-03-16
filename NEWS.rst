@@ -7,7 +7,9 @@ every change, see the Git log.
 Latest
 ------
 * tbd
-* Patch: Recursive implementation of convertion
+* Major: Writing to/from half or less of the bytes of a provided type is now
+  disallowed.
+* Patch: Recursive implementation of convertion.
 
 8.2.0
 -----
