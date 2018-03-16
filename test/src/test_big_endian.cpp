@@ -11,13 +11,6 @@
 
 #include <gtest/gtest.h>
 
-
-TEST(test_big_endian, bitmask)
-{
-    EXPECT_EQ(16777215U, (16777215U & endian::detail::mask<uint32_t, 3>::bytes()));
-    EXPECT_NE(16777216U, (16777216U & endian::detail::mask<uint32_t, 3>::bytes()));
-}
-
 TEST(test_big_endian, convert_integers)
 {
     // Indicate endianness for debugging purposes

@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Steinwurf ApS
+// Copyright (c) 2018 Steinwurf ApS
 // All Rights Reserved
 //
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
@@ -8,45 +8,14 @@
 #include <cassert>
 #include <cstdint>
 #include <cstring>
-#include <cmath>
 #include <limits>
-#include <type_traits>
+
+#include "helpers.hpp"
 
 namespace endian
 {
 namespace detail
 {
-
-// Helper to create a bitmask
-template<class ValueType, uint8_t UsedBytes>
-struct mask
-{
-    static ValueType bytes()
-    {
-        ValueType mask = 0;
-        memset(&mask, 0xFF, UsedBytes);
-        return mask;
-    }
-};
-
-// Helper to convet floating point type into identically sized unsigned integer
-template<class Type>
-struct floating_point
-{ };
-
-template<>
-struct floating_point<float>
-{
-    static_assert(sizeof(float) == 4, "Float type must have a size of 4 bytes");
-    using UnsignedType = uint32_t;
-};
-
-template<>
-struct floating_point<double>
-{
-    static_assert(sizeof(double) == 8, "Float type must have a size of 8 bytes");
-    using UnsignedType = uint64_t;
-};
 
 // Where the actual conversion takes place
 template<class ValueType, uint8_t Bytes>
@@ -114,8 +83,7 @@ struct big<ValueType, Bytes, true, false>
 
     static void put(ValueType& value, uint8_t* buffer)
     {
-        assert(value == (value & detail::mask<ValueType, Bytes>::bytes()) &&
-               "Value to high for the number of bytes");
+        assert((check<ValueType, Bytes>::value(value)) && "hej");
 
         big_impl<ValueType, Bytes>::put(value, buffer);
     }
@@ -130,8 +98,9 @@ struct big<ValueType, Bytes, true, false>
 template<class ValueType, uint8_t Bytes>
 struct big<ValueType, Bytes, false, false>
 {
-    static_assert(Bytes == sizeof(ValueType),
-                  "The number of bytes must match the size of the signed type");
+    static_assert(
+        Bytes == sizeof(ValueType),
+        "The number of bytes must match the size of the signed type");
 
     static void put(ValueType& value, uint8_t* buffer)
     {
