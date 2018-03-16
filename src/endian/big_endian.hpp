@@ -17,26 +17,38 @@ namespace endian
 namespace detail
 {
 
+// Helper to create a bitmask
+template<class ValueType, uint8_t UsedBytes>
+struct mask
+{
+    static ValueType bytes()
+    {
+        ValueType mask = 0;
+        memset(&mask, 0xFF, UsedBytes);
+        return mask;
+    }
+};
+
 // Helper to convet floating point type into identically sized unsigned integer
 template<class Type>
-struct FloatType
+struct floating_point
 { };
 
 template<>
-struct FloatType<float>
+struct floating_point<float>
 {
     static_assert(sizeof(float) == 4, "Float type must have a size of 4 bytes");
     using UnsignedType = uint32_t;
 };
 
 template<>
-struct FloatType<double>
+struct floating_point<double>
 {
     static_assert(sizeof(double) == 8, "Float type must have a size of 8 bytes");
     using UnsignedType = uint64_t;
 };
 
-
+// Where the actual conversion takes place
 template<class ValueType, uint8_t Bytes>
 struct big_impl
 {
@@ -60,6 +72,7 @@ struct big_impl
 template<class ValueType>
 struct big_impl<ValueType, 1>
 {
+
     static void put(ValueType& value, uint8_t* buffer)
     {
         *buffer = value & 0xFF;
@@ -72,110 +85,78 @@ struct big_impl<ValueType, 1>
 };
 
 
-// Wrapper to allow for different checks depending on the Value type,
-// @TODO remove this wrapper when we have CXX17 support and "if constexpr"
-template<class ValueType, uint8_t Bytes, bool isUnsigened, bool isIEC559>
+// Helper to delegate to the appropiate specialization depednign on the type
+// @TODO remove these wrappers when we have CXX17 support and "if constexpr"
+template<class ValueType, uint8_t Bytes,
+         bool isUnsigened = std::is_unsigned<ValueType>::value,
+         bool isFloat = std::is_floating_point<ValueType>::value>
 struct big
-{ };
+{
+    static void put(ValueType& value, uint8_t* buffer)
+    {
+        big<ValueType, Bytes, isUnsigened, isFloat>::put(value, buffer);
+    }
+
+    static void get(ValueType& value, const uint8_t* buffer)
+    {
+        big<ValueType, Bytes, isUnsigened, isFloat>::get(value, buffer);
+    }
+
+};
 
 // Unsigned specialization
 template<class ValueType, uint8_t Bytes>
 struct big<ValueType, Bytes, true, false>
 {
+    static_assert(
+        Bytes > sizeof(ValueType) / 2, "ValueType fits in type of"
+        "half the size compared to the provide one, use a smaller type");
+
     static void put(ValueType& value, uint8_t* buffer)
     {
-        static_assert(Bytes > sizeof(ValueType) / 2,
-        "Inappropiate value type used for the provided bytes, user small type");
+        assert(value == (value & detail::mask<ValueType, Bytes>::bytes()) &&
+               "Value to high for the number of bytes");
+
         big_impl<ValueType, Bytes>::put(value, buffer);
     }
 
     static void get(ValueType& value, const uint8_t* buffer)
     {
-        static_assert(Bytes > sizeof(ValueType) / 2,
-        "Inappropiate value type used for the provided bytes, user small type");
-
         big_impl<ValueType, Bytes>::get(value, buffer);
     }
 };
-
-// Unsigned specialization with 3 bytes
-template<class ValueType>
-struct big<ValueType, 3, true, false>
-{
-    static void put(ValueType& value, uint8_t* buffer)
-    {
-        static_assert(3 > sizeof(ValueType) / 2,
-        "Inappropiate value type used for the provided bytes, user small type");
-        assert(value <= 0xFFFFFF && "Provided value too big");
-
-        big_impl<ValueType, 3>::put(value, buffer);
-    }
-
-    static void get(ValueType& value, const uint8_t* buffer)
-    {
-        static_assert(3 > sizeof(ValueType) / 2,
-        "Inappropiate value type used for the provided bytes, user small type");
-
-        big_impl<ValueType, 3>::get(value, buffer);
-    }
-};
-
-// Unsigned specialization with 5 bytes
-template<class ValueType>
-struct big<ValueType, 5, true, false>
-{
-    static void put(ValueType& value, uint8_t* buffer)
-    {
-        static_assert(5 > sizeof(ValueType) / 2,
-        "Inappropiate value type used for the provided bytes, user small type");
-        assert(value <= 0xFFFFFFFFFF && "Provided value too big");
-
-        big_impl<ValueType, 5>::put(value, buffer);
-    }
-
-    static void get(ValueType& value, const uint8_t* buffer)
-    {
-        static_assert(5 > sizeof(ValueType) / 2,
-        "Inappropiate value type used for the provided bytes, user small type");
-
-        big_impl<ValueType, 5>::get(value, buffer);
-    }
-};
-
 
 // Signed specialization
 template<class ValueType, uint8_t Bytes>
 struct big<ValueType, Bytes, false, false>
 {
+    static_assert(Bytes == sizeof(ValueType),
+                  "The number of bytes must match the size of the signed type");
+
     static void put(ValueType& value, uint8_t* buffer)
     {
-        static_assert(Bytes == sizeof(ValueType),
-            "The number of bytes must match the size of the signed type");
-
         big_impl<ValueType, Bytes>::put(value, buffer);
     }
 
     static void get(ValueType& value, const uint8_t* buffer)
     {
-        static_assert(Bytes == sizeof(ValueType),
-            "The number of bytes must match the size of the signed type");
-
         big_impl<ValueType, Bytes>::get(value, buffer);
     }
 };
 
-// IEC569 specialization
+// Floating point type specialization
 template<class ValueType, uint8_t Bytes>
 struct big<ValueType, Bytes, false, true>
 {
-    static_assert(std::numeric_limits<ValueType>::is_iec559,
+    static_assert(
+        std::numeric_limits<ValueType>::is_iec559,
         "Platform must be iec559 compliant when floating point types are used");
 
     static void put(ValueType& value, uint8_t* buffer)
     {
         assert(buffer != nullptr);
 
-        typename FloatType<ValueType>::UnsignedType temp = 0;
+        typename floating_point<ValueType>::UnsignedType temp = 0;
         memcpy(&temp, &value, sizeof(ValueType));
         big<decltype(temp), sizeof(ValueType), true, false>::put(temp, buffer);
     }
@@ -184,7 +165,7 @@ struct big<ValueType, Bytes, false, true>
     {
         assert(buffer != nullptr);
 
-        typename FloatType<ValueType>::UnsignedType temp = 0;
+        typename floating_point<ValueType>::UnsignedType temp = 0;
         big<decltype(temp), sizeof(ValueType), true, false>::get(temp, buffer);
         memcpy(&value, &temp, sizeof(ValueType));
     }
@@ -204,9 +185,7 @@ struct big_endian
         assert(buffer != nullptr);
 
         value = 0;
-        detail::big<ValueType, sizeof(ValueType),
-            std::is_unsigned<ValueType>::value, std::is_floating_point<ValueType>::value>::get(
-                value, buffer);
+        detail::big<ValueType, sizeof(ValueType)>::get(value, buffer);
     }
 
     /// Gets a ValueType-sized integer value from a data buffer.
@@ -230,8 +209,7 @@ struct big_endian
         assert(buffer != nullptr);
 
         value = 0;
-        detail::big<ValueType, Bytes, std::is_unsigned<ValueType>::value, std::is_floating_point<ValueType>::value>::get(
-            value, buffer);
+        detail::big<ValueType, Bytes>::get(value, buffer);
     }
 
     /// Gets a Bytes-sized integer value from a data buffer.
@@ -253,9 +231,7 @@ struct big_endian
     {
         assert(buffer != nullptr);
 
-        detail::big<ValueType, sizeof(ValueType),
-            std::is_unsigned<ValueType>::value, std::is_floating_point<ValueType>::value>::put(
-                value, buffer);
+        detail::big<ValueType, sizeof(ValueType)>::put(value, buffer);
     }
 
     /// Inserts a Bytes-sized integer value into the data buffer.
@@ -267,9 +243,7 @@ struct big_endian
         static_assert(sizeof(ValueType) >= Bytes, "ValueType too small");
         assert(buffer != nullptr);
 
-        detail::big<ValueType, Bytes, std::is_unsigned<ValueType>::value,
-        std::is_floating_point<ValueType>::value>::put(
-            value, buffer);
+        detail::big<ValueType, Bytes>::put(value, buffer);
     }
 };
 }
