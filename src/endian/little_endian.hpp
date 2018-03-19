@@ -17,6 +17,7 @@ namespace endian
 namespace detail
 {
 
+// Where the actual conversion takes place
 template<class ValueType, uint8_t Bytes>
 struct little_impl
 {
@@ -42,7 +43,6 @@ struct little_impl<ValueType, 1>
 {
     static void put(ValueType& value, uint8_t* buffer)
     {
-        assert(value <= 0xFF && "Value too big for provided buffer");
         *buffer = value & 0xFF;
     }
 
@@ -55,18 +55,18 @@ struct little_impl<ValueType, 1>
 // Helper to delegate to the appropiate specialization depednign on the type
 // @TODO remove these wrappers when we have CXX17 support and "if constexpr"
 template<class ValueType, uint8_t Bytes,
-         bool isUnsigened = std::is_unsigned<ValueType>::value,
-         bool isFloat = std::is_floating_point<ValueType>::value>
+         bool IsUnsigened = std::is_unsigned<ValueType>::value,
+         bool IsFloat = std::is_floating_point<ValueType>::value>
 struct little
 {
     static void put(ValueType& value, uint8_t* buffer)
     {
-        little<ValueType, Bytes, isUnsigened, isFloat>::put(value, buffer);
+        little<ValueType, Bytes, IsUnsigened, IsFloat>::put(value, buffer);
     }
 
     static void get(ValueType& value, const uint8_t* buffer)
     {
-        little<ValueType, Bytes, isUnsigened, isFloat>::get(value, buffer);
+        little<ValueType, Bytes, IsUnsigened, IsFloat>::get(value, buffer);
     }
 };
 

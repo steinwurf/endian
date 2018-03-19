@@ -41,7 +41,6 @@ struct big_impl
 template<class ValueType>
 struct big_impl<ValueType, 1>
 {
-
     static void put(ValueType& value, uint8_t* buffer)
     {
         *buffer = value & 0xFF;
@@ -53,22 +52,21 @@ struct big_impl<ValueType, 1>
     }
 };
 
-
-// Helper to delegate to the appropiate specialization depednign on the type
+// Helper to delegate to the appropiate specialization depending on the type
 // @TODO remove these wrappers when we have CXX17 support and "if constexpr"
 template<class ValueType, uint8_t Bytes,
-         bool isUnsigened = std::is_unsigned<ValueType>::value,
-         bool isFloat = std::is_floating_point<ValueType>::value>
+         bool IsUnsigened = std::is_unsigned<ValueType>::value,
+         bool IsFloat = std::is_floating_point<ValueType>::value>
 struct big
 {
     static void put(ValueType& value, uint8_t* buffer)
     {
-        big<ValueType, Bytes, isUnsigened, isFloat>::put(value, buffer);
+        big<ValueType, Bytes, IsUnsigened, IsFloat>::put(value, buffer);
     }
 
     static void get(ValueType& value, const uint8_t* buffer)
     {
-        big<ValueType, Bytes, isUnsigened, isFloat>::get(value, buffer);
+        big<ValueType, Bytes, IsUnsigened, IsFloat>::get(value, buffer);
     }
 };
 

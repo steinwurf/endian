@@ -8,7 +8,7 @@ Latest
 ------
 * tbd
 * Major: Writing to/from half or less of the bytes of a provided type is now
-  disallowed.
+  disallowed, use a smaller type instead and make an explicit cast is needed.
 * Patch: Recursive implementation of convertion.
 
 8.2.0
