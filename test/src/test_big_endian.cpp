@@ -11,7 +11,6 @@
 
 #include <gtest/gtest.h>
 
-
 TEST(test_big_endian, convert_integers)
 {
     // Indicate endianness for debugging purposes
