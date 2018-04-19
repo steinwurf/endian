@@ -12,7 +12,7 @@ Latest
 -----
 * Major: Writing to/from half or less of the bytes of a provided type is now
   disallowed, use a smaller type instead and make an explicit cast is needed.
-* Patch: Recursive implementation of convertion.
+* Patch: Recursive implementation of conversion.
 
 8.2.0
 -----
@@ -46,7 +46,7 @@ Latest
 7.0.0
 -----
 * Major: Renamed ``get`` and ``put`` to ``get_bytes`` and ``put_bytes``.
-* Minor: Added possiblity to read native types with ``get`` and ``put``.
+* Minor: Added possibility to read native types with ``get`` and ``put``.
 
 6.2.0
 -----
