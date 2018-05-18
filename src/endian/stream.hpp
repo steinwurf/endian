@@ -51,7 +51,7 @@ public:
     /// Gets the current read/write position in the stream
     ///
     /// @return the current position.
-    uint64_t position() const  noexcept
+    uint64_t position() const noexcept
     {
         return m_position;
     }
@@ -83,7 +83,7 @@ public:
     /// @param bytes_to_skip the bytes to skip
     void skip(uint64_t bytes_to_skip) noexcept
     {
-        assert(bytes_to_skip + m_position <= m_size);
+        assert(bytes_to_skip <= m_size - m_position);
 
         seek(m_position + bytes_to_skip);
     }
