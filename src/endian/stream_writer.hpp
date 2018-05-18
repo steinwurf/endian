@@ -14,11 +14,10 @@
 
 namespace endian
 {
-/// The idea behind the stream_writer is to provide a stream-like
-/// interface for accessing a fixed-size buffer.
-/// All complexity regarding endianness is encapsulated.
+/// The stream_writer provides a stream-like interface for writing to a fixed
+/// size buffer. All complexity regarding endianness is encapsulated.
 template<class EndianType>
-class stream_writer : public stream
+class stream_writer : public stream<uint8_t*>
 {
 public:
 
@@ -28,10 +27,9 @@ public:
     /// @param data a data pointer to the buffer
     /// @param size the size of the buffer in bytes
     stream_writer(uint8_t* data, uint64_t size) :
-        stream(size),
-        m_data(data)
+        stream(data, size)
     {
-        assert(m_data != nullptr && "Invalid buffer pointer provided");
+        assert(data != nullptr && "Null pointer provided");
     }
 
     /// Creates an endian stream on top of a pre-allocated buffer
@@ -45,26 +43,22 @@ public:
     ///
     /// @param value the value to write.
     template<uint8_t Bytes, class ValueType>
-    void write_bytes(ValueType value)
+    void write_bytes(ValueType value) noexcept
     {
-        // Make sure there is enough space in the underlying buffer
         assert(Bytes <= remaining_size());
 
-        // Write the value at the current position
         EndianType::template put_bytes<Bytes>(value, remaining_data());
-
-        // Advance the current position
-        m_position += Bytes;
+        skip(Bytes);
     }
 
     /// Writes a Bytes-sized integer to the stream.
     ///
     /// @param value the value to write.
     template<class ValueType>
-    void write(ValueType value)
+    void write(ValueType value) noexcept
     {
-        // Make sure there is enough space in the underlying buffer
         assert(sizeof(ValueType) <= remaining_size());
+
         write_bytes<sizeof(ValueType), ValueType>(value);
     }
 
@@ -76,37 +70,28 @@ public:
     ///
     /// @param data Pointer to the data, to be written to the stream.
     /// @param size Number of bytes from the data pointer.
-    void write(const uint8_t* data, uint64_t size)
+    void write(const uint8_t* data, uint64_t size)  noexcept
     {
-        // Make sure there is enough space in the underlying buffer
         assert(size <= remaining_size());
 
-        // Copy the data to the buffer
         std::copy_n(data, (std::size_t)size, remaining_data());
-
-        // Advance the current position
-        m_position += size;
+        skip(size);
     }
 
-    /// A pointer to the stream's data.
+    /// Writes the raw bytes to the stream.
     ///
-    /// @return pointer to the stream's data.
-    uint8_t* data() const
-    {
-        return m_data;
-    }
-
-    /// A pointer to the stream's data at the current position.
+    /// Note, that this function is provided only for convenience and
+    /// it does not perform any endian conversions.
     ///
-    /// @return pointer to the stream's data at the current position.
-    uint8_t* remaining_data() const
+    /// @param stream the stream to write to
+    /// @param size Number of bytes to read and write
+    void write(stream& s, uint64_t size)  noexcept
     {
-        return m_data + m_position;
+        assert(size <= remaining_size());
+        assert(size <= s.remaining_size());
+
+        write(s.remaining_data(), size);
+        s.skip(size);
     }
-
-private:
-
-    /// Data pointer to buffer
-    uint8_t* m_data;
 };
 }

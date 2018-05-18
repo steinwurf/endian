@@ -14,11 +14,10 @@
 
 namespace endian
 {
-/// The idea behind the stream_reader is to provide a stream-like
-/// interface for accessing a fixed-size buffer.
-/// All complexity regarding endianness is encapsulated.
+/// The stream_reader provides a stream-like interface for reading from a
+/// fixed-size buffer. All complexity regarding endianness is encapsulated.
 template<class EndianType>
-class stream_reader : public stream
+class stream_reader : public stream<const uint8_t*>
 {
 public:
 
@@ -28,10 +27,9 @@ public:
     /// @param data a data pointer to the buffer
     /// @param size the size of the buffer in bytes
     stream_reader(const uint8_t* data, uint64_t size) :
-        stream(size),
-        m_data(data)
+        stream(data, size)
     {
-        assert(m_data != nullptr && "Invalid buffer pointer provided");
+        assert(data != nullptr && "Null pointer provided");
     }
 
     /// Creates an endian stream on top of a pre-allocated buffer
@@ -45,16 +43,13 @@ public:
     ///
     /// @param value reference to the value to be read
     template<uint8_t Bytes, class ValueType>
-    void read_bytes(ValueType& value)
+    void read_bytes(ValueType& value) noexcept
     {
         assert(Bytes <= remaining_size() &&
                "Reading over the end of the underlying buffer");
 
-        // Get the value at the current position
         peek_bytes<Bytes, ValueType>(value);
-
-        // Advance the current position
-        m_position += Bytes;
+        skip(Bytes);
     }
 
     /// Reads a ValueType-sized integer from the stream and moves the read
@@ -62,7 +57,7 @@ public:
     ///
     /// @param value reference to the value to be read
     template<class ValueType>
-    void read(ValueType& value)
+    void read(ValueType& value) noexcept
     {
         assert(sizeof(ValueType) <= remaining_size() &&
                "Reading over the end of the underlying buffer");
@@ -75,7 +70,7 @@ public:
     ///
     /// @return the read value
     template<class ValueType>
-    ValueType read()
+    ValueType read() noexcept
     {
         assert(sizeof(ValueType) <= remaining_size() &&
                "Reading over the end of the underlying buffer");
@@ -93,16 +88,29 @@ public:
     ///
     /// @param data The data pointer to fill into
     /// @param size The number of bytes to fill.
-    void read(uint8_t* data, uint64_t size)
+    void read(uint8_t* data, uint64_t size) noexcept
     {
         assert(size <= remaining_size() &&
                "Reading over the end of the underlying buffer");
 
-        // Copy the data from the buffer to the storage
         std::copy_n(remaining_data(), (std::size_t)size, data);
+        skip(size);
+    }
 
-        // Advance the current position
-        m_position += size;
+    /// Reads the raw bytes from the stream.
+    ///
+    /// Note, that this function is provided only for convenience and
+    /// it does not perform any endian conversions.
+    ///
+    /// @param stream the stream to read from
+    /// @param size Number of bytes to read and write
+    void read(stream& s, uint64_t size) noexcept
+    {
+        assert(size <= remaining_size());
+        assert(size <= s.remaining_size());
+
+        read(s.remaining_data(), size);
+        s.skip(size);
     }
 
     /// Peek a Bytes-sized integer in the stream without moving the read
@@ -111,14 +119,13 @@ public:
     /// @param value reference to the value to be read
     /// @param offset number of bytes to offset the peeking with
     template<uint8_t Bytes, class ValueType>
-    void peek_bytes(ValueType& value, uint64_t offset=0) const
+    void peek_bytes(ValueType& value, uint64_t offset=0) const noexcept
     {
         assert(remaining_size() >= offset && "Offset too large");
         assert(Bytes <= remaining_size() - offset &&
                "Reading over the end of the underlying buffer");
 
         const uint8_t* data_position = remaining_data() + offset;
-        // Get the value at the current position
         EndianType::template get_bytes<Bytes>(value, data_position);
     }
 
@@ -128,7 +135,7 @@ public:
     /// @param value reference to the value to be read
     /// @param offset number of bytes to offset the peeking with
     template<class ValueType>
-    void peek(ValueType& value, uint64_t offset=0) const
+    void peek(ValueType& value, uint64_t offset=0) const noexcept
     {
         assert(remaining_size() >= offset && "Offset too large");
         assert(sizeof(ValueType) <= remaining_size() - offset &&
@@ -143,7 +150,7 @@ public:
     /// @param offset number of bytes to offset the peeking with
     /// @return the peeked value
     template<class ValueType>
-    ValueType peek(uint64_t offset=0) const
+    ValueType peek(uint64_t offset=0) const noexcept
     {
         assert(remaining_size() >= offset && "Offset too large");
         assert(sizeof(ValueType) <= remaining_size() - offset &&
@@ -153,26 +160,5 @@ public:
         peek(value, offset);
         return value;
     }
-
-    /// A pointer to the stream's data.
-    ///
-    /// @return pointer to the stream's data.
-    const uint8_t* data() const
-    {
-        return m_data;
-    }
-
-    /// A pointer to the stream's data at the current position.
-    ///
-    /// @return pointer to the stream's data at the current position.
-    const uint8_t* remaining_data() const
-    {
-        return m_data + m_position;
-    }
-
-private:
-
-    /// Data pointer to buffer
-    const uint8_t* m_data;
 };
 }
