@@ -16,7 +16,7 @@ namespace endian
 {
 /// The stream_reader provides a stream-like interface for reading from a
 /// fixed-size buffer. All complexity regarding endianness is encapsulated.
-template<class EndianType>
+template<typename EndianType, typename SizeType = uint64_t>
 class stream_reader : public stream<const uint8_t*>
 {
 public:
@@ -26,7 +26,7 @@ public:
     ///
     /// @param data a data pointer to the buffer
     /// @param size the size of the buffer in bytes
-    stream_reader(const uint8_t* data, uint64_t size) :
+    stream_reader(const uint8_t* data, SizeType size) :
         stream(data, size)
     {
         assert(data != nullptr && "Null pointer provided");
@@ -88,7 +88,7 @@ public:
     ///
     /// @param data The data pointer to fill into
     /// @param size The number of bytes to fill.
-    void read(uint8_t* data, uint64_t size) noexcept
+    void read(uint8_t* data, SizeType size) noexcept
     {
         assert(size <= remaining_size() &&
                "Reading over the end of the underlying buffer");
@@ -104,7 +104,7 @@ public:
     ///
     /// @param stream the stream to read from
     /// @param size Number of bytes to read and write
-    void read(stream& s, uint64_t size) noexcept
+    void read(stream& s, SizeType size) noexcept
     {
         assert(size <= remaining_size());
         assert(size <= s.remaining_size());
@@ -119,7 +119,7 @@ public:
     /// @param value reference to the value to be read
     /// @param offset number of bytes to offset the peeking with
     template<uint8_t Bytes, class ValueType>
-    void peek_bytes(ValueType& value, uint64_t offset=0) const noexcept
+    void peek_bytes(ValueType& value, SizeType offset=0) const noexcept
     {
         assert(remaining_size() >= offset && "Offset too large");
         assert(Bytes <= remaining_size() - offset &&
@@ -135,7 +135,7 @@ public:
     /// @param value reference to the value to be read
     /// @param offset number of bytes to offset the peeking with
     template<class ValueType>
-    void peek(ValueType& value, uint64_t offset=0) const noexcept
+    void peek(ValueType& value, SizeType offset=0) const noexcept
     {
         assert(remaining_size() >= offset && "Offset too large");
         assert(sizeof(ValueType) <= remaining_size() - offset &&
@@ -150,7 +150,7 @@ public:
     /// @param offset number of bytes to offset the peeking with
     /// @return the peeked value
     template<class ValueType>
-    ValueType peek(uint64_t offset=0) const noexcept
+    ValueType peek(SizeType offset=0) const noexcept
     {
         assert(remaining_size() >= offset && "Offset too large");
         assert(sizeof(ValueType) <= remaining_size() - offset &&

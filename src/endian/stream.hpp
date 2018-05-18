@@ -14,7 +14,7 @@
 namespace endian
 {
 /// @brief Base-class for the endian stream reader and writer.
-template<typename DataPointerType>
+template<typename DataPointerType, typename SizeType = uint64_t>
 class stream
 {
     static_assert(std::is_pointer<DataPointerType>::value,
@@ -27,7 +27,7 @@ public:
     /// Creates an endian stream used to track a buffer of the specified size.
     ///
     /// @param size the size of the buffer in bytes
-    stream(DataPointerType data, uint64_t size) :
+    stream(DataPointerType data, SizeType size) :
         m_data(data), m_size(size)
     {
         assert(data != nullptr && "Null pointer provided");
@@ -43,7 +43,7 @@ public:
     /// Gets the size of the underlying buffer in bytes.
     ///
     /// @return the size of the buffer
-    uint64_t size() const noexcept
+    SizeType size() const noexcept
     {
         return m_size;
     }
@@ -51,7 +51,7 @@ public:
     /// Gets the current read/write position in the stream
     ///
     /// @return the current position.
-    uint64_t position() const noexcept
+    SizeType position() const noexcept
     {
         return m_position;
     }
@@ -59,7 +59,7 @@ public:
     /// The remaining number of bytes in the stream
     ///
     /// @return the remaining number of bytes.
-    uint64_t remaining_size() const noexcept
+    SizeType remaining_size() const noexcept
     {
         assert(m_size >= m_position);
 
@@ -71,7 +71,7 @@ public:
     /// beginning of the buffer which is position 0.
     ///
     /// @param new_position the new position
-    void seek(uint64_t new_position) noexcept
+    void seek(SizeType new_position) noexcept
     {
         assert(new_position <= m_size);
 
@@ -81,7 +81,7 @@ public:
     /// Skips over a given number of bytes in the stream
     ///
     /// @param bytes_to_skip the bytes to skip
-    void skip(uint64_t bytes_to_skip) noexcept
+    void skip(SizeType bytes_to_skip) noexcept
     {
         assert(bytes_to_skip <= m_size - m_position);
 
@@ -110,9 +110,9 @@ private:
     DataPointerType m_data;
 
     /// The size of the buffer in bytes
-    uint64_t m_size;
+    SizeType m_size;
 
     /// The current position
-    uint64_t m_position = 0;
+    SizeType m_position = 0;
 };
 }
