@@ -186,7 +186,7 @@ TEST(test_stream_reader, read_from_stream)
     endian::stream<uint8_t*> stream(stream_buffer);
 
     uint8_t count = 0;
-    for ( auto& b : reader_buffer )
+    for (auto& b : reader_buffer)
     {
         b = count++;
     }
