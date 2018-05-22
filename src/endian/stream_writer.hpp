@@ -45,7 +45,7 @@ public:
     ///
     /// @param value the value to write.
     template<uint8_t Bytes, class ValueType>
-    void write_bytes(ValueType value) noexcept
+    void write_bytes(const ValueType value) noexcept
     {
         assert(Bytes <= this->remaining_size());
 
@@ -57,11 +57,11 @@ public:
     ///
     /// @param value the value to write.
     template<class ValueType>
-    void write(ValueType value) noexcept
+    void write(const ValueType value) noexcept
     {
         assert(sizeof(ValueType) <= this->remaining_size());
 
-        write_bytes<sizeof(ValueType), ValueType>(value);
+        write_bytes<sizeof(ValueType), const ValueType>(value);
     }
 
     /// Writes the raw bytes represented by the storage::const_storage
@@ -72,7 +72,7 @@ public:
     ///
     /// @param data Pointer to the data, to be written to the stream.
     /// @param size Number of bytes from the data pointer.
-    void write(const uint8_t* data, SizeType size)  noexcept
+    void write(const uint8_t* data, SizeType size) noexcept
     {
         assert(size <= this->remaining_size());
 
@@ -87,7 +87,7 @@ public:
     ///
     /// @param stream the stream to write to
     /// @param size Number of bytes to read and write
-    void write(stream<uint8_t*, SizeType>& s, SizeType size)  noexcept
+    void write(stream<uint8_t*, SizeType>& s, SizeType size) noexcept
     {
         assert(size <= this->remaining_size());
         assert(size <= s.remaining_size());

@@ -18,7 +18,7 @@ template<typename DataPointerType, typename SizeType = uint64_t>
 class stream
 {
     static_assert(std::is_pointer<DataPointerType>::value,
-        "The template type must be a pointer type");
+                  "The template type must be a pointer type");
 
     using DataType = typename std::remove_pointer<DataPointerType>::type;
 
@@ -36,8 +36,8 @@ public:
                "Size is too large to be handled on this OS.");
     }
 
-    stream(std::vector<DataType>& vector)
-        : stream(vector.data(), vector.size())
+    stream(std::vector<DataType>& vector) :
+        stream(vector.data(), vector.size())
     { }
 
     /// Gets the size of the underlying buffer in bytes.

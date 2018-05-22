@@ -45,7 +45,6 @@ TEST(test_stream, basic_vector)
     EXPECT_EQ(0U, stream.remaining_size());
 }
 
-
 TEST(test_stream, seek)
 {
     SCOPED_TRACE(testing::Message() << "size 10000");
@@ -78,7 +77,6 @@ TEST(test_stream, seek)
 }
 
 TEST(test_stream, skip)
-
 {
     SCOPED_TRACE(testing::Message() << "size 10000");
     std::vector<uint8_t> buffer(10000U);

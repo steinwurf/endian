@@ -104,7 +104,7 @@ public:
     ///
     /// @param stream the stream to read from
     /// @param size Number of bytes to read and write
-    void read(stream<const uint8_t*, SizeType>& s, SizeType size) noexcept
+    void read(stream<uint8_t*, SizeType>& s, SizeType size) noexcept
     {
         assert(size <= this->remaining_size());
         assert(size <= s.remaining_size());

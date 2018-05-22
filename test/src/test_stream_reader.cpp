@@ -177,7 +177,6 @@ TEST(test_stream_reader, basic_api_big_endian)
 }
 
 
-/*
 TEST(test_stream_reader, read_from_stream)
 {
     std::vector<uint8_t> reader_buffer(11);
@@ -187,17 +186,15 @@ TEST(test_stream_reader, read_from_stream)
     endian::stream<uint8_t*> stream(stream_buffer);
 
     uint8_t count = 0;
-    for ( auto& b : stream_buffer )
+    for ( auto& b : reader_buffer )
     {
         b = count++;
     }
 
     reader.read(stream, 4);
-
     EXPECT_EQ(3u, stream.remaining_size());
     EXPECT_EQ(7u, reader.remaining_size());
 
-    // std::vector<uint8_t> expected = {0,1,2,3,0,0,0,0,0,0,0};
-    // EXPECT_EQ(expected, reader_buffer);
+    std::vector<uint8_t> expected = {0,1,2,3,0,0,0};
+    EXPECT_EQ(expected, stream_buffer);
 }
-*/

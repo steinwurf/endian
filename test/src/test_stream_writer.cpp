@@ -100,7 +100,7 @@ TEST(test_stream_writer, basic_api_big_endian)
     test_basic_api<endian::big_endian>();
 }
 
-TEST(test_stream_writer, write_to_stream)
+TEST(test_stream_writer, write_from_stream)
 {
     std::vector<uint8_t> writer_buffer(9);
     endian::stream_writer<endian::big_endian> writer(writer_buffer);
@@ -109,13 +109,12 @@ TEST(test_stream_writer, write_to_stream)
     endian::stream<uint8_t*> stream(stream_buffer);
 
     uint8_t count = 0;
-    for ( auto& b : stream_buffer )
+    for (auto& b : stream_buffer)
     {
         b = count++;
     }
 
     writer.write(stream, 5);
-
     EXPECT_EQ(0u, stream.remaining_size());
     EXPECT_EQ(4u, writer.remaining_size());
 
