@@ -8,8 +8,8 @@
 #include <cassert>
 #include <cstdint>
 #include <limits>
-#include <vector>
 #include <type_traits>
+#include <vector>
 
 namespace endian
 {

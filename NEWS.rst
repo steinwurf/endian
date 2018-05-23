@@ -7,6 +7,7 @@ every change, see the Git log.
 Latest
 ------
 * tbd
+* Major: stream class in detail namespace
 
 9.0.0
 -----

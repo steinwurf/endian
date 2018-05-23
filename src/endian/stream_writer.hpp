@@ -20,7 +20,6 @@ template<class EndianType, typename SizeType = uint64_t>
 class stream_writer : public detail::stream<uint8_t*, SizeType>
 {
 
-
 public:
 
     /// Creates an endian stream on top of a pre-allocated buffer of the
