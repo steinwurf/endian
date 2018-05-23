@@ -29,7 +29,7 @@ public:
     /// @param data a data pointer to the buffer
     /// @param size the size of the buffer in bytes
     stream_writer(uint8_t* data, SizeType size) :
-        detail::stream<uint8_t*, SizeType>(data, size)
+        stream(data, size)
     {
         assert(data != nullptr && "Null pointer provided");
     }
