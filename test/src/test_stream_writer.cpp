@@ -99,10 +99,3 @@ TEST(test_stream_writer, basic_api_big_endian)
 {
     test_basic_api<endian::big_endian>();
 }
-
-TEST(test_stream_writer, test_uint8_t_size)
-{
-    std::vector<uint8_t> data(10);
-    endian::stream_writer<endian::big_endian, uint8_t> s(data.data(), data.size());
-    EXPECT_EQ(10U, s.size());
-}
