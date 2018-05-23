@@ -19,6 +19,8 @@ namespace endian
 template<typename EndianType, typename SizeType = uint64_t>
 class stream_reader : public detail::stream<const uint8_t*, SizeType>
 {
+    using stream = detail::stream<const uint8_t*, SizeType>;
+
 public:
 
     /// Creates an endian stream on top of a pre-allocated buffer of the
@@ -45,11 +47,11 @@ public:
     template<uint8_t Bytes, class ValueType>
     void read_bytes(ValueType& value) noexcept
     {
-        assert(Bytes <= this->remaining_size() &&
+        assert(Bytes <= stream::remaining_size() &&
                "Reading over the end of the underlying buffer");
 
         peek_bytes<Bytes, ValueType>(value);
-        this->skip(Bytes);
+        stream::skip(Bytes);
     }
 
     /// Reads a ValueType-sized integer from the stream and moves the read
@@ -59,7 +61,7 @@ public:
     template<class ValueType>
     void read(ValueType& value) noexcept
     {
-        assert(sizeof(ValueType) <= this->remaining_size() &&
+        assert(sizeof(ValueType) <= stream::remaining_size() &&
                "Reading over the end of the underlying buffer");
 
         read_bytes<sizeof(ValueType), ValueType>(value);
@@ -72,7 +74,7 @@ public:
     template<class ValueType>
     ValueType read() noexcept
     {
-        assert(sizeof(ValueType) <= this->remaining_size() &&
+        assert(sizeof(ValueType) <= stream::remaining_size() &&
                "Reading over the end of the underlying buffer");
 
         ValueType value;
@@ -90,11 +92,11 @@ public:
     /// @param size The number of bytes to fill.
     void read(uint8_t* data, SizeType size) noexcept
     {
-        assert(size <= this->remaining_size() &&
+        assert(size <= stream::remaining_size() &&
                "Reading over the end of the underlying buffer");
 
-        std::copy_n(this->remaining_data(), (std::size_t)size, data);
-        this->skip(size);
+        std::copy_n(stream::remaining_data(), (std::size_t)size, data);
+        stream::skip(size);
     }
 
     /// Peek a Bytes-sized integer in the stream without moving the read
@@ -105,11 +107,11 @@ public:
     template<uint8_t Bytes, class ValueType>
     void peek_bytes(ValueType& value, SizeType offset=0) const noexcept
     {
-        assert(this->remaining_size() >= offset && "Offset too large");
-        assert(Bytes <= this->remaining_size() - offset &&
+        assert(stream::remaining_size() >= offset && "Offset too large");
+        assert(Bytes <= stream::remaining_size() - offset &&
                "Reading over the end of the underlying buffer");
 
-        const uint8_t* data_position = this->remaining_data() + offset;
+        const uint8_t* data_position = stream::remaining_data() + offset;
         EndianType::template get_bytes<Bytes>(value, data_position);
     }
 
@@ -121,8 +123,8 @@ public:
     template<class ValueType>
     void peek(ValueType& value, SizeType offset=0) const noexcept
     {
-        assert(this->remaining_size() >= offset && "Offset too large");
-        assert(sizeof(ValueType) <= this->remaining_size() - offset &&
+        assert(stream::remaining_size() >= offset && "Offset too large");
+        assert(sizeof(ValueType) <= stream::remaining_size() - offset &&
                "Reading over the end of the underlying buffer");
 
         peek_bytes<sizeof(ValueType), ValueType>(value, offset);
@@ -136,8 +138,8 @@ public:
     template<class ValueType>
     ValueType peek(SizeType offset=0) const noexcept
     {
-        assert(this->remaining_size() >= offset && "Offset too large");
-        assert(sizeof(ValueType) <= this->remaining_size() - offset &&
+        assert(stream::remaining_size() >= offset && "Offset too large");
+        assert(sizeof(ValueType) <= stream::remaining_size() - offset &&
                "Reading over the end of the underlying buffer");
 
         ValueType value;
