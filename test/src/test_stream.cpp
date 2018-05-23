@@ -14,7 +14,7 @@
 TEST(test_stream, basicbuffer)
 {
     std::vector<uint8_t> buffer(1);
-    endian::stream<uint8_t*> stream(buffer.data(), buffer.size());
+    endian::detail::stream<uint8_t*> stream(buffer.data(), buffer.size());
 
     // check initial state
     EXPECT_EQ(buffer.size(), stream.size());
@@ -31,7 +31,7 @@ TEST(test_stream, basicbuffer)
 TEST(test_stream, basic_vector)
 {
     std::vector<uint8_t> buffer(1);
-    endian::stream<uint8_t*> stream(buffer);
+    endian::detail::stream<uint8_t*> stream(buffer);
 
     // check initial state
     EXPECT_EQ(buffer.size(), stream.size());
@@ -49,7 +49,7 @@ TEST(test_stream, seek)
 {
     SCOPED_TRACE(testing::Message() << "size 10000");
     std::vector<uint8_t> buffer(10000U);
-    endian::stream<uint8_t*> stream(buffer);
+    endian::detail::stream<uint8_t*> stream(buffer);
 
     // check initial state
     EXPECT_EQ(buffer.size(), stream.size());
@@ -80,7 +80,7 @@ TEST(test_stream, skip)
 {
     SCOPED_TRACE(testing::Message() << "size 10000");
     std::vector<uint8_t> buffer(10000U);
-    endian::stream<uint8_t*> stream(buffer.data(), buffer.size());
+    endian::detail::stream<uint8_t*> stream(buffer.data(), buffer.size());
 
     // check initial state
     EXPECT_EQ(buffer.size(), stream.size());

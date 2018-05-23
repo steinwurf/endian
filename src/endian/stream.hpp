@@ -13,6 +13,9 @@
 
 namespace endian
 {
+namespace detail
+{
+
 /// @brief Base-class for the endian stream reader and writer.
 template<typename DataPointerType, typename SizeType = uint64_t>
 class stream
@@ -115,4 +118,5 @@ private:
     /// The current position
     SizeType m_position = 0;
 };
+}
 }

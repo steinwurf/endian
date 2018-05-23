@@ -17,7 +17,7 @@ namespace endian
 /// The stream_writer provides a stream-like interface for writing to a fixed
 /// size buffer. All complexity regarding endianness is encapsulated.
 template<class EndianType, typename SizeType = uint64_t>
-class stream_writer : public stream<uint8_t*, SizeType>
+class stream_writer : public detail::stream<uint8_t*, SizeType>
 {
 
 
@@ -29,7 +29,7 @@ public:
     /// @param data a data pointer to the buffer
     /// @param size the size of the buffer in bytes
     stream_writer(uint8_t* data, SizeType size) :
-        stream<uint8_t*, SizeType>(data, size)
+        detail::stream<uint8_t*, SizeType>(data, size)
     {
         assert(data != nullptr && "Null pointer provided");
     }
@@ -78,22 +78,6 @@ public:
 
         std::copy_n(data, (std::size_t)size, this->remaining_data());
         this->skip(size);
-    }
-
-    /// Writes the raw bytes to the stream.
-    ///
-    /// Note, that this function is provided only for convenience and
-    /// it does not perform any endian conversions.
-    ///
-    /// @param stream the stream to write to
-    /// @param size Number of bytes to read and write
-    void write(stream<uint8_t*, SizeType>& s, SizeType size) noexcept
-    {
-        assert(size <= this->remaining_size());
-        assert(size <= s.remaining_size());
-
-        write(s.remaining_data(), size);
-        s.skip(size);
     }
 };
 }

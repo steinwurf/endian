@@ -17,7 +17,7 @@ namespace endian
 /// The stream_reader provides a stream-like interface for reading from a
 /// fixed-size buffer. All complexity regarding endianness is encapsulated.
 template<typename EndianType, typename SizeType = uint64_t>
-class stream_reader : public stream<const uint8_t*, SizeType>
+class stream_reader : public detail::stream<const uint8_t*, SizeType>
 {
 public:
 
@@ -27,7 +27,7 @@ public:
     /// @param data a data pointer to the buffer
     /// @param size the size of the buffer in bytes
     stream_reader(const uint8_t* data, SizeType size) :
-        stream<const uint8_t*, SizeType>(data, size)
+        detail::stream<const uint8_t*, SizeType>(data, size)
     {
         assert(data != nullptr && "Null pointer provided");
     }
@@ -95,22 +95,6 @@ public:
 
         std::copy_n(this->remaining_data(), (std::size_t)size, data);
         this->skip(size);
-    }
-
-    /// Reads the raw bytes from the stream.
-    ///
-    /// Note, that this function is provided only for convenience and
-    /// it does not perform any endian conversions.
-    ///
-    /// @param stream the stream to read from
-    /// @param size Number of bytes to read and write
-    void read(stream<uint8_t*, SizeType>& s, SizeType size) noexcept
-    {
-        assert(size <= this->remaining_size());
-        assert(size <= s.remaining_size());
-
-        read(s.remaining_data(), size);
-        s.skip(size);
     }
 
     /// Peek a Bytes-sized integer in the stream without moving the read
