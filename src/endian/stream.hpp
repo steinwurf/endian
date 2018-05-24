@@ -32,7 +32,7 @@ private:
     using non_const_data_type = typename std::remove_const<data_type>::type;
 
     static_assert(std::is_same<uint8_t, non_const_data_type>::value,
-                  "Only uint8_t is allowed.");
+                  "Only uint8_t allowed.");
 
     static_assert(std::is_pointer<DataPointerType>::value,
                   "The template type must be a pointer type");
