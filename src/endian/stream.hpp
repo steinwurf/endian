@@ -47,7 +47,7 @@ public:
     /// Creates an endian stream used to track a buffer of the specified size.
     ///
     /// @param size the size of the buffer in bytes
-    stream(DataPointerType data, size_type size) :
+    stream(DataPointerType data, size_type size) noexcept :
         m_data(data), m_size(size)
     {
         assert(data != nullptr && "Null pointer provided");

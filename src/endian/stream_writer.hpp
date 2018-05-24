@@ -26,7 +26,7 @@ public:
     ///
     /// @param data a data pointer to the buffer
     /// @param size the size of the buffer in bytes
-    stream_writer(uint8_t* data, size_type size) :
+    stream_writer(uint8_t* data, size_type size) noexcept :
         stream(data, size)
     {
         assert(data != nullptr && "Null pointer provided");
@@ -36,7 +36,7 @@ public:
     /// Creates an endian stream on top of a pre-allocated buffer
     ///
     /// @param buffer a vector containing the buffer
-    stream_writer(std::vector<uint8_t>& buffer) :
+    stream_writer(std::vector<uint8_t>& buffer) noexcept :
         stream_writer(buffer.data(), buffer.size())
     { }
 
@@ -44,7 +44,7 @@ public:
     ///
     /// @param value the value to write.
     template<uint8_t Bytes, class ValueType>
-    void write_bytes(const ValueType value) noexcept
+    void write_bytes(ValueType value) noexcept
     {
         assert(Bytes <= remaining_size());
 
@@ -56,7 +56,7 @@ public:
     ///
     /// @param value the value to write.
     template<class ValueType>
-    void write(const ValueType value) noexcept
+    void write(ValueType value) noexcept
     {
         assert(sizeof(ValueType) <= remaining_size());
 
