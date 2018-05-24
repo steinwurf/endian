@@ -19,8 +19,6 @@ namespace endian
 template<typename EndianType>
 class stream_reader : public detail::stream<const uint8_t*>
 {
-    using size_type = uint64_t;
-
     static_assert(
         std::numeric_limits<size_type>::max() >=
         std::numeric_limits<std::vector<uint8_t>::size_type>::max(),

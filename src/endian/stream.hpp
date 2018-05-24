@@ -20,7 +20,11 @@ namespace detail
 template<typename DataPointerType>
 class stream
 {
+public:
+
     using size_type = uint64_t;
+
+private:
 
     using data_type = typename std::remove_pointer<DataPointerType>::type;
 
