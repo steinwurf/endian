@@ -19,11 +19,6 @@ namespace endian
 template<typename EndianType>
 class stream_writer : public detail::stream<uint8_t*>
 {
-    static_assert(
-        std::numeric_limits<size_type>::max() >=
-        std::numeric_limits<std::vector<uint8_t>::size_type>::max(),
-        "std::vector::size() can return a value we cannot hold in size_type");
-
 public:
 
     /// Creates an endian stream on top of a pre-allocated buffer of the
