@@ -22,6 +22,7 @@ class stream
 {
 public:
 
+    /// Type for holding the size of the data.
     using size_type = uint64_t;
 
 private:
