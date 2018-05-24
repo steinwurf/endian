@@ -28,28 +28,11 @@ TEST(test_stream, basicbuffer)
     EXPECT_EQ(0U, stream.remaining_size());
 }
 
-TEST(test_stream, basic_vector)
-{
-    std::vector<uint8_t> buffer(1);
-    endian::detail::stream<uint8_t*> stream(buffer);
-
-    // check initial state
-    EXPECT_EQ(buffer.size(), stream.size());
-    EXPECT_EQ(0U, stream.position());
-    EXPECT_EQ(buffer.size(), stream.remaining_size());
-
-    // check state after seek
-    stream.seek(1);
-    EXPECT_EQ(buffer.size(), stream.size());
-    EXPECT_EQ(1U, stream.position());
-    EXPECT_EQ(0U, stream.remaining_size());
-}
-
 TEST(test_stream, seek)
 {
     SCOPED_TRACE(testing::Message() << "size 10000");
     std::vector<uint8_t> buffer(10000U);
-    endian::detail::stream<uint8_t*> stream(buffer);
+    endian::detail::stream<uint8_t*> stream(buffer.data(), buffer.size());
 
     // check initial state
     EXPECT_EQ(buffer.size(), stream.size());

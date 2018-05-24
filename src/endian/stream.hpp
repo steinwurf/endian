@@ -22,7 +22,12 @@ class stream
 {
     using size_type = uint64_t;
 
-    using DataType = typename std::remove_pointer<DataPointerType>::type;
+    using data_type = typename std::remove_pointer<DataPointerType>::type;
+
+    using non_const_data_type = typename std::remove_const<data_type>::type;
+
+    static_assert(std::is_same<uint8_t, non_const_data_type>::value,
+                  "Only uint8_t is allowed.");
 
     static_assert(std::is_pointer<DataPointerType>::value,
                   "The template type must be a pointer type");
@@ -43,10 +48,6 @@ public:
         assert(data != nullptr && "Null pointer provided");
         assert(size > 0 && "Empty buffer provided");
     }
-
-    stream(std::vector<DataType>& vector) :
-        stream(vector.data(), vector.size())
-    { }
 
     /// Gets the size of the underlying buffer in bytes.
     ///
