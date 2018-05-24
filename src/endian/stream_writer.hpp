@@ -19,6 +19,7 @@ namespace endian
 template<class EndianType, typename SizeType = uint64_t>
 class stream_writer : public detail::stream<uint8_t*, SizeType>
 {
+    using stream = detail::stream<uint8_t*, SizeType>;
 
 public:
 
@@ -28,7 +29,7 @@ public:
     /// @param data a data pointer to the buffer
     /// @param size the size of the buffer in bytes
     stream_writer(uint8_t* data, SizeType size) :
-        detail::stream<uint8_t*, SizeType>(data, size)
+        stream(data, size)
     {
         assert(data != nullptr && "Null pointer provided");
     }
@@ -46,10 +47,10 @@ public:
     template<uint8_t Bytes, class ValueType>
     void write_bytes(const ValueType value) noexcept
     {
-        assert(Bytes <= this->remaining_size());
+        assert(Bytes <= stream::remaining_size());
 
-        EndianType::template put_bytes<Bytes>(value, this->remaining_data());
-        this->skip(Bytes);
+        EndianType::template put_bytes<Bytes>(value, stream::remaining_data());
+        stream::skip(Bytes);
     }
 
     /// Writes a Bytes-sized integer to the stream.
@@ -58,7 +59,7 @@ public:
     template<class ValueType>
     void write(const ValueType value) noexcept
     {
-        assert(sizeof(ValueType) <= this->remaining_size());
+        assert(sizeof(ValueType) <= stream::remaining_size());
 
         write_bytes<sizeof(ValueType), const ValueType>(value);
     }
@@ -73,10 +74,10 @@ public:
     /// @param size Number of bytes from the data pointer.
     void write(const uint8_t* data, SizeType size) noexcept
     {
-        assert(size <= this->remaining_size());
+        assert(size <= stream::remaining_size());
 
-        std::copy_n(data, (std::size_t)size, this->remaining_data());
-        this->skip(size);
+        std::copy_n(data, (std::size_t)size, stream::remaining_data());
+        stream::skip(size);
     }
 };
 }
