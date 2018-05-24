@@ -25,12 +25,12 @@ class stream
     using DataType = typename std::remove_pointer<DataPointerType>::type;
 
     static_assert(std::is_pointer<DataPointerType>::value,
-        "The template type must be a pointer type");
+                  "The template type must be a pointer type");
 
-    static_assert(std::numeric_limits<size_type>::max() <=
+    static_assert(
+        std::numeric_limits<size_type>::max() >=
         std::numeric_limits<std::vector<uint8_t>::size_type>::max(),
-        "The platform representation of std::vector::size_type is smaller than "
-        "the internal size type");
+        "std::vector::size() can return a value we cannot hold in size_type");
 
 public:
 
@@ -46,11 +46,7 @@ public:
 
     stream(std::vector<DataType>& vector) :
         stream(vector.data(), vector.size())
-    {
-        assert(vector.size() <= std::numeric_limits<size_type>::max() &&
-        "Provided Vector is too big");
-
-    }
+    { }
 
     /// Gets the size of the underlying buffer in bytes.
     ///
@@ -73,8 +69,6 @@ public:
     /// @return the remaining number of bytes.
     size_type remaining_size() const noexcept
     {
-        assert(m_size >= m_position);
-
         return m_size - m_position;
     }
 

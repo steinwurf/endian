@@ -21,10 +21,10 @@ class stream_reader : public detail::stream<const uint8_t*>
 {
     using size_type = uint64_t;
 
-    static_assert(std::numeric_limits<size_type>::max() <=
+    static_assert(
+        std::numeric_limits<size_type>::max() >=
         std::numeric_limits<std::vector<uint8_t>::size_type>::max(),
-        "The platform representation of std::vector::size_type is smaller than "
-        "the internal size type");
+        "std::vector::size() can return a value we cannot hold in size_type");
 
 public:
 
@@ -37,6 +37,7 @@ public:
         stream(data, size)
     {
         assert(data != nullptr && "Null pointer provided");
+        assert(size > 0 && "Empty buffer provided");
     }
 
     /// Creates an endian stream on top of a pre-allocated buffer
@@ -44,10 +45,7 @@ public:
     /// @param buffer a vector containing the buffer
     stream_reader(const std::vector<uint8_t>& buffer) :
         stream_reader(buffer.data(), buffer.size())
-    {
-        assert(buffer.size() <= std::numeric_limits<size_type>::max() &&
-        "Provided Vector is too big");
-    }
+    { }
 
     /// Reads a Bytes-sized integer from the stream and moves the read position.
     ///
