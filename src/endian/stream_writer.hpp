@@ -16,9 +16,15 @@ namespace endian
 {
 /// The stream_writer provides a stream-like interface for writing to a fixed
 /// size buffer. All complexity regarding endianness is encapsulated.
-template<class EndianType, typename SizeType = uint64_t>
-class stream_writer : public detail::stream<uint8_t*, SizeType>
+template<typename EndianType>
+class stream_writer : public detail::stream<uint8_t*>
 {
+    using size_type = uint64_t;
+
+    static_assert(std::numeric_limits<size_type>::max() <=
+        std::numeric_limits<std::vector<uint8_t>::size_type>::max(),
+        "The platform representation of std::vector::size_type is smaller than "
+        "the internal size type");
 
 public:
 
@@ -27,8 +33,8 @@ public:
     ///
     /// @param data a data pointer to the buffer
     /// @param size the size of the buffer in bytes
-    stream_writer(uint8_t* data, SizeType size) :
-        detail::stream<uint8_t*, SizeType>(data, size)
+    stream_writer(uint8_t* data, size_type size) :
+        detail::stream<uint8_t*>(data, size)
     {
         assert(data != nullptr && "Null pointer provided");
     }
@@ -38,7 +44,10 @@ public:
     /// @param buffer a vector containing the buffer
     stream_writer(std::vector<uint8_t>& buffer) :
         stream_writer(buffer.data(), buffer.size())
-    { }
+    {
+        assert(buffer.size() <= std::numeric_limits<size_type>::max() &&
+        "Provided Vector is too big");
+    }
 
     /// Writes a Bytes-sized integer to the stream.
     ///
@@ -49,7 +58,7 @@ public:
         assert(Bytes <= this->remaining_size());
 
         EndianType::template put_bytes<Bytes>(value, this->remaining_data());
-        this->skip(Bytes);
+        skip(Bytes);
     }
 
     /// Writes a Bytes-sized integer to the stream.
@@ -71,12 +80,12 @@ public:
     ///
     /// @param data Pointer to the data, to be written to the stream.
     /// @param size Number of bytes from the data pointer.
-    void write(const uint8_t* data, SizeType size) noexcept
+    void write(const uint8_t* data, size_type size) noexcept
     {
         assert(size <= this->remaining_size());
 
         std::copy_n(data, (std::size_t)size, this->remaining_data());
-        this->skip(size);
+        skip(size);
     }
 };
 }

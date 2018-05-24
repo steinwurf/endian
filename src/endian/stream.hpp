@@ -17,36 +17,45 @@ namespace detail
 {
 
 /// @brief Base-class for the endian stream reader and writer.
-template<typename DataPointerType, typename SizeType = uint64_t>
+template<typename DataPointerType>
 class stream
 {
-    static_assert(std::is_pointer<DataPointerType>::value,
-                  "The template type must be a pointer type");
+    using size_type = uint64_t;
 
     using DataType = typename std::remove_pointer<DataPointerType>::type;
+
+    static_assert(std::is_pointer<DataPointerType>::value,
+        "The template type must be a pointer type");
+
+    static_assert(std::numeric_limits<size_type>::max() <=
+        std::numeric_limits<std::vector<uint8_t>::size_type>::max(),
+        "The platform representation of std::vector::size_type is smaller than "
+        "the internal size type");
 
 public:
 
     /// Creates an endian stream used to track a buffer of the specified size.
     ///
     /// @param size the size of the buffer in bytes
-    stream(DataPointerType data, SizeType size) :
+    stream(DataPointerType data, size_type size) :
         m_data(data), m_size(size)
     {
         assert(data != nullptr && "Null pointer provided");
         assert(size > 0 && "Empty buffer provided");
-        assert(size <= std::numeric_limits<std::size_t>::max() &&
-               "Size is too large to be handled on this OS.");
     }
 
     stream(std::vector<DataType>& vector) :
         stream(vector.data(), vector.size())
-    { }
+    {
+        assert(vector.size() <= std::numeric_limits<size_type>::max() &&
+        "Provided Vector is too big");
+
+    }
 
     /// Gets the size of the underlying buffer in bytes.
     ///
     /// @return the size of the buffer
-    SizeType size() const noexcept
+    size_type size() const noexcept
     {
         return m_size;
     }
@@ -54,7 +63,7 @@ public:
     /// Gets the current read/write position in the stream
     ///
     /// @return the current position.
-    SizeType position() const noexcept
+    size_type position() const noexcept
     {
         return m_position;
     }
@@ -62,7 +71,7 @@ public:
     /// The remaining number of bytes in the stream
     ///
     /// @return the remaining number of bytes.
-    SizeType remaining_size() const noexcept
+    size_type remaining_size() const noexcept
     {
         assert(m_size >= m_position);
 
@@ -74,7 +83,7 @@ public:
     /// beginning of the buffer which is position 0.
     ///
     /// @param new_position the new position
-    void seek(SizeType new_position) noexcept
+    void seek(size_type new_position) noexcept
     {
         assert(new_position <= m_size);
 
@@ -84,7 +93,7 @@ public:
     /// Skips over a given number of bytes in the stream
     ///
     /// @param bytes_to_skip the bytes to skip
-    void skip(SizeType bytes_to_skip) noexcept
+    void skip(size_type bytes_to_skip) noexcept
     {
         assert(bytes_to_skip <= m_size - m_position);
 
@@ -113,10 +122,10 @@ private:
     DataPointerType m_data;
 
     /// The size of the buffer in bytes
-    SizeType m_size;
+    size_type m_size;
 
     /// The current position
-    SizeType m_position = 0;
+    size_type m_position = 0;
 };
 }
 }

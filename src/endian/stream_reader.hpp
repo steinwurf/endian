@@ -16,9 +16,16 @@ namespace endian
 {
 /// The stream_reader provides a stream-like interface for reading from a
 /// fixed-size buffer. All complexity regarding endianness is encapsulated.
-template<typename EndianType, typename SizeType = uint64_t>
-class stream_reader : public detail::stream<const uint8_t*, SizeType>
+template<typename EndianType>
+class stream_reader : public detail::stream<const uint8_t*>
 {
+    using size_type = uint64_t;
+
+    static_assert(std::numeric_limits<size_type>::max() <=
+        std::numeric_limits<std::vector<uint8_t>::size_type>::max(),
+        "The platform representation of std::vector::size_type is smaller than "
+        "the internal size type");
+
 public:
 
     /// Creates an endian stream on top of a pre-allocated buffer of the
@@ -26,8 +33,8 @@ public:
     ///
     /// @param data a data pointer to the buffer
     /// @param size the size of the buffer in bytes
-    stream_reader(const uint8_t* data, SizeType size) :
-        detail::stream<const uint8_t*, SizeType>(data, size)
+    stream_reader(const uint8_t* data, size_type size) :
+        detail::stream<const uint8_t*>(data, size)
     {
         assert(data != nullptr && "Null pointer provided");
     }
@@ -37,7 +44,10 @@ public:
     /// @param buffer a vector containing the buffer
     stream_reader(const std::vector<uint8_t>& buffer) :
         stream_reader(buffer.data(), buffer.size())
-    { }
+    {
+        assert(buffer.size() <= std::numeric_limits<size_type>::max() &&
+        "Provided Vector is too big");
+    }
 
     /// Reads a Bytes-sized integer from the stream and moves the read position.
     ///
@@ -88,7 +98,7 @@ public:
     ///
     /// @param data The data pointer to fill into
     /// @param size The number of bytes to fill.
-    void read(uint8_t* data, SizeType size) noexcept
+    void read(uint8_t* data, size_type size) noexcept
     {
         assert(size <= this->remaining_size() &&
                "Reading over the end of the underlying buffer");
@@ -103,7 +113,7 @@ public:
     /// @param value reference to the value to be read
     /// @param offset number of bytes to offset the peeking with
     template<uint8_t Bytes, class ValueType>
-    void peek_bytes(ValueType& value, SizeType offset=0) const noexcept
+    void peek_bytes(ValueType& value, size_type offset=0) const noexcept
     {
         assert(this->remaining_size() >= offset && "Offset too large");
         assert(Bytes <= this->remaining_size() - offset &&
@@ -119,7 +129,7 @@ public:
     /// @param value reference to the value to be read
     /// @param offset number of bytes to offset the peeking with
     template<class ValueType>
-    void peek(ValueType& value, SizeType offset=0) const noexcept
+    void peek(ValueType& value, size_type offset=0) const noexcept
     {
         assert(this->remaining_size() >= offset && "Offset too large");
         assert(sizeof(ValueType) <= this->remaining_size() - offset &&
@@ -134,7 +144,7 @@ public:
     /// @param offset number of bytes to offset the peeking with
     /// @return the peeked value
     template<class ValueType>
-    ValueType peek(SizeType offset=0) const noexcept
+    ValueType peek(size_type offset=0) const noexcept
     {
         assert(this->remaining_size() >= offset && "Offset too large");
         assert(sizeof(ValueType) <= this->remaining_size() - offset &&
