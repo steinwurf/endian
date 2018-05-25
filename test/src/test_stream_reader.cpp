@@ -175,6 +175,3 @@ TEST(test_stream_reader, basic_api_big_endian)
 {
     test_basic_api<endian::big_endian>();
 }
-
-// Note: the testing of stream_reader's read function is located in
-// test_stream.cpp.

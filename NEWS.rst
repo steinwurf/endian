@@ -7,6 +7,8 @@ every change, see the Git log.
 Latest
 ------
 * tbd
+* Major: stream class in detail namespace
+* Minor: Added ``size_type`` to the API.
 
 9.0.0
 -----

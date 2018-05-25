@@ -1,4 +1,4 @@
-// Copyright (c) Steinwurf ApS 2016.
+// Copyright (c) Steinwurf ApS 2018.
 // All Rights Reserved
 //
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
@@ -10,6 +10,7 @@
 
 #include <endian/big_endian.hpp>
 #include <endian/little_endian.hpp>
+#include <endian/stream.hpp>
 
 #include <gtest/gtest.h>
 
@@ -19,8 +20,7 @@ static void test_basic_api()
     {
         SCOPED_TRACE(testing::Message() << "size 1");
         uint32_t size = 1U;
-        std::vector<uint8_t> buffer;
-        buffer.resize(size);
+        std::vector<uint8_t> buffer(size);
         endian::stream_writer<EndianType> stream(buffer.data(), buffer.size());
 
         // check initial state
@@ -42,8 +42,7 @@ static void test_basic_api()
     {
         SCOPED_TRACE(testing::Message() << "size 1000");
         uint32_t size = 1000U;
-        std::vector<uint8_t> buffer;
-        buffer.resize(size);
+        std::vector<uint8_t> buffer(size);
         endian::stream_writer<EndianType> stream(buffer.data(), buffer.size());
 
         // check initial state
@@ -83,8 +82,7 @@ static void test_basic_api()
         SCOPED_TRACE(testing::Message() << "vector vs pointer");
 
         uint32_t size = 10U;
-        std::vector<uint8_t> buffer;
-        buffer.resize(size);
+        std::vector<uint8_t> buffer(size);
         endian::stream_writer<EndianType> stream1(buffer.data(), buffer.size());
         endian::stream_writer<EndianType> stream2(buffer);
         EXPECT_EQ(stream1.size(), stream2.size());
@@ -101,6 +99,3 @@ TEST(test_stream_writer, basic_api_big_endian)
 {
     test_basic_api<endian::big_endian>();
 }
-
-// Note: the testing of stream_writer's write function is located in
-// test_stream.cpp.
