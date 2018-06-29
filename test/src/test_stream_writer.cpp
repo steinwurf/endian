@@ -5,12 +5,11 @@
 
 #include <endian/stream_writer.hpp>
 
-#include <vector>
 #include <cstdint>
+#include <vector>
 
 #include <endian/big_endian.hpp>
 #include <endian/little_endian.hpp>
-#include <endian/stream.hpp>
 
 #include <gtest/gtest.h>
 
@@ -84,7 +83,7 @@ static void test_basic_api()
         uint32_t size = 10U;
         std::vector<uint8_t> buffer(size);
         endian::stream_writer<EndianType> stream1(buffer.data(), buffer.size());
-        endian::stream_writer<EndianType> stream2(buffer);
+        endian::stream_writer<EndianType> stream2(buffer.data(), buffer.size());
         EXPECT_EQ(stream1.size(), stream2.size());
         EXPECT_EQ(stream1.data(), stream2.data());
     }

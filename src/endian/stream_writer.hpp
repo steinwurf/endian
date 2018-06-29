@@ -8,9 +8,8 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdint>
-#include <vector>
 
-#include "stream.hpp"
+#include "detail/stream.hpp"
 
 namespace endian
 {
@@ -32,13 +31,6 @@ public:
         assert(data != nullptr && "Null pointer provided");
         assert(size > 0 && "Empty buffer provided");
     }
-
-    /// Creates an endian stream on top of a pre-allocated buffer
-    ///
-    /// @param buffer a vector containing the buffer
-    stream_writer(std::vector<uint8_t>& buffer) noexcept :
-        stream_writer(buffer.data(), buffer.size())
-    { }
 
     /// Writes a Bytes-sized integer to the stream.
     ///

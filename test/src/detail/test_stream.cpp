@@ -3,13 +3,12 @@
 //
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
 
-#include <endian/stream.hpp>
+#include <endian/detail/stream.hpp>
 
 #include <cstdint>
 #include <vector>
 
 #include <gtest/gtest.h>
-
 
 TEST(test_stream, basicbuffer)
 {
