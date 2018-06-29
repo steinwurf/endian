@@ -86,7 +86,7 @@ static void test_basic_api()
         std::vector<uint8_t> buffer;
         buffer.resize(size);
         endian::stream_reader<EndianType> stream1(buffer.data(), buffer.size());
-        endian::stream_reader<EndianType> stream2(buffer);
+        endian::stream_reader<EndianType> stream2(buffer.data(), buffer.size());
         EXPECT_EQ(stream1.size(), stream2.size());
         EXPECT_EQ(stream1.data(), stream2.data());
     }
