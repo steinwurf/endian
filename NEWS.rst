@@ -7,6 +7,9 @@ every change, see the Git log.
 Latest
 ------
 * tbd
+
+10.0.0
+------
 * Major: stream class in detail namespace and folder
 * Major: Removed stream_writer(std::vector<uint8_t>&) and
   stream_reader(const std::vector<uint8_t>&)
