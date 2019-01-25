@@ -91,3 +91,18 @@ TEST(test_stream, skip)
     EXPECT_EQ(buffer.size(), stream.position());
     EXPECT_EQ(0U, stream.remaining_size());
 }
+
+TEST(test_stream, empty)
+{
+    std::vector<uint8_t> buffer;
+    endian::detail::stream<uint8_t*> stream(buffer.data(), buffer.size());
+    EXPECT_EQ(0U, stream.size());
+    EXPECT_EQ(0U, stream.position());
+    EXPECT_EQ(0U, stream.remaining_size());
+    EXPECT_EQ(nullptr, stream.data());
+    EXPECT_EQ(nullptr, stream.remaining_data());
+    stream.seek(0);
+    EXPECT_EQ(0U, stream.position());
+    stream.skip(0);
+    EXPECT_EQ(0U, stream.position());
+}
