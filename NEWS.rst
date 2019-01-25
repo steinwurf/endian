@@ -7,6 +7,7 @@ every change, see the Git log.
 Latest
 ------
 * tbd
+* Patch: Allow empty streams.
 
 10.0.0
 ------
