@@ -96,7 +96,6 @@ def cmake(properties):
     os.chdir(old_cwd)
 
 
-
 def coverage_settings(options):
     options['required_line_coverage'] = 100.0
 
