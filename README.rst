@@ -57,6 +57,19 @@ for Windows):
 Where ``platform`` is typically either linux, win32 or darwin depending on
 your operating system
 
+Use as Dependency in CMake
+--------------------------
+
+To depend on this project when using the CMake build system, add the following
+in your CMake build script:
+
+::
+
+   add_subdirectory("/path/to/endian" endian)
+   target_link_libraries(<my_target> steinwurf::endian)
+
+Where ``<my_target>`` is replaced by your target.
+
 License
 -------
 
