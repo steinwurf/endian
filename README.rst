@@ -6,8 +6,8 @@ endian is a simple C++ library for conversion between big and little endian
 data representations and provide stream-like interface for accessing a
 fixed-size buffer.
 
-.. image:: http://buildbot.steinwurf.dk/svgstatus?project=endian
-    :target: http://buildbot.steinwurf.dk/stats?projects=endian
+.. image:: https://travis-ci.org/steinwurf/endian.svg?branch=master
+    :target: https://travis-ci.org/steinwurf/endian
 
 .. contents:: Table of Contents:
    :local:
@@ -39,18 +39,14 @@ The unit tests for the endian library are located in the ``test/src``
 folder.
 
 We use the Google Unit Testing Framwork (gtest) to drive the unit tests. To
-build and run the test run:
-
-::
+build and run the test run::
 
     python waf configure
     python waf
 
 Depending on the platform you should see a test binary called
 ``endian_test`` in (extension also depends on operating system e.g `.exe`
-for Windows):
-
-::
+for Windows)::
 
    build/platform/test
 
@@ -61,9 +57,7 @@ Use as Dependency in CMake
 --------------------------
 
 To depend on this project when using the CMake build system, add the following
-in your CMake build script:
-
-::
+in your CMake build script::
 
    add_subdirectory("/path/to/endian" endian)
    target_link_libraries(<my_target> steinwurf::endian)
