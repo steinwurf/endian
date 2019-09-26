@@ -2,12 +2,12 @@
 endian
 ======
 
+.. image:: https://travis-ci.org/steinwurf/endian.svg?branch=master
+    :target: https://travis-ci.org/steinwurf/endian
+
 endian is a simple C++ library for conversion between big and little endian
 data representations and provide stream-like interface for accessing a
 fixed-size buffer.
-
-.. image:: https://travis-ci.org/steinwurf/endian.svg?branch=master
-    :target: https://travis-ci.org/steinwurf/endian
 
 .. contents:: Table of Contents:
    :local:
