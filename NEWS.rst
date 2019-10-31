@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+10.3.0
+------
 * Minor: Lower cmake version requirement.
 
 10.2.0
