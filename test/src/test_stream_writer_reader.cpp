@@ -16,21 +16,21 @@ template<class EndianType, class ValueType, uint8_t Bytes>
 void write_and_read_value_type(ValueType min, ValueType max)
 {
 
-    const uint32_t elements = 1024;
-    const uint64_t size = elements * sizeof(ValueType);
+    const std::size_t elements = 1024;
+    const std::size_t size = elements * sizeof(ValueType);
     std::vector<uint8_t> buffer(size);
 
     endian::stream_reader<EndianType> stream_reader(buffer.data(), size);
     endian::stream_writer<EndianType> stream_writer(buffer.data(), size);
 
 
-    for (uint32_t i = 0; i < elements; i++)
+    for (std::size_t i = 0; i < elements; i++)
     {
         stream_writer.template write_bytes<Bytes>(max);
     }
 
     stream_reader.seek(0);
-    for (uint32_t i = 0; i < elements; i++)
+    for (std::size_t i = 0; i < elements; i++)
     {
         ValueType value = 0;
         stream_reader.template read_bytes<Bytes>(value);
@@ -38,13 +38,13 @@ void write_and_read_value_type(ValueType min, ValueType max)
     }
 
     stream_writer.seek(0);
-    for (uint32_t i = 0; i < elements; i++)
+    for (std::size_t i = 0; i < elements; i++)
     {
         stream_writer.template write_bytes<Bytes>(min);
     }
 
     stream_reader.seek(0);
-    for (uint32_t i = 0; i < elements; i++)
+    for (std::size_t i = 0; i < elements; i++)
     {
         ValueType value = 0;
         stream_reader.template read_bytes<Bytes>(value);
@@ -55,8 +55,8 @@ void write_and_read_value_type(ValueType min, ValueType max)
 template<class EndianType, class ValueType, uint8_t Bytes>
 void write_and_read_random_value_type(ValueType min, ValueType max)
 {
-    const uint32_t elements = 1024;
-    const uint64_t size = elements * sizeof(ValueType);
+    const std::size_t elements = 1024;
+    const std::size_t size = elements * sizeof(ValueType);
     std::vector<uint8_t> buffer(size);
 
     endian::stream_writer<EndianType> stream_writer(buffer.data(), size);
@@ -68,12 +68,12 @@ void write_and_read_random_value_type(ValueType min, ValueType max)
     std::mt19937 engine(device());
     std::uniform_int_distribution<uint64_t> distribution(min, max);
 
-    for (uint32_t i = 0; i < elements; i++)
+    for (std::size_t i = 0; i < elements; i++)
     {
         values[i] = (ValueType)distribution(engine);
         stream_writer.template write_bytes<Bytes>(values[i]);
     }
-    for (uint32_t i = 0; i < elements; i++)
+    for (std::size_t i = 0; i < elements; i++)
     {
         ValueType value;
         stream_reader.template read_bytes<Bytes>(value);
@@ -84,8 +84,8 @@ void write_and_read_random_value_type(ValueType min, ValueType max)
 template<class EndianType>
 void run_write_peek_and_read_variadic_bytes()
 {
-    const uint32_t elements = 1024;
-    const uint64_t size = elements * sizeof(uint64_t);
+    const std::size_t elements = 1024;
+    const std::size_t size = elements * sizeof(uint64_t);
     std::vector<uint8_t> buffer(size);
 
     endian::stream_writer<EndianType> writer(buffer.data(), size);
@@ -94,7 +94,7 @@ void run_write_peek_and_read_variadic_bytes()
     std::mt19937 engine(device());
 
     std::vector<uint64_t> values(elements);
-    for (uint32_t i = 0; i < elements; i++)
+    for (std::size_t i = 0; i < elements; i++)
     {
         switch (i % 8)
         {
@@ -174,7 +174,7 @@ void run_write_peek_and_read_variadic_bytes()
     endian::stream_reader<EndianType> reader(buffer.data(), size);
 
     // Read values in FIFO order
-    for (uint32_t i = 0; i < elements; i++)
+    for (std::size_t i = 0; i < elements; i++)
     {
         switch (i % 8)
         {
@@ -265,7 +265,7 @@ void run_write_peek_and_read_variadic_bytes()
 template<class EndianType>
 static void run_write_and_read_string_test()
 {
-    const uint64_t size = 1024;
+    const std::size_t size = 1024;
     std::vector<uint8_t> buffer(size);
 
     endian::stream_writer<EndianType> writer(buffer.data(), size);
@@ -319,7 +319,7 @@ static void run_write_and_read_string_test()
 template<class EndianType>
 static void run_write_read_vector_test()
 {
-    const uint64_t size = 1024;
+    const std::size_t size = 1024;
     std::vector<uint8_t> buffer(size);
     endian::stream_writer<EndianType> writer(buffer.data(), size);
 
