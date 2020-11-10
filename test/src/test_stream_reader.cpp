@@ -18,7 +18,7 @@ static void test_basic_api()
 {
     {
         SCOPED_TRACE(testing::Message() << "size 1");
-        uint32_t size = 1U;
+        std::size_t size = 1U;
         std::vector<uint8_t> buffer;
         buffer.resize(size);
         endian::stream_reader<EndianType> stream(buffer.data(), buffer.size());
@@ -41,7 +41,7 @@ static void test_basic_api()
 
     {
         SCOPED_TRACE(testing::Message() << "size 1000");
-        uint32_t size = 1000U;
+        std::size_t size = 1000U;
         std::vector<uint8_t> buffer;
         buffer.resize(size);
         endian::stream_reader<EndianType> stream(buffer.data(), buffer.size());
@@ -82,7 +82,7 @@ static void test_basic_api()
     {
         SCOPED_TRACE(testing::Message() << "vector vs pointer");
 
-        uint32_t size = 10U;
+        std::size_t size = 10U;
         std::vector<uint8_t> buffer;
         buffer.resize(size);
         endian::stream_reader<EndianType> stream1(buffer.data(), buffer.size());

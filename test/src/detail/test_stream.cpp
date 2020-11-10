@@ -81,7 +81,7 @@ TEST(test_stream, skip)
 
     // go back and skip each byte until the end
     stream.seek(0);
-    for (uint64_t i = 0; i < buffer.size(); ++i)
+    for (std::size_t i = 0; i < buffer.size(); ++i)
     {
         EXPECT_EQ(buffer.size() - i, stream.remaining_size());
         ASSERT_NE(0U, stream.remaining_size());
