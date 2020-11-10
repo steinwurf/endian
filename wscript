@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 APPNAME = 'endian'
-VERSION = '10.3.0'
+VERSION = '11.0.0'
 
 
 def build(bld):
