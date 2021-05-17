@@ -11,6 +11,8 @@
 #include <limits>
 #include <type_traits>
 
+#include "helpers.hpp"
+
 namespace endian
 {
 namespace detail
