@@ -17,7 +17,7 @@ namespace detail
 {
 
 // Where the actual conversion takes place
-template<class ValueType, uint8_t Bytes>
+template <class ValueType, uint8_t Bytes>
 struct little_impl
 {
     static void put(ValueType& value, uint8_t* buffer)
@@ -33,11 +33,11 @@ struct little_impl
         little_impl<ValueType, Bytes - 1>::get(value, buffer + 1);
 
         value = (value << 8);
-        value |= ((ValueType) *buffer);
+        value |= ((ValueType)*buffer);
     }
 };
 
-template<class ValueType>
+template <class ValueType>
 struct little_impl<ValueType, 1>
 {
     static void put(ValueType& value, uint8_t* buffer)
@@ -47,15 +47,15 @@ struct little_impl<ValueType, 1>
 
     static void get(ValueType& value, const uint8_t* buffer)
     {
-        value |= ((ValueType) *buffer);
+        value |= ((ValueType)*buffer);
     }
 };
 
 // Helper to delegate to the appropiate specialization depednign on the type
 // @TODO remove these wrappers when we have CXX17 support and "if constexpr"
-template<class ValueType, uint8_t Bytes,
-         bool IsUnsigened = std::is_unsigned<ValueType>::value,
-         bool IsFloat = std::is_floating_point<ValueType>::value>
+template <class ValueType, uint8_t Bytes,
+          bool IsUnsigened = std::is_unsigned<ValueType>::value,
+          bool IsFloat = std::is_floating_point<ValueType>::value>
 struct little
 {
     static void put(ValueType& value, uint8_t* buffer)
@@ -70,11 +70,12 @@ struct little
 };
 
 // Unsigned specialization
-template<class ValueType, uint8_t Bytes>
+template <class ValueType, uint8_t Bytes>
 struct little<ValueType, Bytes, true, false>
 {
     static_assert(
-        Bytes > sizeof(ValueType) / 2, "ValueType fits in type of"
+        Bytes > sizeof(ValueType) / 2,
+        "ValueType fits in type of"
         "half the size compared to the provide one, use a smaller type");
 
     static void put(ValueType& value, uint8_t* buffer)
@@ -92,12 +93,11 @@ struct little<ValueType, Bytes, true, false>
 };
 
 // Signed specialization
-template<class ValueType, uint8_t Bytes>
+template <class ValueType, uint8_t Bytes>
 struct little<ValueType, Bytes, false, false>
 {
-    static_assert(
-        Bytes == sizeof(ValueType),
-        "The number of bytes must match the size of the signed type");
+    static_assert(Bytes == sizeof(ValueType),
+                  "The number of bytes must match the size of the signed type");
 
     static void put(ValueType& value, uint8_t* buffer)
     {
@@ -111,7 +111,7 @@ struct little<ValueType, Bytes, false, false>
 };
 
 // Floating point type specialization
-template<class ValueType, uint8_t Bytes>
+template <class ValueType, uint8_t Bytes>
 struct little<ValueType, Bytes, false, true>
 {
     static_assert(

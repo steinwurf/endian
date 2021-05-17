@@ -11,12 +11,11 @@
 
 #include <gtest/gtest.h>
 
-
 TEST(test_little_endian, convert)
 {
     // Indicate endianness for debugging purposes
-    SCOPED_TRACE(testing::Message() << "big_endian: " <<
-                 endian::is_big_endian());
+    SCOPED_TRACE(testing::Message()
+                 << "big_endian: " << endian::is_big_endian());
 
     // Test 8-bit integer
     {
@@ -35,7 +34,8 @@ TEST(test_little_endian, convert)
         out = endian::little_endian::get<decltype(out)>(data);
         EXPECT_EQ(input, out);
 
-        out = endian::little_endian::get_bytes<sizeof(out), decltype(out)>(data);
+        out =
+            endian::little_endian::get_bytes<sizeof(out), decltype(out)>(data);
         EXPECT_EQ(input, out);
     }
 
@@ -58,9 +58,9 @@ TEST(test_little_endian, convert)
         out = endian::little_endian::get<decltype(out)>(data);
         EXPECT_EQ(input, out);
 
-        out = endian::little_endian::get_bytes<sizeof(out), decltype(out)>(data);
+        out =
+            endian::little_endian::get_bytes<sizeof(out), decltype(out)>(data);
         EXPECT_EQ(input, out);
-
     }
 
     // Test 24-bit integer
@@ -82,7 +82,6 @@ TEST(test_little_endian, convert)
 
         out = endian::little_endian::get_bytes<3, decltype(out)>(data);
         EXPECT_EQ(input, out);
-
     }
 
     // Test 32-bit integer
@@ -106,7 +105,8 @@ TEST(test_little_endian, convert)
         out = endian::little_endian::get<decltype(out)>(data);
         EXPECT_EQ(input, out);
 
-        out = endian::little_endian::get_bytes<sizeof(out), decltype(out)>(data);
+        out =
+            endian::little_endian::get_bytes<sizeof(out), decltype(out)>(data);
         EXPECT_EQ(input, out);
     }
 
@@ -131,7 +131,6 @@ TEST(test_little_endian, convert)
 
         out = endian::little_endian::get_bytes<5, decltype(out)>(data);
         EXPECT_EQ(input, out);
-
     }
 
     // Test 48-bit integer
@@ -208,7 +207,8 @@ TEST(test_little_endian, convert)
         out = endian::little_endian::get<decltype(out)>(data);
         EXPECT_EQ(input, out);
 
-        out = endian::little_endian::get_bytes<sizeof(out), decltype(out)>(data);
+        out =
+            endian::little_endian::get_bytes<sizeof(out), decltype(out)>(data);
         EXPECT_EQ(input, out);
     }
 }
