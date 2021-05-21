@@ -5,15 +5,15 @@
 
 #include <endian/stream_reader.hpp>
 
-#include <vector>
 #include <cstdint>
+#include <vector>
 
 #include <endian/big_endian.hpp>
 #include <endian/little_endian.hpp>
 
 #include <gtest/gtest.h>
 
-template<class EndianType>
+template <class EndianType>
 static void test_basic_api()
 {
     {
@@ -93,7 +93,7 @@ static void test_basic_api()
 
     {
         SCOPED_TRACE(testing::Message() << "peek_bytes");
-        std::vector<uint8_t> buffer = { 1, 2 };
+        std::vector<uint8_t> buffer = {1, 2};
         endian::stream_reader<EndianType> stream(buffer.data(), buffer.size());
         uint8_t first_peek = 0;
         uint8_t second_peek = 0;
@@ -114,7 +114,7 @@ static void test_basic_api()
 
     {
         SCOPED_TRACE(testing::Message() << "peek_read");
-        std::vector<uint8_t> buffer = { 1, 2 };
+        std::vector<uint8_t> buffer = {1, 2};
         endian::stream_reader<EndianType> stream(buffer.data(), buffer.size());
         uint8_t first_peek = 0;
         uint8_t second_peek = 0;
@@ -135,7 +135,7 @@ static void test_basic_api()
 
     {
         SCOPED_TRACE(testing::Message() << "peek_read_return_value");
-        std::vector<uint8_t> buffer = { 1, 2 };
+        std::vector<uint8_t> buffer = {1, 2};
         endian::stream_reader<EndianType> stream(buffer.data(), buffer.size());
 
         uint8_t first_peek = stream.template peek<uint8_t>();
@@ -152,7 +152,7 @@ static void test_basic_api()
 
     {
         SCOPED_TRACE(testing::Message() << "offset peek");
-        std::vector<uint8_t> buffer = { 1, 2, 3, 4 };
+        std::vector<uint8_t> buffer = {1, 2, 3, 4};
         endian::stream_reader<EndianType> stream(buffer.data(), buffer.size());
         uint8_t first_peek_at_3 = 0;
         uint8_t second_peek_at_1 = 0;

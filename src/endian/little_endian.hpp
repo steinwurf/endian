@@ -21,7 +21,7 @@ struct little_endian
     /// Inserts a ValueType-sized value into the data buffer.
     /// @param value to put in the data buffer
     /// @param buffer pointer to the data buffer
-    template<class ValueType>
+    template <class ValueType>
     static void put(ValueType value, uint8_t* buffer)
     {
         assert(buffer != nullptr && "Nullpointer provided");
@@ -32,7 +32,7 @@ struct little_endian
     /// Gets a ValueType-sized integer value from a data buffer.
     /// @param value variable where to get the value
     /// @param buffer pointer to the data buffer
-    template<class ValueType>
+    template <class ValueType>
     static void get(ValueType& value, const uint8_t* buffer)
     {
         assert(buffer != nullptr && "Nullpointer provided");
@@ -44,7 +44,7 @@ struct little_endian
     /// Gets a ValueType-sized integer value from a data buffer.
     /// @return value variable where to get the value
     /// @param buffer pointer to the data buffer
-    template<class ValueType>
+    template <class ValueType>
     static ValueType get(const uint8_t* buffer)
     {
         assert(buffer != nullptr && "Nullpointer provided");
@@ -57,11 +57,12 @@ struct little_endian
     /// Inserts a Bytes-sized integer value into the data buffer.
     /// @param value to put in the data buffer
     /// @param buffer pointer to the data buffer
-    template<uint8_t Bytes, class ValueType>
+    template <uint8_t Bytes, class ValueType>
     static void put_bytes(ValueType value, uint8_t* buffer)
     {
         static_assert(Bytes == sizeof(ValueType) ||
-                      std::is_unsigned<ValueType>::value, "Must be unsigned");
+                          std::is_unsigned<ValueType>::value,
+                      "Must be unsigned");
         assert(buffer != nullptr && "Nullpointer provided");
         assert((detail::check<ValueType, Bytes>::value(value)) &&
                "Value too big to fit in the provided bytes");
@@ -72,11 +73,12 @@ struct little_endian
     /// Gets a Bytes-sized integer value from a data buffer.
     /// @param value variable where to get the value
     /// @param buffer pointer to the data buffer
-    template<uint8_t Bytes, class ValueType>
+    template <uint8_t Bytes, class ValueType>
     static void get_bytes(ValueType& value, const uint8_t* buffer)
     {
         static_assert(Bytes == sizeof(ValueType) ||
-                      std::is_unsigned<ValueType>::value, "Must be unsigned");
+                          std::is_unsigned<ValueType>::value,
+                      "Must be unsigned");
         static_assert(sizeof(ValueType) >= Bytes, "ValueType too small");
         assert(buffer != nullptr && "Nullpointer provided");
 
@@ -87,11 +89,12 @@ struct little_endian
     /// Gets a Bytes-sized integer value from a data buffer.
     /// @return value variable where to get the value
     /// @param buffer pointer to the data buffer
-    template<uint8_t Bytes, class ValueType>
+    template <uint8_t Bytes, class ValueType>
     static ValueType get_bytes(const uint8_t* buffer)
     {
         static_assert(Bytes == sizeof(ValueType) ||
-                      std::is_unsigned<ValueType>::value, "Must be unsigned");
+                          std::is_unsigned<ValueType>::value,
+                      "Must be unsigned");
         static_assert(sizeof(ValueType) >= Bytes, "ValueType too small");
         assert(buffer != nullptr && "Nullpointer provided");
 
@@ -99,6 +102,5 @@ struct little_endian
         get_bytes<Bytes>(value, buffer);
         return value;
     }
-
 };
 }

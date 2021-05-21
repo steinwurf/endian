@@ -17,11 +17,10 @@ namespace detail
 {
 
 /// @brief Base-class for the endian stream reader and writer.
-template<typename DataPointerType>
+template <typename DataPointerType>
 class stream
 {
 private:
-
     using data_type = typename std::remove_pointer<DataPointerType>::type;
 
     using non_const_data_type = typename std::remove_const<data_type>::type;
@@ -33,13 +32,13 @@ private:
                   "The template type must be a pointer type");
 
 public:
-
     /// Creates an endian stream used to track a buffer of the specified size.
     ///
     /// @param size the size of the buffer in bytes
     stream(DataPointerType data, std::size_t size) noexcept :
         m_data(data), m_size(size)
-    { }
+    {
+    }
 
     /// Gets the size of the underlying buffer in bytes.
     ///
@@ -104,7 +103,6 @@ public:
     }
 
 private:
-
     /// Data pointer to buffer
     DataPointerType m_data;
 

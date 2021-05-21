@@ -13,17 +13,17 @@ namespace detail
 {
 
 // Helper to check that unsigned values can fit in the bytes
-template<class ValueType, uint8_t Bytes>
+template <class ValueType, uint8_t Bytes>
 struct check
 {
     static bool value(ValueType value)
     {
-        (void) value;
+        (void)value;
         return (sizeof(ValueType) == Bytes);
     }
 };
 
-template<uint8_t Bytes>
+template <uint8_t Bytes>
 struct check<uint8_t, Bytes>
 {
     static bool value(uint8_t value)
@@ -32,7 +32,7 @@ struct check<uint8_t, Bytes>
     }
 };
 
-template<class ValueType>
+template <class ValueType>
 struct check<ValueType, 3>
 {
     static bool value(ValueType value)
@@ -41,7 +41,7 @@ struct check<ValueType, 3>
     }
 };
 
-template<class ValueType>
+template <class ValueType>
 struct check<ValueType, 5>
 {
     static bool value(ValueType value)
@@ -50,7 +50,7 @@ struct check<ValueType, 5>
     }
 };
 
-template<class ValueType>
+template <class ValueType>
 struct check<ValueType, 6>
 {
     static bool value(ValueType value)
@@ -59,7 +59,7 @@ struct check<ValueType, 6>
     }
 };
 
-template<class ValueType>
+template <class ValueType>
 struct check<ValueType, 7>
 {
     static bool value(ValueType value)
@@ -69,21 +69,23 @@ struct check<ValueType, 7>
 };
 
 // Helper to convet floating point type into identically sized unsigned integer
-template<class Type>
+template <class Type>
 struct floating_point
-{ };
+{
+};
 
-template<>
+template <>
 struct floating_point<float>
 {
     static_assert(sizeof(float) == 4, "Float type must have a size of 4 bytes");
     using UnsignedType = uint32_t;
 };
 
-template<>
+template <>
 struct floating_point<double>
 {
-    static_assert(sizeof(double) == 8, "Float type must have a size of 8 bytes");
+    static_assert(sizeof(double) == 8,
+                  "Float type must have a size of 8 bytes");
     using UnsignedType = uint64_t;
 };
 

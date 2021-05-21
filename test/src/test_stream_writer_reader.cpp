@@ -3,16 +3,16 @@
 //
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
 
-#include <endian/stream_reader.hpp>
-#include <endian/stream_writer.hpp>
 #include <endian/big_endian.hpp>
 #include <endian/little_endian.hpp>
+#include <endian/stream_reader.hpp>
+#include <endian/stream_writer.hpp>
 
 #include <random>
 
 #include <gtest/gtest.h>
 
-template<class EndianType, class ValueType, uint8_t Bytes>
+template <class EndianType, class ValueType, uint8_t Bytes>
 void write_and_read_value_type(ValueType min, ValueType max)
 {
 
@@ -22,7 +22,6 @@ void write_and_read_value_type(ValueType min, ValueType max)
 
     endian::stream_reader<EndianType> stream_reader(buffer.data(), size);
     endian::stream_writer<EndianType> stream_writer(buffer.data(), size);
-
 
     for (std::size_t i = 0; i < elements; i++)
     {
@@ -52,7 +51,7 @@ void write_and_read_value_type(ValueType min, ValueType max)
     }
 }
 
-template<class EndianType, class ValueType, uint8_t Bytes>
+template <class EndianType, class ValueType, uint8_t Bytes>
 void write_and_read_random_value_type(ValueType min, ValueType max)
 {
     const std::size_t elements = 1024;
@@ -81,7 +80,7 @@ void write_and_read_random_value_type(ValueType min, ValueType max)
     }
 }
 
-template<class EndianType>
+template <class EndianType>
 void run_write_peek_and_read_variadic_bytes()
 {
     const std::size_t elements = 1024;
@@ -262,7 +261,7 @@ void run_write_peek_and_read_variadic_bytes()
     }
 }
 
-template<class EndianType>
+template <class EndianType>
 static void run_write_and_read_string_test()
 {
     const std::size_t size = 1024;
@@ -316,7 +315,7 @@ static void run_write_and_read_string_test()
     }
 }
 
-template<class EndianType>
+template <class EndianType>
 static void run_write_read_vector_test()
 {
     const std::size_t size = 1024;
@@ -367,7 +366,7 @@ static void run_write_read_vector_test()
     }
 }
 
-template<class EndianType>
+template <class EndianType>
 static void test_reader_and_writer_api()
 {
     {

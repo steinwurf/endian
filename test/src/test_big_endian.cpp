@@ -14,8 +14,8 @@
 TEST(test_big_endian, convert_integers)
 {
     // Indicate endianness for debugging purposes
-    SCOPED_TRACE(testing::Message() << "big_endian: " <<
-                 endian::is_big_endian());
+    SCOPED_TRACE(testing::Message()
+                 << "big_endian: " << endian::is_big_endian());
 
     // Test 8-bit integer
     {
