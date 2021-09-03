@@ -15,7 +15,7 @@
 namespace endian
 {
 
-// Inserts and extracts integers in little-endian format.
+/// Inserts and extracts integers in little-endian format.
 struct little_endian
 {
     /// Inserts a ValueType-sized value into the data buffer.
