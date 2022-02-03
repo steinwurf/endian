@@ -139,7 +139,7 @@ public:
     ///
     /// @return the read value
     template <typename ValueType>
-    stream_reader<EndianType>& operator >> (ValueType& value)
+    stream_reader<EndianType>& operator>>(ValueType& value)
     {
         read(value);
         return *this;

@@ -71,7 +71,7 @@ public:
     ///
     /// @param value the value to write.
     template <typename ValueType>
-    stream_writer<EndianType>& operator << (ValueType value)
+    stream_writer<EndianType>& operator<<(ValueType value)
     {
         write(value);
         return *this;

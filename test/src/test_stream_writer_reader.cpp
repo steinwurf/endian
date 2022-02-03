@@ -371,8 +371,10 @@ static void test_stream_operators()
 {
     auto number_of_integers = 16;
     auto buffer = std::vector<uint8_t>(sizeof(size_t) * number_of_integers);
-    auto writer = endian::stream_writer<EndianType>(buffer.data(), buffer.size());
-    auto reader = endian::stream_reader<EndianType>(buffer.data(), buffer.size());
+    auto writer =
+        endian::stream_writer<EndianType>(buffer.data(), buffer.size());
+    auto reader =
+        endian::stream_reader<EndianType>(buffer.data(), buffer.size());
 
     for (size_t i = 0; i < number_of_integers; i++)
     {
@@ -383,7 +385,7 @@ static void test_stream_operators()
     {
         size_t value;
         reader >> value;
-        EXPECT_EQ(value,i);
+        EXPECT_EQ(value, i);
     }
 }
 

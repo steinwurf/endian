@@ -4,8 +4,8 @@
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
 
 #include <endian/network.hpp>
-#include <endian/stream_writer.hpp>
 #include <endian/stream_reader.hpp>
+#include <endian/stream_writer.hpp>
 
 int main()
 {
@@ -25,10 +25,12 @@ int main()
     // Usage: `stream_writer` and `stream_reader`
     x = y = 0;
     std::vector<uint8_t> stream_buffer(sizeof(uint16_t) * 2);
-    endian::stream_writer<endian::network> writer(stream_buffer.data(), stream_buffer.size());
+    endian::stream_writer<endian::network> writer(stream_buffer.data(),
+                                                  stream_buffer.size());
     writer << a << b;
 
-    endian::stream_reader<endian::network> reader(stream_buffer.data(), stream_buffer.size());
+    endian::stream_reader<endian::network> reader(stream_buffer.data(),
+                                                  stream_buffer.size());
     reader >> x >> y;
     assert(x == a && y == b);
 
