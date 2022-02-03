@@ -16,7 +16,7 @@ namespace endian
 /// The stream_writer provides a stream-like interface for writing to a fixed
 /// size buffer. All complexity regarding endianness is encapsulated.
 template <typename EndianType>
-class stream_writer : public detail::stream<uint8_t*>
+class stream_writer : public detail::stream<>
 {
 public:
     /// Creates an endian stream on top of a pre-allocated buffer of the

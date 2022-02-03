@@ -6,6 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
+* Minor: Improved api of the detail stream class.
 * Minor: Updated waf.
 
 12.0.0

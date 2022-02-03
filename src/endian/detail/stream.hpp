@@ -16,26 +16,22 @@ namespace endian
 namespace detail
 {
 
+using const_stream = std::true_type;
+using non_const_stream = std::false_type;
+
 /// @brief Base-class for the endian stream reader and writer.
-template <typename DataPointerType>
+template <typename use_const = detail::non_const_stream>
 class stream
 {
-private:
-    using data_type = typename std::remove_pointer<DataPointerType>::type;
-
-    using non_const_data_type = typename std::remove_const<data_type>::type;
-
-    static_assert(std::is_same<uint8_t, non_const_data_type>::value,
-                  "Only uint8_t allowed.");
-
-    static_assert(std::is_pointer<DataPointerType>::value,
-                  "The template type must be a pointer type");
-
 public:
+    using data_ptr_type = typename std::conditional<
+        std::is_same<use_const, std::true_type>::value, const uint8_t*,
+        uint8_t*>::type;
+
     /// Creates an endian stream used to track a buffer of the specified size.
     ///
     /// @param size the size of the buffer in bytes
-    stream(DataPointerType data, std::size_t size) noexcept :
+    stream(data_ptr_type data, std::size_t size) noexcept :
         m_data(data), m_size(size)
     {
     }
@@ -89,7 +85,7 @@ public:
     /// A pointer to the stream's data.
     ///
     /// @return pointer to the stream's data.
-    DataPointerType data() const noexcept
+    data_ptr_type data() const noexcept
     {
         return m_data;
     }
@@ -97,14 +93,14 @@ public:
     /// A pointer to the stream's data at the current position.
     ///
     /// @return pointer to the stream's data at the current position.
-    DataPointerType remaining_data() const noexcept
+    data_ptr_type remaining_data() const noexcept
     {
         return m_data + m_position;
     }
 
 private:
     /// Data pointer to buffer
-    DataPointerType m_data;
+    data_ptr_type m_data;
 
     /// The size of the buffer in bytes
     std::size_t m_size;
