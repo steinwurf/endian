@@ -6,6 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
+* Minor: Added network alias methods.
 * Minor: Updated waf.
 
 12.0.0
