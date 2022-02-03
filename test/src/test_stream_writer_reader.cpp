@@ -369,7 +369,7 @@ static void run_write_read_vector_test()
 template <class EndianType>
 static void test_stream_operators()
 {
-    auto number_of_integers = 16;
+    size_t number_of_integers = 16;
     auto buffer = std::vector<uint8_t>(sizeof(size_t) * number_of_integers);
     auto writer =
         endian::stream_writer<EndianType>(buffer.data(), buffer.size());
