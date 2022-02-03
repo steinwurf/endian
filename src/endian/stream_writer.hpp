@@ -66,5 +66,15 @@ public:
         std::copy_n(data, size, this->remaining_data());
         skip(size);
     }
+
+    /// Operator for writing given value to the end of the stream.
+    ///
+    /// @param value the value to write.
+    template <typename ValueType>
+    stream_writer<EndianType>& operator << (ValueType value)
+    {
+        write(value);
+        return *this;
+    }
 };
 }
