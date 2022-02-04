@@ -367,6 +367,29 @@ static void run_write_read_vector_test()
 }
 
 template <class EndianType>
+static void test_stream_operators()
+{
+    size_t number_of_integers = 16;
+    auto buffer = std::vector<uint8_t>(sizeof(size_t) * number_of_integers);
+    auto writer =
+        endian::stream_writer<EndianType>(buffer.data(), buffer.size());
+    auto reader =
+        endian::stream_reader<EndianType>(buffer.data(), buffer.size());
+
+    for (size_t i = 0; i < number_of_integers; i++)
+    {
+        writer << i;
+    }
+
+    for (size_t i = 0; i < number_of_integers; i++)
+    {
+        size_t value;
+        reader >> value;
+        EXPECT_EQ(value, i);
+    }
+}
+
+template <class EndianType>
 static void test_reader_and_writer_api()
 {
     {
@@ -469,6 +492,7 @@ static void test_reader_and_writer_api()
     run_write_peek_and_read_variadic_bytes<EndianType>();
     run_write_and_read_string_test<EndianType>();
     run_write_read_vector_test<EndianType>();
+    test_stream_operators<EndianType>();
 }
 
 TEST(test_stream_writer_reader, test_reader_and_writer)
