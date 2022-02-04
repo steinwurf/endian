@@ -134,5 +134,15 @@ public:
         peek(value, offset);
         return value;
     }
+
+    /// Operator for reading the next value from the stream.
+    ///
+    /// @return the read value
+    template <typename ValueType>
+    stream_reader<EndianType>& operator>>(ValueType& value)
+    {
+        read(value);
+        return *this;
+    }
 };
 }

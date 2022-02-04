@@ -28,7 +28,6 @@ wurfapi = {
         "../src/endian/stream_writer.hpp",
     ],
     "recursive": False,
-    "user_templates": "rst_templates",
     "include_paths": ["../src"],
     "parser": {
         "type": "doxygen",
