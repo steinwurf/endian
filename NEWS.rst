@@ -6,6 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
+* Minor: Improved api of the detail stream class.
 * Minor: Added example and documentation for network.
 * Minor: Added network alias methods.
 * Minor: Added basic example for stream writer and reader.
