@@ -5,3 +5,16 @@ bld.program(
     source=['convert_to_little_endian.cpp'],
     target='convert_little_endian_to_big',
     use=['endian_includes'])
+
+
+bld.program(
+    features='cxx',
+    source=['stream_writer_reader.cpp'],
+    target='stream_writer_reader',
+    use=['endian_includes'])
+
+bld.program(
+    features='cxx',
+    source=['network.cpp'],
+    target='network',
+    use=['endian_includes'])
