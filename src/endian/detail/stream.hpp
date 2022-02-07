@@ -16,18 +16,14 @@ namespace endian
 namespace detail
 {
 
-using const_stream = std::true_type;
-using non_const_stream = std::false_type;
+using non_const_stream = uint8_t*;
+using const_stream = const uint8_t*;
 
 /// @brief Base-class for the endian stream reader and writer.
-template <typename use_const = detail::non_const_stream>
+template <typename data_ptr_type>
 class stream
 {
 public:
-    using data_ptr_type = typename std::conditional<
-        std::is_same<use_const, std::true_type>::value, const uint8_t*,
-        uint8_t*>::type;
-
     /// Creates an endian stream used to track a buffer of the specified size.
     ///
     /// @param size the size of the buffer in bytes
