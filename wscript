@@ -4,7 +4,7 @@
 import os
 
 APPNAME = "endian"
-VERSION = "12.1.0"
+VERSION = "12.1.1"
 
 
 def build(bld):

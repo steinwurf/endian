@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+12.1.1
+------
 * Patch: Fix warning in 8-bit value check.
 
 12.1.0
