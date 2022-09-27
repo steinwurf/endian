@@ -26,9 +26,10 @@ struct check
 template <uint8_t Bytes>
 struct check<uint8_t, Bytes>
 {
-    static bool value(uint8_t value)
+    static bool value(uint8_t)
     {
-        return value <= 0xFF;
+        // 8 bit values can always fit in 8 bits
+        return true;
     }
 };
 
