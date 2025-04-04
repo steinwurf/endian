@@ -44,8 +44,8 @@ if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
     endif()
 
     file(GLOB_RECURSE endian_test_sources test/**.cpp)
-    add_executable(endian_test ${endian_test_sources})
-    target_link_libraries(endian_test ${steinwurf_object_libraries}
+    add_executable(endian_tests ${endian_test_sources})
+    target_link_libraries(endian_tests ${steinwurf_object_libraries}
                           steinwurf::gtest steinwurf::endian)
   endif()
 
