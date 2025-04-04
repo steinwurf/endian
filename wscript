@@ -152,7 +152,7 @@ def _cmake_configure_command(bld):
         "-DSTEINWURF_RESOLVE={}".format(
             (str(bld.path.abspath()).replace("\\", "/") + "/resolve_symlinks")
         ),
-        "-DSTEINWURF_TOP_NAME=encian",
+        "-DSTEINWURF_TOP_NAME=endian",
         "-DCMAKE_BUILD_TYPE={}".format(cmake_build_type),
     ]
     if os.path.exists("build_cmake"):
