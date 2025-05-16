@@ -39,29 +39,29 @@ if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
     endif()
 
     file(GLOB_RECURSE endian_test_sources test/**.cpp)
-    add_executable(endian_tests ${endian_test_sources})
-    target_link_libraries(endian_tests ${steinwurf_object_libraries}
+    add_executable(sw_endian_tests ${endian_test_sources})
+    target_link_libraries(sw_endian_tests ${steinwurf_object_libraries}
                           steinwurf::gtest steinwurf::endian)
 
     enable_testing()
-    add_test(NAME endian_tests COMMAND endian_tests)
+    add_test(NAME sw_endian_tests COMMAND sw_endian_tests)
 
 
     # Convert to little endian
-    add_executable(endian_example_convert_to_little_endian
+    add_executable(sw_endian_example_convert_to_little_endian
                    examples/convert_to_little_endian.cpp)
-    target_link_libraries(endian_example_convert_to_little_endian
+    target_link_libraries(sw_endian_example_convert_to_little_endian
                           ${steinwurf_object_libraries} steinwurf::endian)
 
     # Stream writer reader
-    add_executable(endian_example_stream_writer_reader
+    add_executable(sw_endian_example_stream_writer_reader
                    examples/stream_writer_reader.cpp)
-    target_link_libraries(endian_example_stream_writer_reader
+    target_link_libraries(sw_endian_example_stream_writer_reader
                           ${steinwurf_object_libraries} steinwurf::endian)
 
     # Network
-    add_executable(endian_example_network examples/network.cpp)
-    target_link_libraries(endian_example_network ${steinwurf_object_libraries}
+    add_executable(sw_endian_example_network examples/network.cpp)
+    target_link_libraries(sw_endian_example_network ${steinwurf_object_libraries}
                           steinwurf::endian)
 
 endif()
