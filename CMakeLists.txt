@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(nanoping_endian)
+project(sw_endian)
 
 
 # Use waf to resolve dependencies
@@ -18,10 +18,10 @@ if(NOT DEFINED STEINWURF_RESOLVE)
 endif()
 
 # Define library
-add_library(nanoping_endian INTERFACE)
-target_compile_features(nanoping_endian INTERFACE cxx_std_14)
-target_include_directories(nanoping_endian INTERFACE src/)
-add_library(nanoping::endian ALIAS nanoping_endian)
+add_library(sw_endian INTERFACE)
+target_compile_features(sw_endian INTERFACE cxx_std_14)
+target_include_directories(sw_endian INTERFACE src/)
+add_library(steinwurf::endian ALIAS sw_endian)
 
 # Install headers
 install(
@@ -41,7 +41,7 @@ if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
     file(GLOB_RECURSE endian_test_sources test/**.cpp)
     add_executable(endian_tests ${endian_test_sources})
     target_link_libraries(endian_tests ${steinwurf_object_libraries}
-                          steinwurf::gtest nanoping::endian)
+                          steinwurf::gtest steinwurf::endian)
 
     enable_testing()
     add_test(NAME endian_tests COMMAND endian_tests)
@@ -51,17 +51,17 @@ if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
     add_executable(endian_example_convert_to_little_endian
                    examples/convert_to_little_endian.cpp)
     target_link_libraries(endian_example_convert_to_little_endian
-                          ${steinwurf_object_libraries} nanoping::endian)
+                          ${steinwurf_object_libraries} steinwurf::endian)
 
     # Stream writer reader
     add_executable(endian_example_stream_writer_reader
                    examples/stream_writer_reader.cpp)
     target_link_libraries(endian_example_stream_writer_reader
-                          ${steinwurf_object_libraries} nanoping::endian)
+                          ${steinwurf_object_libraries} steinwurf::endian)
 
     # Network
     add_executable(endian_example_network examples/network.cpp)
     target_link_libraries(endian_example_network ${steinwurf_object_libraries}
-                          nanoping::endian)
+                          steinwurf::endian)
 
 endif()
