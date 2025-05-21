@@ -54,6 +54,7 @@ void write_and_read_value_type(ValueType min, ValueType max)
 template <class EndianType, class ValueType, uint8_t Bytes>
 void write_and_read_random_value_type(ValueType min, ValueType max)
 {
+
     const std::size_t elements = 1024;
     const std::size_t size = elements * sizeof(ValueType);
     std::vector<uint8_t> buffer(size);
@@ -65,7 +66,9 @@ void write_and_read_random_value_type(ValueType min, ValueType max)
 
     std::random_device device;
     std::mt19937 engine(device());
-    std::uniform_int_distribution<uint64_t> distribution(min, max);
+
+    assert(min <= max);
+    std::uniform_int_distribution<ValueType> distribution(min, max);
 
     for (std::size_t i = 0; i < elements; i++)
     {
@@ -99,6 +102,7 @@ void run_write_peek_and_read_variadic_bytes()
         {
         case 0:
         {
+            assert(0 < 0xFF);
             std::uniform_int_distribution<uint64_t> distribution(0, 0xFF);
             values[i] = (uint8_t)distribution(engine);
             writer.template write_bytes<1>((uint8_t)values[i]);
@@ -106,6 +110,7 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 1:
         {
+            assert(0 < 0xFFFF);
             std::uniform_int_distribution<uint64_t> distribution(0, 0xFFFF);
             values[i] = (uint16_t)distribution(engine);
             writer.template write_bytes<2>((uint16_t)values[i]);
@@ -113,6 +118,7 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 2:
         {
+            assert(0 < 0xFFFFFF);
             std::uniform_int_distribution<uint64_t> distribution(0, 0xFFFFFF);
             values[i] = (uint32_t)distribution(engine);
             writer.template write_bytes<3>((uint32_t)values[i]);
@@ -120,6 +126,7 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 3:
         {
+            assert(0 < 0xFFFFFFFF);
             std::uniform_int_distribution<uint64_t> distribution(0, 0xFFFFFFFF);
             values[i] = (uint32_t)distribution(engine);
             writer.template write_bytes<4>((uint32_t)values[i]);
@@ -127,6 +134,7 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 4:
         {
+            assert(0 < 0x000000FFFFFFFFFF);
             std::uniform_int_distribution<uint64_t> distribution(
                 0, 0x000000FFFFFFFFFF);
             values[i] = (uint64_t)distribution(engine);
@@ -135,6 +143,7 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 5:
         {
+            assert(0 < 0x0000FFFFFFFFFFFF);
             std::uniform_int_distribution<uint64_t> distribution(
                 0, 0x0000FFFFFFFFFFFF);
             values[i] = (uint64_t)distribution(engine);
@@ -143,6 +152,7 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 6:
         {
+            assert(0 < 0x00FFFFFFFFFFFFFF);
             std::uniform_int_distribution<uint64_t> distribution(
                 0, 0x00FFFFFFFFFFFFFF);
             values[i] = (uint64_t)distribution(engine);
@@ -151,8 +161,9 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 7:
         {
+            assert(0 < 0x0FFFFFFFFFFFFFFF);
             std::uniform_int_distribution<uint64_t> distribution(
-                0, 0xFFFFFFFFFFFFFFFF);
+                0, 0x0FFFFFFFFFFFFFFF);
             values[i] = (uint64_t)distribution(engine);
             writer.template write_bytes<8>((uint64_t)values[i]);
             break;
@@ -392,35 +403,39 @@ static void test_stream_operators()
 template <class EndianType>
 static void test_reader_and_writer_api()
 {
-    {
-        SCOPED_TRACE("u8");
-        using value_type = uint8_t;
-        value_type min = std::numeric_limits<value_type>::max();
-        value_type max = std::numeric_limits<value_type>::min();
-        write_and_read_value_type<EndianType, value_type, 1>(min, max);
-        write_and_read_random_value_type<EndianType, value_type, 1>(min, max);
-    }
-    {
-        SCOPED_TRACE("i8");
-        using value_type = int8_t;
-        value_type min = std::numeric_limits<value_type>::max();
-        value_type max = std::numeric_limits<value_type>::min();
-        write_and_read_value_type<EndianType, value_type, 1>(min, max);
-        write_and_read_random_value_type<EndianType, value_type, 1>(min, max);
-    }
+    // Not allowed by the starndard - maybe will be allowed some day:
+    // https://stackoverflow.com/a/31460827
+    // {
+    //     SCOPED_TRACE("u8");
+    //     using value_type = uint8_t;
+    //     value_type min = std::numeric_limits<value_type>::min();
+    //     value_type max = std::numeric_limits<value_type>::max();
+    //     write_and_read_value_type<EndianType, value_type, 1>(min, max);
+    //     write_and_read_random_value_type<EndianType, value_type, 1>(min,
+    //     max);
+    // }
+    // {
+    //     SCOPED_TRACE("i8");
+    //     using value_type = int8_t;
+    //     value_type min = std::numeric_limits<value_type>::min();
+    //     value_type max = std::numeric_limits<value_type>::max();
+    //     write_and_read_value_type<EndianType, value_type, 1>(min, max);
+    //     write_and_read_random_value_type<EndianType, value_type, 1>(min,
+    //     max);
+    // }
     {
         SCOPED_TRACE("u16");
         using value_type = uint16_t;
-        value_type min = std::numeric_limits<value_type>::max();
-        value_type max = std::numeric_limits<value_type>::min();
+        value_type min = std::numeric_limits<value_type>::min();
+        value_type max = std::numeric_limits<value_type>::max();
         write_and_read_value_type<EndianType, value_type, 2>(min, max);
         write_and_read_random_value_type<EndianType, value_type, 2>(min, max);
     }
     {
         SCOPED_TRACE("i16");
         using value_type = int16_t;
-        value_type min = std::numeric_limits<value_type>::max();
-        value_type max = std::numeric_limits<value_type>::min();
+        value_type min = std::numeric_limits<value_type>::min();
+        value_type max = std::numeric_limits<value_type>::max();
         write_and_read_value_type<EndianType, value_type, 2>(min, max);
         write_and_read_random_value_type<EndianType, value_type, 2>(min, max);
     }
@@ -435,16 +450,16 @@ static void test_reader_and_writer_api()
     {
         SCOPED_TRACE("u32");
         using value_type = uint32_t;
-        value_type min = std::numeric_limits<value_type>::max();
-        value_type max = std::numeric_limits<value_type>::min();
+        value_type min = std::numeric_limits<value_type>::min();
+        value_type max = std::numeric_limits<value_type>::max();
         write_and_read_value_type<EndianType, value_type, 4>(min, max);
         write_and_read_random_value_type<EndianType, value_type, 4>(min, max);
     }
     {
         SCOPED_TRACE("i32");
         using value_type = int32_t;
-        value_type min = std::numeric_limits<value_type>::max();
-        value_type max = std::numeric_limits<value_type>::min();
+        value_type min = std::numeric_limits<value_type>::min();
+        value_type max = std::numeric_limits<value_type>::max();
         write_and_read_value_type<EndianType, value_type, 4>(min, max);
         write_and_read_random_value_type<EndianType, value_type, 4>(min, max);
     }
@@ -475,16 +490,16 @@ static void test_reader_and_writer_api()
     {
         SCOPED_TRACE("u64");
         using value_type = uint64_t;
-        value_type min = std::numeric_limits<value_type>::max();
-        value_type max = std::numeric_limits<value_type>::min();
+        value_type min = std::numeric_limits<value_type>::min();
+        value_type max = std::numeric_limits<value_type>::max();
         write_and_read_value_type<EndianType, value_type, 8>(min, max);
         write_and_read_random_value_type<EndianType, value_type, 8>(min, max);
     }
     {
         SCOPED_TRACE("i64");
         using value_type = int64_t;
-        value_type min = std::numeric_limits<value_type>::max();
-        value_type max = std::numeric_limits<value_type>::min();
+        value_type min = std::numeric_limits<value_type>::min();
+        value_type max = std::numeric_limits<value_type>::max();
         write_and_read_value_type<EndianType, value_type, 8>(min, max);
         write_and_read_random_value_type<EndianType, value_type, 8>(min, max);
     }
