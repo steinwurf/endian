@@ -60,28 +60,28 @@ jobs:
       - name: Waf Build
         run: python3 waf build --run_tests
 
-valgrind:
-  timeout-minutes: 45
-  runs-on:
-    - self-hosted
-    - vm
-    - ubuntu-current
-  name: Valgrind
-  steps:
-    - name: Ensure correct owner of repository
-      run: sudo chown -R actions-runner:actions-runner .
+  valgrind:
+    timeout-minutes: 45
+    runs-on:
+      - self-hosted
+      - vm
+      - ubuntu-current
+    name: Valgrind
+    steps:
+      - name: Ensure correct owner of repository
+        run: sudo chown -R actions-runner:actions-runner .
 
-    - name: Checkout source code
-      uses: actions/checkout@v3
+      - name: Checkout source code
+        uses: actions/checkout@v3
 
-    - name: Waf Clean
-      run: python3 waf clean --no_resolve
+      - name: Waf Clean
+        run: python3 waf clean --no_resolve
 
-    - name: Waf Configure
-      run: python3 waf configure --git_protocol=git@ --cmake_toolchain=./resolve_symlinks/toolchains/gcc-toolchain.cmake --cmake_verbose
+      - name: Waf Configure
+        run: python3 waf configure --git_protocol=git@ --cmake_toolchain=./resolve_symlinks/toolchains/gcc-toolchain.cmake --cmake_verbose
 
-    - name: Waf Build
-      run: python3 waf build --run_tests --ctest_valgrind
+      - name: Waf Build
+        run: python3 waf build --run_tests --ctest_valgrind
 
   zig_toolchain_build:
     name: Zig Toolchain Build (Docker)
