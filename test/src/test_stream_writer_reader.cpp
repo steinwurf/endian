@@ -54,6 +54,7 @@ void write_and_read_value_type(ValueType min, ValueType max)
 template <class EndianType, class ValueType, uint8_t Bytes>
 void write_and_read_random_value_type(ValueType min, ValueType max)
 {
+
     const std::size_t elements = 1024;
     const std::size_t size = elements * sizeof(ValueType);
     std::vector<uint8_t> buffer(size);
@@ -65,6 +66,8 @@ void write_and_read_random_value_type(ValueType min, ValueType max)
 
     std::random_device device;
     std::mt19937 engine(device());
+
+    assert(min <= max);
     std::uniform_int_distribution<uint64_t> distribution(min, max);
 
     for (std::size_t i = 0; i < elements; i++)
@@ -99,6 +102,7 @@ void run_write_peek_and_read_variadic_bytes()
         {
         case 0:
         {
+            assert(0 < 0xFF);
             std::uniform_int_distribution<uint64_t> distribution(0, 0xFF);
             values[i] = (uint8_t)distribution(engine);
             writer.template write_bytes<1>((uint8_t)values[i]);
@@ -106,6 +110,7 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 1:
         {
+            assert(0 < 0xFFFF);
             std::uniform_int_distribution<uint64_t> distribution(0, 0xFFFF);
             values[i] = (uint16_t)distribution(engine);
             writer.template write_bytes<2>((uint16_t)values[i]);
@@ -113,6 +118,7 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 2:
         {
+            assert(0 < 0xFFFFFF);
             std::uniform_int_distribution<uint64_t> distribution(0, 0xFFFFFF);
             values[i] = (uint32_t)distribution(engine);
             writer.template write_bytes<3>((uint32_t)values[i]);
@@ -120,6 +126,7 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 3:
         {
+            assert(0 < 0xFFFFFFFF);
             std::uniform_int_distribution<uint64_t> distribution(0, 0xFFFFFFFF);
             values[i] = (uint32_t)distribution(engine);
             writer.template write_bytes<4>((uint32_t)values[i]);
@@ -127,6 +134,7 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 4:
         {
+            assert(0 < 0x000000FFFFFFFFFF);
             std::uniform_int_distribution<uint64_t> distribution(
                 0, 0x000000FFFFFFFFFF);
             values[i] = (uint64_t)distribution(engine);
@@ -135,6 +143,7 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 5:
         {
+            assert(0 < 0x0000FFFFFFFFFFFF);
             std::uniform_int_distribution<uint64_t> distribution(
                 0, 0x0000FFFFFFFFFFFF);
             values[i] = (uint64_t)distribution(engine);
@@ -143,6 +152,7 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 6:
         {
+            assert(0 < 0x00FFFFFFFFFFFFFF);
             std::uniform_int_distribution<uint64_t> distribution(
                 0, 0x00FFFFFFFFFFFFFF);
             values[i] = (uint64_t)distribution(engine);
@@ -151,6 +161,7 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 7:
         {
+            assert(0 < 0xFFFFFFFFFFFFFFFF);
             std::uniform_int_distribution<uint64_t> distribution(
                 0, 0xFFFFFFFFFFFFFFFF);
             values[i] = (uint64_t)distribution(engine);
