@@ -29,6 +29,15 @@ jobs:
           - runner: ubuntu-current
             name: Clang ASAN Latest
             toolchain: "./resolve_symlinks/toolchains/clang-asan-toolchain.cmake"
+          - runner: ubuntu-current
+            name: Clang TSAN Latest
+            toolchain: "./resolve_symlinks/toolchains/clang-tsan-toolchain.cmake"
+          - runner: ubuntu-current
+            name: Clang UBSAN Latest
+            toolchain: "./resolve_symlinks/toolchains/clang-ubsan-toolchain.cmake"
+          - runner: ubuntu-current
+            name: Clang MSAN Latest
+            toolchain: "./resolve_symlinks/toolchains/clang-msan-toolchain.cmake"
           - runner: ubuntu-old
             name: GCC Oldest
             toolchain: "./resolve_symlinks/toolchains/gcc-toolchain.cmake"
