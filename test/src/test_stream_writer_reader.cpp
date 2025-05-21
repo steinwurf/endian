@@ -161,9 +161,9 @@ void run_write_peek_and_read_variadic_bytes()
         }
         case 7:
         {
-            assert(0 < 0xFFFFFFFFFFFFFFFF);
+            assert(0 < 0x0FFFFFFFFFFFFFFF);
             std::uniform_int_distribution<uint64_t> distribution(
-                0, 0xFFFFFFFFFFFFFFFF);
+                0, 0x0FFFFFFFFFFFFFFF);
             values[i] = (uint64_t)distribution(engine);
             writer.template write_bytes<8>((uint64_t)values[i]);
             break;
