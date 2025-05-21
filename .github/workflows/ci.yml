@@ -14,7 +14,7 @@ on:
         required: false
 
 jobs:
-  docker_builds:
+  linux_cmake:
     timeout-minutes: 45
     strategy:
       fail-fast: false
@@ -35,9 +35,6 @@ jobs:
           - runner: ubuntu-current
             name: Clang UBSAN Latest
             toolchain: "./resolve_symlinks/toolchains/clang-ubsan-toolchain.cmake"
-          - runner: ubuntu-current
-            name: Clang MSAN Latest
-            toolchain: "./resolve_symlinks/toolchains/clang-msan-toolchain.cmake"
           - runner: ubuntu-old
             name: GCC Oldest
             toolchain: "./resolve_symlinks/toolchains/gcc-toolchain.cmake"
@@ -62,6 +59,29 @@ jobs:
         run: python3 waf configure --git_protocol=git@ --cmake_toolchain=${{ matrix.config.toolchain }} --cmake_verbose
       - name: Waf Build
         run: python3 waf build --run_tests
+
+valgrind:
+  timeout-minutes: 45
+  runs-on:
+    - self-hosted
+    - vm
+    - ubuntu-current
+  name: Valgrind
+  steps:
+    - name: Ensure correct owner of repository
+      run: sudo chown -R actions-runner:actions-runner .
+
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Waf Clean
+      run: python3 waf clean --no_resolve
+
+    - name: Waf Configure
+      run: python3 waf configure --git_protocol=git@ --cmake_toolchain=./resolve_symlinks/toolchains/gcc-toolchain.cmake --cmake_verbose
+
+    - name: Waf Build
+      run: python3 waf build --run_tests --ctest_valgrind
 
   zig_toolchain_build:
     name: Zig Toolchain Build (Docker)
