@@ -68,7 +68,7 @@ void write_and_read_random_value_type(ValueType min, ValueType max)
     std::mt19937 engine(device());
 
     assert(min <= max);
-    std::uniform_int_distribution<uint64_t> distribution(min, max);
+    std::uniform_int_distribution<ValueType> distribution(min, max);
 
     for (std::size_t i = 0; i < elements; i++)
     {
