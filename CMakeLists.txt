@@ -43,9 +43,6 @@ if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
       add_subdirectory("${STEINWURF_RESOLVE}/gtest" EXCLUDE_FROM_ALL)
     endif()
 
-    # Avoid tests ending up in other folders
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
-
     file(GLOB_RECURSE endian_test_sources test/**.cpp)
     add_executable(sw_endian_tests ${endian_test_sources})
     target_link_libraries(sw_endian_tests ${steinwurf_object_libraries}
