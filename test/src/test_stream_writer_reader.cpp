@@ -403,22 +403,26 @@ static void test_stream_operators()
 template <class EndianType>
 static void test_reader_and_writer_api()
 {
-    {
-        SCOPED_TRACE("u8");
-        using value_type = uint8_t;
-        value_type min = std::numeric_limits<value_type>::min();
-        value_type max = std::numeric_limits<value_type>::max();
-        write_and_read_value_type<EndianType, value_type, 1>(min, max);
-        write_and_read_random_value_type<EndianType, value_type, 1>(min, max);
-    }
-    {
-        SCOPED_TRACE("i8");
-        using value_type = int8_t;
-        value_type min = std::numeric_limits<value_type>::min();
-        value_type max = std::numeric_limits<value_type>::max();
-        write_and_read_value_type<EndianType, value_type, 1>(min, max);
-        write_and_read_random_value_type<EndianType, value_type, 1>(min, max);
-    }
+    // Not allowed by the starndard - maybe will be allowed some day:
+    // https://stackoverflow.com/a/31460827
+    // {
+    //     SCOPED_TRACE("u8");
+    //     using value_type = uint8_t;
+    //     value_type min = std::numeric_limits<value_type>::min();
+    //     value_type max = std::numeric_limits<value_type>::max();
+    //     write_and_read_value_type<EndianType, value_type, 1>(min, max);
+    //     write_and_read_random_value_type<EndianType, value_type, 1>(min,
+    //     max);
+    // }
+    // {
+    //     SCOPED_TRACE("i8");
+    //     using value_type = int8_t;
+    //     value_type min = std::numeric_limits<value_type>::min();
+    //     value_type max = std::numeric_limits<value_type>::max();
+    //     write_and_read_value_type<EndianType, value_type, 1>(min, max);
+    //     write_and_read_random_value_type<EndianType, value_type, 1>(min,
+    //     max);
+    // }
     {
         SCOPED_TRACE("u16");
         using value_type = uint16_t;
