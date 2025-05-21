@@ -45,7 +45,7 @@ jobs:
       - name: Waf Clean
         run: python3 waf clean --no_resolve
       - name: Waf Configure
-        run: python3 waf configure --git_protocol=git@ --cmake_toolchain=${{ matrix.config.toolchain }} --cmake_verbose --with_protoc
+        run: python3 waf configure --git_protocol=git@ --cmake_toolchain=${{ matrix.config.toolchain }} --cmake_verbose
       - name: Waf Build
         run: python3 waf build --run_tests
 
