@@ -17,6 +17,11 @@ if(NOT DEFINED STEINWURF_RESOLVE)
   set(STEINWURF_RESOLVE "${CMAKE_CURRENT_SOURCE_DIR}/resolve_symlinks")
 endif()
 
+
+# Include common CMake settings
+include("${STEINWURF_RESOLVE}/toolchains/common_settings.cmake")
+
+
 # Define library
 add_library(sw_endian INTERFACE)
 target_compile_features(sw_endian INTERFACE cxx_std_14)
