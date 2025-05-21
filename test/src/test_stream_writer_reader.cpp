@@ -475,16 +475,16 @@ static void test_reader_and_writer_api()
     {
         SCOPED_TRACE("u64");
         using value_type = uint64_t;
-        value_type min = std::numeric_limits<value_type>::max();
-        value_type max = std::numeric_limits<value_type>::min();
+        value_type min = std::numeric_limits<value_type>::min();
+        value_type max = std::numeric_limits<value_type>::max();
         write_and_read_value_type<EndianType, value_type, 8>(min, max);
         write_and_read_random_value_type<EndianType, value_type, 8>(min, max);
     }
     {
         SCOPED_TRACE("i64");
         using value_type = int64_t;
-        value_type min = std::numeric_limits<value_type>::max();
-        value_type max = std::numeric_limits<value_type>::min();
+        value_type min = std::numeric_limits<value_type>::min();
+        value_type max = std::numeric_limits<value_type>::max();
         write_and_read_value_type<EndianType, value_type, 8>(min, max);
         write_and_read_random_value_type<EndianType, value_type, 8>(min, max);
     }
