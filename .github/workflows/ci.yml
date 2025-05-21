@@ -26,6 +26,9 @@ jobs:
           - runner: ubuntu-current
             name: Clang Latest
             toolchain: "./resolve_symlinks/toolchains/clang-toolchain.cmake"
+          - runner: ubuntu-current
+            name: Clang ASAN Latest
+            toolchain: "./resolve_symlinks/toolchains/clang-asan-toolchain.cmake"
           - runner: ubuntu-old
             name: GCC Oldest
             toolchain: "./resolve_symlinks/toolchains/gcc-toolchain.cmake"
@@ -38,6 +41,8 @@ jobs:
       - ${{ matrix.config.runner }}
     name: ${{ matrix.config.name }}
     steps:
+      # This is sometimes needed when running docker builds since these
+      # sometimes produce files with root ownership
       - name: Ensure correct owner of repository
         run: sudo chown -R actions-runner:actions-runner .
       - name: Checkout source code
