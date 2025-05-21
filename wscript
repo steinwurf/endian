@@ -12,7 +12,7 @@ import subprocess
 from waflib.Build import BuildContext
 
 APPNAME = "endian"
-VERSION = "13.0.0"
+VERSION = "14.0.0"
 
 
 def options(opt):
