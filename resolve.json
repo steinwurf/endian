@@ -4,7 +4,7 @@
         "internal": true,
         "resolver": "git",
         "method": "semver",
-        "major": 5,
+        "major": 6,
         "sources": [
             "github.com/steinwurf/gtest.git"
         ]
