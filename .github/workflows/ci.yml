@@ -67,9 +67,53 @@ jobs:
       - name: Waf Clean
         run: python3 waf clean --no_resolve
       - name: Waf Configure with Zig Toolchain
-        run: python3 waf configure --git_protocol=git@ --cmake_toolchain=../resolve_symlinks/toolchains/zig-toolchain-x86_64-linux-musl.cmake --cmake_verbose --with_protoc
+        run: python3 waf configure --git_protocol=git@ --cmake_toolchain=../resolve_symlinks/toolchains/zig-toolchain-x86_64-linux-musl.cmake --cmake_verbose
       - name: Waf Build with Zig Toolchain
         run: python3 waf build --run_tests
+
+  macos_cmake:
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - arch: ARM64
+            os: big_sur
+            name: Apple Big Sur (ARM)
+            toolchain: "./resolve_symlinks/toolchains/clang-toolchain.cmake"
+    runs-on:
+      - self-hosted
+      - macOS
+      - ${{ matrix.config.os }}
+      - ${{ matrix.config.arch }}
+      - cmake
+      - builder
+    name: ${{ matrix.config.name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Waf Clean
+        run: python3 waf clean --no_resolve
+      - name: Waf Configure
+        run: python3 waf configure --git_protocol=git@ --cmake_toolchain=${{ matrix.config.toolchain }} --cmake_verbose
+      - name: Waf Build
+        run: python3 waf build --run_tests
+
+  windows_cmake:
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+    runs-on: [self-hosted, windows, vm, windows-current]
+    name: Windows
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Waf Clean
+        run: python waf clean --no_resolve
+      - name: Waf Configure
+        run: python waf configure --git_protocol=git@ --cmake_verbose
+      - name: Waf Build
+        run: python waf build --run_tests
 
   clang-format:
     timeout-minutes: 45
